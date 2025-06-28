@@ -32,6 +32,9 @@ src/config/secrets.js
 .env.test.local
 .env.production.local
 
+# Keep example files
+!.env.example
+
 # OS generated files
 Thumbs.db
 .DS_Store?

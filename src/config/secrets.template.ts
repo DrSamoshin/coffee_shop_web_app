@@ -3,9 +3,6 @@
 
 // Test tokens and sensitive data
 export const SECRETS = {
-  // Test API token for development
-  TEST_TOKEN: 'your-test-token-here',
-  
   // API Keys (add real keys here in production)
   API_KEYS: {
     DEVELOPMENT: 'dev-api-key-here',
@@ -51,7 +48,6 @@ export const getSecret = (path: string): string | undefined => {
 };
 
 // Environment-specific getters
-export const getTestToken = (): string => SECRETS.TEST_TOKEN;
 export const getApiKey = (env: 'DEVELOPMENT' | 'STAGING' | 'PRODUCTION'): string => {
   return SECRETS.API_KEYS[env];
 };

@@ -117,7 +117,7 @@ class ApiService {
   // Проверка токена
   async checkToken(): Promise<{ isValid: boolean; error?: string }> {
     try {
-      const response = await this.api.get('/health/token/');
+      await this.api.get('/health/token/');
       return { isValid: true };
     } catch (error: any) {
       let errorMessage = 'Unknown error';

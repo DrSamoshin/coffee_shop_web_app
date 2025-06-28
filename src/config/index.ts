@@ -1,4 +1,5 @@
-import { APP_CONFIG, ENV } from './constants';
+import { APP_CONFIG } from './constants';
+import ENV_CONFIG from './env.template';
 
 // Configuration interface
 export interface AppConfig {
@@ -36,9 +37,9 @@ export interface AppConfig {
 // Default API configuration
 const getApiConfig = () => {
   // In development, use proxy. In production, use full URL
-  const baseUrl = ENV.isDevelopment 
+  const baseUrl = ENV_CONFIG.IS_DEVELOPMENT 
     ? '/api'  // Use Vite proxy in development
-    : 'http://0.0.0.0:8080'; // Direct URL in production
+    : ENV_CONFIG.API_BASE_URL; // Direct URL in production
     
   return {
     baseUrl,
@@ -97,7 +98,6 @@ export const getApiEndpoint = (endpoint: string): string => {
   return endpoint.startsWith('/') ? `${baseUrl}${endpoint}` : `${baseUrl}/${endpoint}`;
 };
 
-// Development helpers
-export const isDev = ENV.isDevelopment;
-export const isProd = ENV.isProduction;
-export const getEnvMode = () => ENV.mode; 
+export const isDev = ENV_CONFIG.IS_DEVELOPMENT;
+export const getEnvMode = () => ENV_CONFIG.MODE;
+export const isAdminMode = () => ENV_CONFIG.ADMIN_MODE; 

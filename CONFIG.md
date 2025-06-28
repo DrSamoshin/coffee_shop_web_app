@@ -48,7 +48,6 @@ Contains all application constants organized by category:
 import { APP_CONFIG, STORAGE_KEYS, UI, BUSINESS } from '../config/constants';
 
 // Access specific constants
-const tokenKey = STORAGE_KEYS.TOKEN;
 const primaryColor = UI.COLORS.PRIMARY;
 const orderStatuses = BUSINESS.ORDER_STATUSES;
 ```
@@ -65,7 +64,6 @@ const orderStatuses = BUSINESS.ORDER_STATUSES;
 2. Fill in real values in `secrets.ts`:
    ```typescript
    export const SECRETS = {
-     TEST_TOKEN: 'your-actual-test-token-here',
      API_KEYS: {
        DEVELOPMENT: 'dev-key',
        STAGING: 'staging-key',
@@ -79,10 +77,7 @@ const orderStatuses = BUSINESS.ORDER_STATUSES;
 ### Using Secrets:
 
 ```typescript
-import { getTestToken, getApiKey } from '../config/secrets';
-
-// Get test token
-const token = getTestToken();
+import { getApiKey } from '../config/secrets';
 
 // Get environment-specific API key
 const apiKey = getApiKey('DEVELOPMENT');
@@ -168,12 +163,12 @@ If you have hardcoded values in your components, replace them:
 ```typescript
 // ❌ Old way
 const API_URL = 'http://0.0.0.0:8080';
-localStorage.setItem('coffee_shop_token', token);
+const PRIMARY_COLOR = '#6f4e37';
 
 // ✅ New way  
-import { apiConfig, getStorageKey } from '../config';
+import { apiConfig, uiConfig } from '../config';
 const API_URL = apiConfig.baseUrl;
-localStorage.setItem(getStorageKey('TOKEN'), token);
+const PRIMARY_COLOR = uiConfig.colors.PRIMARY;
 ```
 
 ## 🚀 Development vs Production
