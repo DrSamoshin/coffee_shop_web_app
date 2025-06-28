@@ -54,6 +54,8 @@
 - Always fix TypeScript errors
 - Don't use `any` without extreme necessity
 - Follow clean code principles
+- **ALWAYS use colors from `src/config/colors.json`** via `UI.COLORS` constants
+- Never hardcode hex colors, rgba values, or gradients in components
 
 ### File Structure
 - Use centralized configuration from `src/config/`

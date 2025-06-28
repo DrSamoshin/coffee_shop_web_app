@@ -36,8 +36,12 @@ import { useTranslation } from 'react-i18next';
 import { apiService } from '../services/api';
 import { logger } from '../services/logger';
 import { OrderStatus } from '../types/api';
-import { getAppBackground } from '../config/constants';
+import { getAppBackground, UI } from '../config/constants';
 import CategoriesView from './CategoriesView';
+import EmployeesView from './EmployeesView';
+import ProductsView from './ProductsView';
+import ImagesView from './ImagesView';
+import SuppliersView from './SuppliersView';
 
 const drawerWidth = 240;
 
@@ -70,6 +74,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     { id: 'dashboard', label: t('navigation.dashboard') },
     { id: 'analytics', label: t('navigation.analytics') },
     { id: 'categories', label: t('navigation.categories') },
+    { id: 'products', label: t('navigation.products') },
+    { id: 'images', label: t('navigation.images') },
+    { id: 'employees', label: t('navigation.employees') },
+    { id: 'suppliers', label: t('navigation.suppliers') },
   ];
 
   useEffect(() => {
@@ -156,10 +164,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
               }}
               sx={{
                 '&.Mui-selected': {
-                  backgroundColor: '#6f4e37',
+                  backgroundColor: UI.COLORS.primary.main,
                   color: 'white',
                   '&:hover': {
-                    backgroundColor: '#5a3d2a',
+                    backgroundColor: UI.COLORS.primary.dark,
                   },
                 },
               }}
@@ -182,9 +190,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
           <ListItemButton 
             onClick={handleSettingsOpen}
             sx={{ 
-              color: '#6f4e37',
+              color: UI.COLORS.primary.main,
               '&:hover': {
-                backgroundColor: 'rgba(111, 78, 55, 0.1)',
+                backgroundColor: UI.COLORS.action.hover,
               }
             }}
           >
@@ -242,7 +250,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
                           {formatCurrency(stats.totalRevenue)}
                         </Typography>
                       </Box>
-                      <AttachMoney sx={{ fontSize: 40, color: '#4caf50' }} />
+                      <AttachMoney sx={{ fontSize: 40, color: UI.COLORS.success.main }} />
                     </Box>
                   </CardContent>
                 </Card>
@@ -258,7 +266,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
                           {stats.totalOrders}
                         </Typography>
                       </Box>
-                      <ShoppingCart sx={{ fontSize: 40, color: '#2196f3' }} />
+                      <ShoppingCart sx={{ fontSize: 40, color: UI.COLORS.info.main }} />
                     </Box>
                   </CardContent>
                 </Card>
@@ -274,7 +282,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
                           {stats.activeShifts}
                         </Typography>
                       </Box>
-                      <People sx={{ fontSize: 40, color: '#ff9800' }} />
+                      <People sx={{ fontSize: 40, color: UI.COLORS.warning.main }} />
                     </Box>
                   </CardContent>
                 </Card>
@@ -290,7 +298,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
                           {stats.pendingOrders}
                         </Typography>
                       </Box>
-                      <TrendingUp sx={{ fontSize: 40, color: '#f44336' }} />
+                      <TrendingUp sx={{ fontSize: 40, color: UI.COLORS.error.main }} />
                     </Box>
                   </CardContent>
                 </Card>
@@ -328,6 +336,18 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
       case 'categories':
         return <CategoriesView />;
 
+      case 'products':
+        return <ProductsView />;
+
+      case 'images':
+        return <ImagesView />;
+
+      case 'employees':
+        return <EmployeesView />;
+
+      case 'suppliers':
+        return <SuppliersView />;
+
       default:
         return (
           <Box sx={{ p: 3, textAlign: 'center' }}>
@@ -351,9 +371,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         left: 0,
         right: 0,
         height: 60,
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        backgroundColor: UI.COLORS.background.paper,
         backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+        borderBottom: `1px solid ${UI.COLORS.divider}`,
         display: { xs: 'flex', sm: 'none' },
         alignItems: 'center',
         justifyContent: 'flex-start',
@@ -362,7 +382,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
       }}>
         {/* Mobile Menu Button */}
         <Box sx={{
-          background: 'rgba(0,0,0,0.1)',
+          background: UI.COLORS.action.hover,
           borderRadius: 1,
           padding: 0.5
         }}>
@@ -479,11 +499,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
                 onLogout();
               }}
               sx={{ 
-                color: '#6f4e37',
-                borderColor: '#6f4e37',
-                '&:hover': {
-                  backgroundColor: 'rgba(111, 78, 55, 0.1)',
-                  borderColor: '#6f4e37',
+                                  color: UI.COLORS.primary.main,
+                  borderColor: UI.COLORS.primary.main,
+                  '&:hover': {
+                    backgroundColor: UI.COLORS.action.hover,
+                    borderColor: UI.COLORS.primary.main,
                 }
               }}
             >

@@ -26,6 +26,7 @@ import {
 } from '@mui/material';
 import { Refresh, Edit, CheckCircle } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
+import { UI } from '../config/constants';
 import { apiService } from '../services/api';
 import type { Order } from '../types/api';
 import { OrderStatus } from '../types/api';
@@ -177,7 +178,7 @@ const OrdersView: React.FC = () => {
             <Typography color="text.secondary" variant="body2">
               {t('orders.pending')}
             </Typography>
-            <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#ff9800' }}>
+            <Typography variant="h5" sx={{ fontWeight: 'bold', color: UI.COLORS.warning.main }}>
               {orders.filter(o => o.status === OrderStatus.WAITING).length}
             </Typography>
           </CardContent>
@@ -187,7 +188,7 @@ const OrdersView: React.FC = () => {
             <Typography color="text.secondary" variant="body2">
               {t('orders.completed')}
             </Typography>
-            <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
+            <Typography variant="h5" sx={{ fontWeight: 'bold', color: UI.COLORS.success.main }}>
               {orders.filter(o => o.status === OrderStatus.COMPLETED).length}
             </Typography>
           </CardContent>
@@ -199,7 +200,7 @@ const OrdersView: React.FC = () => {
         <TableContainer>
           <Table>
             <TableHead>
-              <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
+              <TableRow sx={{ backgroundColor: UI.COLORS.background.cardHover }}>
                 <TableCell sx={{ fontWeight: 'bold' }}>{t('orders.id')}</TableCell>
                 <TableCell sx={{ fontWeight: 'bold' }}>{t('orders.date')}</TableCell>
                 <TableCell sx={{ fontWeight: 'bold' }}>{t('orders.amount')}</TableCell>

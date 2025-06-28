@@ -11,7 +11,6 @@ import {
   TableHead,
   TableRow,
   Button,
-  Chip,
   IconButton,
   Dialog,
   DialogTitle,
@@ -159,23 +158,15 @@ const CategoriesView: React.FC = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>{t('categories.name')}</TableCell>
-                    <TableCell>{t('categories.status')}</TableCell>
-                    <TableCell>{t('categories.actions')}</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>{t('categories.name')}</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 'bold' }}>{t('categories.actions')}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {categories.map((category) => (
-                    <TableRow key={category.id}>
-                      <TableCell>{category.name}</TableCell>
-                      <TableCell>
-                        <Chip
-                          label={category.active ? t('categories.active') : t('categories.inactive')}
-                          color={category.active ? 'success' : 'default'}
-                          size="small"
-                        />
-                      </TableCell>
-                      <TableCell>
+                    <TableRow key={category.id} sx={{ height: 48 }}>
+                      <TableCell sx={{ py: 1 }}>{category.name}</TableCell>
+                      <TableCell align="right" sx={{ py: 1 }}>
                         <IconButton onClick={() => openEditDialog(category)} size="small">
                           <EditIcon />
                         </IconButton>
@@ -220,7 +211,7 @@ const CategoriesView: React.FC = () => {
           <Button onClick={() => setAddDialogOpen(false)}>
             {t('categories.cancel')}
           </Button>
-          <Button onClick={handleAddCategory} variant="contained">
+          <Button onClick={handleAddCategory} variant="contained" color="success">
             {t('categories.save')}
           </Button>
         </DialogActions>
@@ -244,7 +235,7 @@ const CategoriesView: React.FC = () => {
           <Button onClick={() => setEditDialogOpen(false)}>
             {t('categories.cancel')}
           </Button>
-          <Button onClick={handleEditCategory} variant="contained">
+          <Button onClick={handleEditCategory} variant="contained" color="success">
             {t('categories.save')}
           </Button>
         </DialogActions>

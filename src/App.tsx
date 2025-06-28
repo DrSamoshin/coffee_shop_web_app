@@ -5,25 +5,25 @@ import { CssBaseline, Box } from '@mui/material';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import { apiService } from './services/api';
-import { getAppBackground } from './config/constants';
+import { getAppBackground, UI } from './config/constants';
 import './i18n';
 
 // Создаем тему для приложения
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#6f4e37', // Кофейный цвет
-      light: '#8b6f47',
-      dark: '#5a3d2a',
+      main: UI.COLORS.primary.main,
+      light: UI.COLORS.primary.light,
+      dark: UI.COLORS.primary.dark,
     },
     secondary: {
-      main: '#ff6f00',
-      light: '#ff8f00',
-      dark: '#e65100',
+      main: UI.COLORS.secondary.main,
+      light: UI.COLORS.secondary.light,
+      dark: UI.COLORS.secondary.dark,
     },
     background: {
-      default: '#f5f5f5',
-      paper: '#ffffff',
+      default: UI.COLORS.background.default,
+      paper: UI.COLORS.background.paper,
     },
   },
   typography: {
@@ -40,7 +40,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 12,
-          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          backgroundColor: UI.COLORS.background.card,
         },
       },
     },
@@ -102,17 +102,17 @@ function App() {
           }}
         >
           <Box sx={{ textAlign: 'center' }}>
-            <Box sx={{ 
+            <            Box sx={{ 
               fontSize: '48px',
               marginBottom: '16px',
-              color: '#6f4e37',
+              color: UI.COLORS.primary.main,
               fontWeight: 'bold'
             }}>
               Coffee
             </Box>
             <Box sx={{ 
               fontSize: '18px',
-              color: '#6f4e37',
+              color: UI.COLORS.primary.main,
               fontWeight: 'bold'
             }}>
               Загрузка приложения...

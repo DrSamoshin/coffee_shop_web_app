@@ -34,6 +34,7 @@ import {
 } from '@mui/icons-material';
 import { logger, LogLevel } from '../services/logger';
 import type { LogEntry } from '../services/logger';
+import { UI } from '../config/constants';
 
 interface LogViewerProps {
   isOpen: boolean;
@@ -87,11 +88,11 @@ const LogViewer: React.FC<LogViewerProps> = ({ isOpen, onClose }) => {
 
   const getLevelColor = (level: LogLevel): string => {
     switch (level) {
-      case LogLevel.DEBUG: return '#9e9e9e';
-      case LogLevel.INFO: return '#2196f3';
-      case LogLevel.WARN: return '#ff9800';
-      case LogLevel.ERROR: return '#f44336';
-      default: return '#9e9e9e';
+      case LogLevel.DEBUG: return UI.COLORS.text.secondary;
+      case LogLevel.INFO: return UI.COLORS.info.main;
+      case LogLevel.WARN: return UI.COLORS.warning.main;
+      case LogLevel.ERROR: return UI.COLORS.error.main;
+      default: return UI.COLORS.text.secondary;
     }
   };
 
@@ -290,7 +291,7 @@ const LogViewer: React.FC<LogViewerProps> = ({ isOpen, onClose }) => {
                             <Typography variant="subtitle2" gutterBottom>
                               Data:
                             </Typography>
-                            <Paper sx={{ p: 1, backgroundColor: '#f5f5f5' }}>
+                            <Paper sx={{ p: 1, backgroundColor: UI.COLORS.background.cardHover }}>
                               <pre style={{ 
                                 margin: 0, 
                                 fontSize: '12px', 
@@ -308,13 +309,13 @@ const LogViewer: React.FC<LogViewerProps> = ({ isOpen, onClose }) => {
                             <Typography variant="subtitle2" gutterBottom>
                               Stack Trace:
                             </Typography>
-                            <Paper sx={{ p: 1, backgroundColor: '#ffebee' }}>
+                            <Paper sx={{ p: 1, backgroundColor: UI.COLORS.error.light }}>
                               <pre style={{ 
                                 margin: 0, 
                                 fontSize: '12px', 
                                 whiteSpace: 'pre-wrap',
                                 wordBreak: 'break-word',
-                                color: '#d32f2f'
+                                color: UI.COLORS.error.dark
                               }}>
                                 {log.stack}
                               </pre>

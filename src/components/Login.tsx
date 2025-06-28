@@ -12,7 +12,9 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { apiService } from '../services/api';
 import { logger } from '../services/logger';
+import { UI } from '../config/constants';
 import LanguageSwitcher from './LanguageSwitcher';
+import logoSvg from '../assets/logo.svg';
 
 interface LoginProps {
   onSuccess: () => void;
@@ -88,7 +90,7 @@ const Login: React.FC<LoginProps> = ({ onSuccess }) => {
         top: 20, 
         right: 20, 
         zIndex: 1000,
-        background: 'rgba(0,0,0,0.1)',
+        background: UI.COLORS.action.hover,
         borderRadius: 1,
         padding: 0.5
       }}>
@@ -102,10 +104,23 @@ const Login: React.FC<LoginProps> = ({ onSuccess }) => {
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center',
-          padding: { xs: 1, sm: 2 }
+          padding: { xs: 1, sm: 2 },
+          background: UI.COLORS.background.default
         }}
       >
                 <Box sx={{ width: '100%', maxWidth: 400, px: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+            <img 
+              src={logoSvg} 
+              alt="Coffee Shop Logo"
+              style={{ 
+                width: '70%',
+                maxWidth: '280px',
+                height: 'auto',
+                color: UI.COLORS.primary.main
+              }}
+            />
+          </Box>
           <form onSubmit={handleSubmit}>
             <TextField
               fullWidth
@@ -118,12 +133,12 @@ const Login: React.FC<LoginProps> = ({ onSuccess }) => {
               sx={{ 
                 mb: 2,
                 '& .MuiInputLabel-root': {
-                  color: 'rgba(0, 0, 0, 0.6)',
+                  color: UI.COLORS.text.secondary,
                   '&.Mui-focused': {
-                    color: 'rgba(0, 0, 0, 0.6)',
+                    color: UI.COLORS.text.secondary,
                   },
                   '&.MuiInputLabel-shrink': {
-                    color: 'rgba(0, 0, 0, 0.6)',
+                    color: UI.COLORS.text.secondary,
                   }
                 },
                 '& .MuiOutlinedInput-root': {
@@ -134,17 +149,17 @@ const Login: React.FC<LoginProps> = ({ onSuccess }) => {
                   '&.Mui-focused': {
                     backgroundColor: 'transparent',
                     '& .MuiOutlinedInput-notchedOutline': {
-                      borderColor: 'rgba(0, 0, 0, 0.23)',
+                      borderColor: UI.COLORS.divider,
                     }
                   },
                   '&.MuiInputBase-formControl': {
                     backgroundColor: 'transparent',
                   },
                   '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: 'rgba(0, 0, 0, 0.23)',
+                    borderColor: UI.COLORS.divider,
                   },
                   '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: 'rgba(0, 0, 0, 0.23)',
+                    borderColor: UI.COLORS.divider,
                   }
                 },
                 '& .MuiInputBase-input': {
@@ -207,9 +222,9 @@ const Login: React.FC<LoginProps> = ({ onSuccess }) => {
                 py: 1.5,
                 fontSize: '1.1rem',
                 fontWeight: 'bold',
-                background: 'linear-gradient(45deg, #6f4e37 30%, #8b6f47 90%)',
+                background: UI.COLORS.primary.main,
                 '&:hover': {
-                  background: 'linear-gradient(45deg, #5a3d2a 30%, #6f5535 90%)',
+                  background: UI.COLORS.primary.dark,
                 },
                 '&:disabled': {
                   background: '#ccc',

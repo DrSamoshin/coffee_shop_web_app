@@ -254,9 +254,50 @@ class ApiService {
     return response.data;
   }
 
-  async createEmployee(name: string): Promise<Employee> {
-    const response = await this.api.post('/employees/', { name });
+  async getDeactivatedEmployees(): Promise<Employee[]> {
+    const response = await this.api.get('/employees/deactivated/');
     return response.data;
+  }
+
+  async createEmployee(data: { name: string; position: string }): Promise<Employee> {
+    const response = await this.api.post('/employees/', data);
+    return response.data;
+  }
+
+  async updateEmployee(id: string, data: { name: string; position: string }): Promise<Employee> {
+    const response = await this.api.put(`/employees/${id}/`, data);
+    return response.data;
+  }
+
+  async deleteEmployee(id: string): Promise<void> {
+    await this.api.delete(`/employees/${id}/`);
+  }
+
+  async activateEmployee(id: string): Promise<Employee> {
+    const response = await this.api.post(`/employees/activate/${id}/`);
+    return response.data;
+  }
+
+  // === ФАЙЛЫ ===
+  async getFiles(): Promise<any[]> {
+    const response = await this.api.get('/files/');
+    return response.data;
+  }
+
+  async uploadFile(file: File): Promise<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await this.api.post('/files/upload-image/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  }
+
+  async deleteFile(url: string): Promise<void> {
+    console.log('Удаляем файл с URL:', url);
+    await this.api.post('/files/delete/', { image_url: url });
   }
 
   // === СКЛАДСКИЕ ТОВАРЫ ===
@@ -276,8 +317,27 @@ class ApiService {
     return response.data;
   }
 
+  async getDeactivatedSuppliers(): Promise<Supplier[]> {
+    const response = await this.api.get('/suppliers/deactivated/');
+    return response.data;
+  }
+
   async createSupplier(name: string): Promise<Supplier> {
     const response = await this.api.post('/suppliers/', { name });
+    return response.data;
+  }
+
+  async updateSupplier(id: string, name: string): Promise<Supplier> {
+    const response = await this.api.put(`/suppliers/${id}/`, { name });
+    return response.data;
+  }
+
+  async deleteSupplier(id: string): Promise<void> {
+    await this.api.delete(`/suppliers/${id}/`);
+  }
+
+  async activateSupplier(id: string): Promise<Supplier> {
+    const response = await this.api.post(`/suppliers/activate/${id}/`);
     return response.data;
   }
 

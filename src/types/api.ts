@@ -95,9 +95,15 @@ export interface Shift {
 }
 
 // Employee types
+export enum EmployeePosition {
+  BARISTA = 'barista',
+  MANAGER = 'manager'
+}
+
 export interface Employee {
   id: string;
   name?: string;
+  position?: EmployeePosition;
   deactivated: boolean;
 }
 
