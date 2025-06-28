@@ -1,0 +1,84 @@
+# Cursor AI Development Rules
+
+## 💬 COMMUNICATION RULES
+
+### Language and Style
+- **ALWAYS communicate in Russian** with the user
+- **NO EMOJIS** in messages or code
+- Use clear, professional language
+- Explain technical concepts in Russian
+
+### Code Style
+- No emojis in console.log, comments, or UI
+- Use English for variable names and function names
+- Comments in Russian when helpful
+- User-facing text should support i18n
+
+## 🔄 ITERATIVE DEVELOPMENT RULE
+
+### "Iterate → Verify → Commit" Methodology
+
+**MANDATORY to follow this algorithm for any changes:**
+
+1. **SMALL CHANGES** - make only one change at a time
+2. **VERIFY FUNCTIONALITY** - test after each change  
+3. **COMMIT RESULT** - ensure nothing is broken
+4. **ONLY AFTER SUCCESS** - proceed to next change
+
+### 🚫 WHAT NOT TO DO:
+- ❌ Multiple changes simultaneously
+- ❌ Large refactoring without verification
+- ❌ Rushing with massive changes
+- ❌ Ignoring compilation errors
+- ❌ Writing code without testing
+
+### ✅ WHAT TO DO:
+- ✅ One change → verify → next
+- ✅ Test in browser after each step
+- ✅ Read compilation errors carefully
+- ✅ Fix problems immediately
+- ✅ Confirm functionality works
+
+### 🔧 WORK ALGORITHM:
+
+**Step 1:** Define ONE specific task  
+**Step 2:** Make minimal change  
+**Step 3:** Check compilation (no errors)  
+**Step 4:** Check in browser (function works)  
+**Step 5:** If OK → proceed to next step  
+**Step 6:** If NOT OK → fix before continuing  
+
+## 📋 ADDITIONAL RULES
+
+### Code Quality
+- Always fix TypeScript errors
+- Don't use `any` without extreme necessity
+- Follow clean code principles
+
+### File Structure
+- Use centralized configuration from `src/config/`
+- Don't hardcode URLs and constants
+- All secrets in `src/config/secrets.ts` (in .gitignore)
+
+### Testing Strategy
+- Check in browser after each change
+- Check console for errors
+- Test main user scenarios
+
+### Communication
+- Communicate in Russian language
+- Ask confirmation before large changes
+- Explain what exactly will be changed
+- Show result after each step
+- No emojis in technical communication
+
+## 🎯 PRIORITIES
+
+1. **FUNCTIONALITY** - application must work
+2. **STABILITY** - don't break existing functionality  
+3. **QUALITY** - clean and understandable code
+4. **PERFORMANCE** - optimization only after stability
+
+---
+
+**REMEMBER: Better to do little but well, than much but with errors!** 

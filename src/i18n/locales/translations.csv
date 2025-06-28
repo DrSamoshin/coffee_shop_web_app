@@ -1,0 +1,60 @@
+key,en,ru
+dashboard.title,Dashboard,Панель управления
+dashboard.welcome,Welcome to the coffee shop management system,Добро пожаловать в систему управления кофейней
+dashboard.totalRevenue,Total Revenue,Общая выручка
+dashboard.totalOrders,Total Orders,Всего заказов
+dashboard.activeShifts,Active Shifts,Активные смены
+dashboard.pendingOrders,Pending Orders,Заказы в ожидании
+dashboard.quickActions,Quick Actions,Быстрые действия
+dashboard.newOrder,New Order,Новый заказ
+dashboard.manageProducts,Manage Products,Управление продуктами
+dashboard.viewAnalytics,View Analytics,Посмотреть аналитику
+
+menu.dashboard,Dashboard,Главная
+menu.orders,Orders,Заказы
+menu.products,Products,Продукты
+menu.inventory,Inventory,Склад
+menu.analytics,Analytics,Аналитика
+menu.employees,Employees,Сотрудники
+menu.logout,Logout,Выход
+
+orders.title,Order Management,Управление заказами
+orders.refresh,Refresh,Обновить
+orders.total,Total Orders,Всего заказов
+orders.pending,Pending,В ожидании
+orders.completed,Completed,Выполнено
+orders.id,Order ID,ID заказа
+orders.status,Status,Статус
+orders.amount,Amount,Сумма
+orders.date,Date,Дата
+orders.actions,Actions,Действия
+
+status.waiting,Waiting,Ожидание
+status.completed,Completed,Выполнен
+status.cancelled,Cancelled,Отменен
+status.returned,Returned,Возврат
+
+common.inDevelopment,This feature is under development,Эта функция находится в разработке
+common.loadingError,Error loading dashboard data,Ошибка загрузки данных панели управления
+common.ordersLoadError,Error loading orders,Ошибка загрузки заказов
+common.orderUpdateError,Error updating order status,Ошибка обновления статуса заказа
+
+navigation.categories,Categories,Категории
+categories.title,Categories,Категории
+categories.name,Name,Название
+categories.description,Description,Описание
+categories.status,Status,Статус
+categories.active,Active,Активная
+categories.inactive,Inactive,Неактивная
+categories.createdAt,Created At,Создано
+categories.updatedAt,Updated At,Обновлено
+categories.actions,Actions,Действия
+categories.edit,Edit,Редактировать
+categories.delete,Delete,Удалить
+categories.addCategory,Add Category,Добавить категорию
+categories.editCategory,Edit Category,Редактировать категорию
+categories.deleteCategory,Delete Category,Удалить категорию
+categories.confirmDelete,Are you sure you want to delete this category?,Вы уверены что хотите удалить эту категорию?
+categories.cancel,Cancel,Отмена
+categories.save,Save,Сохранить
+categories.noCategories,No categories found,Категории не найдены 
