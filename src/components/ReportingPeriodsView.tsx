@@ -132,7 +132,7 @@ const ReportingPeriodsView: React.FC = () => {
                         {period.active ? (
                           <CheckCircleIcon sx={{ color: 'green' }} />
                         ) : (
-                          'Нет'
+                          t('common.no')
                         )}
                       </TableCell>
                     </TableRow>

@@ -279,6 +279,11 @@ class ApiService {
     return response.data;
   }
 
+  async getEmployeePositions(): Promise<string[]> {
+    const response = await this.api.get('/constants/employee-positions/');
+    return response.data.map((item: any) => item.value);
+  }
+
   // === ФАЙЛЫ ===
   async getFiles(): Promise<any[]> {
     const response = await this.api.get('/files/');

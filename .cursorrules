@@ -1,6 +1,6 @@
 # Cursor AI Development Rules
 
-## 💬 COMMUNICATION RULES
+## COMMUNICATION RULES
 
 ### Language and Style
 - **ALWAYS communicate in Russian** with the user
@@ -14,7 +14,7 @@
 - Comments in Russian when helpful
 - User-facing text should support i18n
 
-## 🔄 ITERATIVE DEVELOPMENT RULE
+## ITERATIVE DEVELOPMENT RULE
 
 ### "Iterate → Verify → Commit" Methodology
 
@@ -25,19 +25,19 @@
 3. **COMMIT RESULT** - ensure nothing is broken
 4. **ONLY AFTER SUCCESS** - proceed to next change
 
-### 🚫 WHAT NOT TO DO:
-- ❌ Multiple changes simultaneously
-- ❌ Large refactoring without verification
-- ❌ Rushing with massive changes
-- ❌ Ignoring compilation errors
-- ❌ Writing code without testing
+### WHAT NOT TO DO:
+- Multiple changes simultaneously
+- Large refactoring without verification
+- Rushing with massive changes
+- Ignoring compilation errors
+- Writing code without testing
 
-### ✅ WHAT TO DO:
-- ✅ One change → verify → next
-- ✅ Test in browser after each step
-- ✅ Read compilation errors carefully
-- ✅ Fix problems immediately
-- ✅ Confirm functionality works
+### WHAT TO DO:
+- One change → verify → next
+- Test in browser after each step
+- Read compilation errors carefully
+- Fix problems immediately
+- Confirm functionality works
 
 ### 🔧 WORK ALGORITHM:
 
@@ -74,7 +74,7 @@
 - Show result after each step
 - No emojis in technical communication
 
-## 🎯 PRIORITIES
+## PRIORITIES
 
 1. **FUNCTIONALITY** - application must work
 2. **STABILITY** - don't break existing functionality  

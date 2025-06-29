@@ -101,7 +101,9 @@
     "search": "Поиск",
     "filter": "Фильтр",
     "refresh": "Обновить",
-    "currency": "₽"
+    "currency": "₽",
+    "yes": "Да",
+    "no": "Нет"
   },
   "logging": {
     "categories": {

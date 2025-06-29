@@ -101,7 +101,9 @@
     "search": "Search",
     "filter": "Filter",
     "refresh": "Refresh",
-    "currency": "$"
+    "currency": "$",
+    "yes": "Yes",
+    "no": "No"
   },
   "logging": {
     "categories": {
