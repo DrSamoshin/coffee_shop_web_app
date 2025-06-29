@@ -128,6 +128,17 @@ export interface Supply {
   active: boolean;
 }
 
+export interface ReportingPeriod {
+  id: string;
+  name?: string;
+  start_time: string;
+  end_time: string | null;
+  status?: string;
+  active: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
 // API Response types
 export interface ApiResponse<T> {
   data: T;

@@ -30,7 +30,7 @@
     "manageEmployees": "Manage Employees",
     "loadingError": "Error loading dashboard data"
   },
-  "navigation": {
+      "navigation": {
     "dashboard": "Dashboard",
     "orders": "Orders",
     "products": "Products", 
@@ -38,6 +38,8 @@
     "analytics": "Analytics",
     "employees": "Employees",
     "suppliers": "Suppliers",
+    "supplies": "Supplies",
+    "reportingPeriods": "Reporting Periods",
     "images": "Images",
     "settings": "Settings",
     "menu": "Menu",
@@ -220,5 +222,31 @@
     "noSuppliers": "No suppliers found",
     "showDeactivated": "Deactivated Suppliers",
     "allSuppliers": "All Suppliers"
+  },
+  "supplies": {
+    "title": "Supplies",
+    "date": "Date",
+    "supplier": "Supplier",
+    "actions": "Actions",
+    "addSupply": "Add Supply",
+    "editSupply": "Edit Supply",
+    "noSupplies": "No supplies found"
+  },
+  "reportingPeriods": {
+    "title": "Reporting Periods",
+    "name": "Name",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "status": "Status",
+    "active": "Active",
+    "createdAt": "Created At",
+    "actions": "Actions",
+    "noPeriods": "No reporting periods found",
+    "addPeriod": "Add Period",
+    "editPeriod": "Edit Period",
+    "deletePeriod": "Delete Period",
+    "confirmDelete": "Are you sure you want to delete this reporting period?",
+    "confirmCreate": "Are you sure you want to create a new reporting period?",
+    "create": "Create"
   }
 } 

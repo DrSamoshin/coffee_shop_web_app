@@ -11,7 +11,8 @@ import type {
   Employee,
   Item,
   Supplier,
-  Supply
+  Supply,
+  ReportingPeriod
 } from '../types/api';
 import { OrderStatus } from '../types/api';
 
@@ -349,6 +350,22 @@ class ApiService {
 
   async createSupply(supply: { date: string; supplier_id: string }): Promise<Supply> {
     const response = await this.api.post('/supplies/', supply);
+    return response.data;
+  }
+
+  async updateSupply(id: string, supply: { date: string; supplier_id: string }): Promise<Supply> {
+    const response = await this.api.put(`/supplies/${id}/`, supply);
+    return response.data;
+  }
+
+  // === ОТЧЕТНЫЕ ПЕРИОДЫ ===
+  async getReportingPeriods(): Promise<ReportingPeriod[]> {
+    const response = await this.api.get('/reporting-periods/reporting-periods/');
+    return response.data;
+  }
+
+  async createReportingPeriod(): Promise<ReportingPeriod> {
+    const response = await this.api.post('/reporting-periods/', {});
     return response.data;
   }
 
