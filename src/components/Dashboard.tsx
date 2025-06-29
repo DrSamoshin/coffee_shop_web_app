@@ -41,6 +41,8 @@ import CategoriesView from './CategoriesView';
 import EmployeesView from './EmployeesView';
 import ProductsView from './ProductsView';
 import ImagesView from './ImagesView';
+import ItemsView from './ItemsView';
+import StoreView from './StoreView';
 import SuppliersView from './SuppliersView';
 import SuppliesView from './SuppliesView';
 import ReportingPeriodsView from './ReportingPeriodsView';
@@ -78,6 +80,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     { id: 'categories', label: t('navigation.categories') },
     { id: 'products', label: t('navigation.products') },
     { id: 'images', label: t('navigation.images') },
+    { id: 'items', label: t('items.title') },
+    { id: 'store', label: t('navigation.store') },
     { id: 'employees', label: t('navigation.employees') },
     { id: 'suppliers', label: t('navigation.suppliers') },
     { id: 'supplies', label: t('navigation.supplies') },
@@ -345,6 +349,12 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
 
       case 'images':
         return <ImagesView />;
+
+      case 'items':
+        return <ItemsView />;
+
+      case 'store':
+        return <StoreView />;
 
       case 'employees':
         return <EmployeesView />;

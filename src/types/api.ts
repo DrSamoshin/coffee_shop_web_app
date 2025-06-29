@@ -111,7 +111,7 @@ export interface Employee {
 export interface Item {
   id: string;
   name: string;
-  measure: string;
+  measurement: string;
   active: boolean;
 }
 
@@ -126,6 +126,33 @@ export interface Supply {
   date: string;
   supplier_id: string;
   active: boolean;
+}
+
+// Store Item types
+export interface StoreItem {
+  id: string;
+  item_id: string;
+  item_name: string;
+  supply_id: string | null;
+  amount: string;
+  price_per_item: string;
+  debit: boolean;
+  reporting_period_id: string;
+  date: string;
+  supplier: string;
+}
+
+export interface StoreItemCreate {
+  item_id: string;
+  supply_id?: string | null;
+  amount: number | string;
+  price_per_item: number | string;
+}
+
+export interface StoreItemCalculation {
+  item_id: string;
+  item_name: string;
+  amount: string;
 }
 
 export interface ReportingPeriod {

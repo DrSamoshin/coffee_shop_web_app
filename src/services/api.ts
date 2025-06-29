@@ -12,6 +12,9 @@ import type {
   Item,
   Supplier,
   Supply,
+  StoreItem,
+  StoreItemCreate,
+  StoreItemCalculation,
   ReportingPeriod
 } from '../types/api';
 import { OrderStatus } from '../types/api';
@@ -284,6 +287,11 @@ class ApiService {
     return response.data.map((item: any) => item.value);
   }
 
+  async getItemMeasurements(): Promise<string[]> {
+    const response = await this.api.get('/constants/item-measurements/');
+    return response.data.map((item: any) => item.value);
+  }
+
   // === ФАЙЛЫ ===
   async getFiles(): Promise<any[]> {
     const response = await this.api.get('/files/');
@@ -312,9 +320,18 @@ class ApiService {
     return response.data;
   }
 
-  async createItem(item: { name: string; measure: string }): Promise<Item> {
+  async createItem(item: { name: string; measurement: string }): Promise<Item> {
     const response = await this.api.post('/items/', item);
     return response.data;
+  }
+
+  async updateItem(id: string, item: { name: string; measurement: string }): Promise<Item> {
+    const response = await this.api.put(`/items/${id}/`, item);
+    return response.data;
+  }
+
+  async deleteItem(id: string): Promise<void> {
+    await this.api.delete(`/items/${id}/`);
   }
 
   // === ПОСТАВЩИКИ ===
@@ -360,6 +377,32 @@ class ApiService {
 
   async updateSupply(id: string, supply: { date: string; supplier_id: string }): Promise<Supply> {
     const response = await this.api.put(`/supplies/${id}/`, supply);
+    return response.data;
+  }
+
+  // === СКЛАД ===
+  async getStoreItems(): Promise<StoreItem[]> {
+    const response = await this.api.get('/store_items/');
+    return response.data;
+  }
+
+  async createStoreItem(storeItem: StoreItemCreate): Promise<StoreItem> {
+    const response = await this.api.post('/store_items/add/', storeItem);
+    return response.data;
+  }
+
+  async updateStoreItem(id: string, storeItem: StoreItemCreate): Promise<StoreItem> {
+    const response = await this.api.put(`/store_items/${id}/`, storeItem);
+    return response.data;
+  }
+
+  async getStoreItemsCalculation(): Promise<StoreItemCalculation[]> {
+    const response = await this.api.get('/store_items/calculation/');
+    return response.data;
+  }
+
+  async removeStoreItem(data: { item_id: string; amount: number; price_per_item: number }): Promise<any> {
+    const response = await this.api.post('/store_items/remove/', data);
     return response.data;
   }
 
