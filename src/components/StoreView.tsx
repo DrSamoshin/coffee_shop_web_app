@@ -110,7 +110,7 @@ const StoreView: React.FC = () => {
         ...newStoreItem,
         supply_id: newStoreItem.supply_id || null,
         amount: parseFloat(newStoreItem.amount.toString()) || 0,
-        price_per_item: parseFloat(newStoreItem.price_per_item.toString()) || 0
+        price_per_item: newStoreItem.price_per_item ? parseFloat(newStoreItem.price_per_item.toString()) : null
       };
 
       await apiService.createStoreItem(storeItemToCreate);
@@ -152,7 +152,7 @@ const StoreView: React.FC = () => {
       item_id: storeItem.item_id,
       supply_id: storeItem.supply_id || '',
       amount: storeItem.amount.toString(),
-      price_per_item: storeItem.price_per_item.toString()
+      price_per_item: storeItem.price_per_item ? storeItem.price_per_item.toString() : ''
     });
     setOpenEditDialog(true);
   };
@@ -165,7 +165,7 @@ const StoreView: React.FC = () => {
         ...editStoreItem,
         supply_id: editStoreItem.supply_id || null,
         amount: parseFloat(editStoreItem.amount.toString()) || 0,
-        price_per_item: parseFloat(editStoreItem.price_per_item.toString()) || 0
+        price_per_item: editStoreItem.price_per_item ? parseFloat(editStoreItem.price_per_item.toString()) : null
       };
       await apiService.updateStoreItem(editingItem.id, storeItemToUpdate);
       setOpenEditDialog(false);

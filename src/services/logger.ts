@@ -1,12 +1,15 @@
 // Система логирования для отладки приложения
 import { loggingConfig } from '../config';
 
-export enum LogLevel {
-  DEBUG = 0,
-  INFO = 1,
-  WARN = 2,
-  ERROR = 3
-}
+// Уровни логирования
+export const LogLevel = {
+  DEBUG: 'debug',
+  INFO: 'info',
+  WARN: 'warn',
+  ERROR: 'error'
+} as const;
+
+export type LogLevel = typeof LogLevel[keyof typeof LogLevel];
 
 export interface LogEntry {
   id: string;
@@ -21,13 +24,13 @@ export interface LogEntry {
 class LoggerService {
   private logs: LogEntry[] = [];
   private maxLogs = loggingConfig.maxLogs;
-  private currentLogLevel = LogLevel.DEBUG;
+  private currentLogLevel: LogLevel = LogLevel.DEBUG;
   private listeners: Array<(logs: LogEntry[]) => void> = [];
 
   // Настройка логирования
   setLogLevel(level: LogLevel): void {
     this.currentLogLevel = level;
-    this.info('Logger', `Log level set to ${LogLevel[level]}`);
+    this.info('Logger', `Log level set to ${level}`);
   }
 
   setMaxLogs(max: number): void {
@@ -50,7 +53,12 @@ class LoggerService {
 
   // Основной метод логирования
   private log(level: LogLevel, category: string, message: string, data?: any, error?: Error): void {
-    if (level < this.currentLogLevel) return;
+    // Проверяем уровень логирования по порядку важности
+    const levelOrder = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR];
+    const currentIndex = levelOrder.indexOf(this.currentLogLevel);
+    const messageIndex = levelOrder.indexOf(level);
+    
+    if (messageIndex < currentIndex) return;
 
     const logEntry: LogEntry = {
       id: this.generateId(),
@@ -176,7 +184,7 @@ class LoggerService {
   exportLogs(): string {
     const logsForExport = this.logs.map(log => ({
       timestamp: log.timestamp.toISOString(),
-      level: LogLevel[log.level],
+      level: log.level,
       category: log.category,
       message: log.message,
       data: log.data,

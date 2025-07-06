@@ -36,14 +36,15 @@ import { useTranslation } from 'react-i18next';
 import type { Employee } from '../types/api';
 import { apiService } from '../services/api';
 import { logger } from '../services/logger';
+import { useConstants } from '../hooks/useConstants';
 
 const EmployeesView: React.FC = () => {
   const { t } = useTranslation();
+  const { constants, loading: constantsLoading } = useConstants();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showDeactivatedOnly, setShowDeactivatedOnly] = useState(false);
-  const [positions, setPositions] = useState<string[]>([]);
   
   // Dialog states
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -59,27 +60,14 @@ const EmployeesView: React.FC = () => {
 
   useEffect(() => {
     loadEmployees();
-    loadPositions();
   }, [showDeactivatedOnly]);
 
-  const loadPositions = async () => {
-    try {
-      const data = await apiService.getEmployeePositions();
-      setPositions(data);
-      // Устанавливаем первую позицию как значение по умолчанию
-      if (data.length > 0 && !newEmployeePosition) {
-        setNewEmployeePosition(data[0]);
-      }
-    } catch (err) {
-      logger.error('API_ERROR', 'Failed to load employee positions', err instanceof Error ? err : new Error('Unknown error'));
-      // Устанавливаем fallback позиции если API недоступен
-      const fallbackPositions = ['barista', 'manager', 'shift_supervisor', 'assistant_manager'];
-      setPositions(fallbackPositions);
-      if (!newEmployeePosition) {
-        setNewEmployeePosition(fallbackPositions[0]);
-      }
+  // Устанавливаем позицию по умолчанию когда загружаются константы
+  useEffect(() => {
+    if (constants.employeePositions.length > 0 && !newEmployeePosition) {
+      setNewEmployeePosition(constants.employeePositions[0]);
     }
-  };
+  }, [constants.employeePositions, newEmployeePosition]);
 
   const loadEmployees = async () => {
     try {
@@ -108,7 +96,7 @@ const EmployeesView: React.FC = () => {
         position: newEmployeePosition
       });
       setNewEmployeeName('');
-      setNewEmployeePosition(positions.length > 0 ? positions[0] : '');
+      setNewEmployeePosition(constants.employeePositions.length > 0 ? constants.employeePositions[0] : '');
       setAddDialogOpen(false);
       await loadEmployees();
       logger.info('Employee created', 'USER_ACTION', { name: newEmployeeName, position: newEmployeePosition });
@@ -130,7 +118,7 @@ const EmployeesView: React.FC = () => {
       setEditDialogOpen(false);
       setSelectedEmployee(null);
       setEditEmployeeName('');
-      setEditEmployeePosition(positions.length > 0 ? positions[0] : '');
+      setEditEmployeePosition(constants.employeePositions.length > 0 ? constants.employeePositions[0] : '');
       await loadEmployees();
       logger.info('Employee updated', 'USER_ACTION', { id: selectedEmployee.id, name: editEmployeeName, position: editEmployeePosition });
     } catch (err) {
@@ -178,9 +166,9 @@ const EmployeesView: React.FC = () => {
     
     // Проверяем, есть ли позиция сотрудника в списке доступных позиций
     const currentPosition = employee.position || '';
-    const validPosition = positions.includes(currentPosition) 
+    const validPosition = constants.employeePositions.includes(currentPosition) 
       ? currentPosition 
-      : (positions.length > 0 ? positions[0] : '');
+      : (constants.employeePositions.length > 0 ? constants.employeePositions[0] : '');
       
     setEditEmployeePosition(validPosition);
     setEditDialogOpen(true);
@@ -191,7 +179,7 @@ const EmployeesView: React.FC = () => {
     setDeleteDialogOpen(true);
   };
 
-  if (loading) {
+  if (loading || constantsLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
         <CircularProgress />
@@ -316,7 +304,7 @@ const EmployeesView: React.FC = () => {
               onChange={(e) => setNewEmployeePosition(e.target.value as string)}
               label="Position"
             >
-              {positions.map((position) => (
+              {constants.employeePositions.map((position) => (
                 <MenuItem key={position} value={position}>
                   {position}
                 </MenuItem>
@@ -355,7 +343,7 @@ const EmployeesView: React.FC = () => {
               onChange={(e) => setEditEmployeePosition(e.target.value as string)}
               label="Position"
             >
-              {positions.map((position) => (
+              {constants.employeePositions.map((position) => (
                 <MenuItem key={position} value={position}>
                   {position}
                 </MenuItem>

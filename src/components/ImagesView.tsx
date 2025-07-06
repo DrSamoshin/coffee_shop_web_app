@@ -18,6 +18,7 @@ import { Add as AddIcon, CloudUpload as UploadIcon, Delete as DeleteIcon } from 
 import { useTranslation } from 'react-i18next';
 import { logger } from '../services/logger';
 import { apiService } from '../services/api';
+import { UI } from '../config/constants';
 
 
 
@@ -138,7 +139,7 @@ const ImagesView: React.FC = () => {
             <Box
               key={index}
               sx={{
-                border: '1px solid #ddd',
+                border: `1px solid ${UI.COLORS.divider}`,
                 borderRadius: 2,
                 overflow: 'hidden',
                 boxShadow: 1,
@@ -167,11 +168,11 @@ const ImagesView: React.FC = () => {
                   position: 'absolute',
                   top: 8,
                   right: 8,
-                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                  backgroundColor: UI.COLORS.background.paper,
                   opacity: 0,
                   transition: 'opacity 0.2s',
                   '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.9)'
+                    backgroundColor: UI.COLORS.background.paper
                   }
                 }}
                 onClick={() => {

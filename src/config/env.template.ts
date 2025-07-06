@@ -50,7 +50,7 @@ export const ENV_CONFIG = {
   DEBUG_MODE: getBoolEnvVar('VITE_DEBUG_MODE', false),
   
   // API Configuration
-  API_BASE_URL: getEnvVar('VITE_API_BASE_URL', 'http://0.0.0.0:8080'),
+  API_BASE_URL: getEnvVar('VITE_API_BASE_URL', 'https://coffee-point-api-1011837808330.us-central1.run.app'),
   API_TIMEOUT: parseInt(getEnvVar('VITE_API_TIMEOUT', '10000')),
   
   // Application Settings

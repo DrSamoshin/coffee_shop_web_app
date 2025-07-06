@@ -15,7 +15,8 @@ import type {
   StoreItem,
   StoreItemCreate,
   StoreItemCalculation,
-  ReportingPeriod
+
+  ConstantItem
 } from '../types/api';
 import { OrderStatus } from '../types/api';
 
@@ -24,6 +25,13 @@ class ApiService {
   private baseURL = apiConfig.baseUrl;
 
   constructor() {
+    // Debug: проверяем что baseURL правильный
+    console.log('ApiService Constructor Debug:', {
+      baseURL: this.baseURL,
+      apiConfig: apiConfig,
+      isProduction: import.meta.env.PROD
+    });
+
     this.api = axios.create({
       baseURL: this.baseURL,
       timeout: apiConfig.timeout,
@@ -36,6 +44,16 @@ class ApiService {
     this.api.interceptors.request.use(
       (config) => {
         const token = localStorage.getItem(getStorageKey('TOKEN'));
+        
+        // Debug info для продакшн режима
+        console.log('API Request Debug:', {
+          url: config.url,
+          fullUrl: `${config.baseURL}${config.url}`,
+          hasToken: !!token,
+          tokenPreview: token ? `${token.substring(0, 20)}...` : null,
+          headers: config.headers
+        });
+        
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
@@ -53,6 +71,7 @@ class ApiService {
         return config;
       },
       (error) => {
+        console.error('API Request Error:', error);
         logger.apiError('REQUEST', 'Unknown URL', error);
         return Promise.reject(error);
       }
@@ -197,7 +216,7 @@ class ApiService {
 
   // === ЗАКАЗЫ ===
   async getOrders(): Promise<Order[]> {
-    const response = await this.api.get('/orders/');
+    const response = await this.api.get('/orders/shift-orders/');
     return response.data;
   }
 
@@ -212,17 +231,17 @@ class ApiService {
   }
 
   async updateOrderStatus(id: string, status: OrderStatus): Promise<Order> {
-    const response = await this.api.patch(`/orders/status-update/${id}/`, { status });
+    const response = await this.api.put(`/orders/status-update/${id}/`, { status });
     return response.data;
   }
 
-  async getShiftOrders(shiftId: string): Promise<Order[]> {
-    const response = await this.api.get(`/orders/shift-orders/${shiftId}/`);
+  async getShiftOrders(): Promise<Order[]> {
+    const response = await this.api.get('/orders/shift-orders/');
     return response.data;
   }
 
-  async getWaitingShiftOrders(shiftId: string): Promise<Order[]> {
-    const response = await this.api.get(`/orders/waiting-shift-orders/${shiftId}/`);
+  async getWaitingShiftOrders(): Promise<Order[]> {
+    const response = await this.api.get('/orders/waiting-shift-orders/');
     return response.data;
   }
 
@@ -283,13 +302,21 @@ class ApiService {
   }
 
   async getEmployeePositions(): Promise<string[]> {
-    const response = await this.api.get('/constants/employee-positions/');
-    return response.data.map((item: any) => item.value);
+    try {
+      const response = await this.api.get('/constants/employee-positions/');
+      return response.data.map((item: ConstantItem) => item.value);
+    } catch {
+      return ['barista', 'manager'];
+    }
   }
 
   async getItemMeasurements(): Promise<string[]> {
-    const response = await this.api.get('/constants/item-measurements/');
-    return response.data.map((item: any) => item.value);
+    try {
+      const response = await this.api.get('/constants/item-measurements/');
+      return response.data.map((item: ConstantItem) => item.value);
+    } catch {
+      return ['kg', 'g', 'l', 'ml', 'pcs'];
+    }
   }
 
   // === ФАЙЛЫ ===
@@ -382,40 +409,31 @@ class ApiService {
 
   // === СКЛАД ===
   async getStoreItems(): Promise<StoreItem[]> {
-    const response = await this.api.get('/store_items/');
+    const response = await this.api.get('/store-items/');
     return response.data;
   }
 
   async createStoreItem(storeItem: StoreItemCreate): Promise<StoreItem> {
-    const response = await this.api.post('/store_items/add/', storeItem);
+    const response = await this.api.post('/store-items/add/', storeItem);
     return response.data;
   }
 
   async updateStoreItem(id: string, storeItem: StoreItemCreate): Promise<StoreItem> {
-    const response = await this.api.put(`/store_items/${id}/`, storeItem);
+    const response = await this.api.put(`/store-items/${id}/`, storeItem);
     return response.data;
   }
 
   async getStoreItemsCalculation(): Promise<StoreItemCalculation[]> {
-    const response = await this.api.get('/store_items/calculation/');
+    const response = await this.api.get('/store-items/calculation/');
     return response.data;
   }
 
   async removeStoreItem(data: { item_id: string; amount: number; price_per_item: number }): Promise<any> {
-    const response = await this.api.post('/store_items/remove/', data);
+    const response = await this.api.post('/store-items/remove/', data);
     return response.data;
   }
 
-  // === ОТЧЕТНЫЕ ПЕРИОДЫ ===
-  async getReportingPeriods(): Promise<ReportingPeriod[]> {
-    const response = await this.api.get('/reporting-periods/reporting-periods/');
-    return response.data;
-  }
 
-  async createReportingPeriod(): Promise<ReportingPeriod> {
-    const response = await this.api.post('/reporting-periods/', {});
-    return response.data;
-  }
 
   // === КЛИЕНТЫ ===
   async getClients(): Promise<any[]> {
@@ -473,6 +491,34 @@ class ApiService {
     return Object.entries(grouped)
       .map(([date, data]) => ({ date, ...data }))
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }
+
+  // === КОНСТАНТЫ ===
+  async getPaymentMethods(): Promise<string[]> {
+    try {
+      const response = await this.api.get('/constants/payment-methods/');
+      return response.data.map((item: ConstantItem) => item.value);
+    } catch {
+      return ['cash', 'card'];
+    }
+  }
+
+  async getOrderTypes(): Promise<string[]> {
+    try {
+      const response = await this.api.get('/constants/order-types/');
+      return response.data.map((item: ConstantItem) => item.value);
+    } catch {
+      return ['dine_in', 'delivery', 'takeaway'];
+    }
+  }
+
+  async getOrderStatuses(): Promise<string[]> {
+    try {
+      const response = await this.api.get('/constants/order-statuses/');
+      return response.data.map((item: ConstantItem) => item.value);
+    } catch {
+      return ['waiting', 'completed', 'cancelled'];
+    }
   }
 }
 

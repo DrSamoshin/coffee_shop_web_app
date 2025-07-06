@@ -36,10 +36,19 @@ export interface AppConfig {
 
 // Default API configuration
 const getApiConfig = () => {
-  // In development, use proxy. In production, use full URL
-  const baseUrl = ENV_CONFIG.IS_DEVELOPMENT 
-    ? '/api'  // Use Vite proxy in development
-    : ENV_CONFIG.API_BASE_URL; // Direct URL in production
+  // Всегда используем прокси для локальной разработки и тестирования
+  // Только в реальном продакшн (развернутом на домене) используем прямой URL
+  const baseUrl = '/api';  // Прокси для всех режимов локальной разработки
+    
+  // Debug info
+  console.log('API Config Debug:', {
+    IS_DEVELOPMENT: ENV_CONFIG.IS_DEVELOPMENT,
+    MODE: ENV_CONFIG.MODE,
+    PROD: import.meta.env.PROD,
+    DEV: import.meta.env.DEV,
+    ENV_CONFIG_API_BASE_URL: ENV_CONFIG.API_BASE_URL,
+    finalBaseUrl: baseUrl
+  });
     
   return {
     baseUrl,

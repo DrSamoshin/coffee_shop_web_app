@@ -28,17 +28,18 @@ import { Refresh, Edit, CheckCircle } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { UI } from '../config/constants';
 import { apiService } from '../services/api';
-import type { Order } from '../types/api';
-import { OrderStatus } from '../types/api';
+import type { Order, OrderStatus } from '../types/api';
+import { useConstants } from '../hooks/useConstants';
 
 const OrdersView: React.FC = () => {
   const { t } = useTranslation();
+  const { constants, loading: constantsLoading } = useConstants();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [updateLoading, setUpdateLoading] = useState<string | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [newStatus, setNewStatus] = useState<OrderStatus>(OrderStatus.WAITING);
+  const [newStatus, setNewStatus] = useState<OrderStatus>('waiting');
   const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
@@ -91,14 +92,12 @@ const OrdersView: React.FC = () => {
 
   const getStatusColor = (status: OrderStatus) => {
     switch (status) {
-      case OrderStatus.WAITING:
+      case 'waiting':
         return 'warning';
-      case OrderStatus.COMPLETED:
+      case 'completed':
         return 'success';
-      case OrderStatus.CANCELLED:
+      case 'cancelled':
         return 'error';
-      case OrderStatus.RETURNED:
-        return 'default';
       default:
         return 'default';
     }
@@ -106,14 +105,12 @@ const OrdersView: React.FC = () => {
 
   const getStatusLabel = (status: OrderStatus) => {
     switch (status) {
-      case OrderStatus.WAITING:
+      case 'waiting':
         return t('status.waiting');
-      case OrderStatus.COMPLETED:
+      case 'completed':
         return t('status.completed');
-      case OrderStatus.CANCELLED:
+      case 'cancelled':
         return t('status.cancelled');
-      case OrderStatus.RETURNED:
-        return t('status.returned');
       default:
         return status;
     }
@@ -130,7 +127,7 @@ const OrdersView: React.FC = () => {
     return new Date(dateString).toLocaleString('ru-RU');
   };
 
-  if (loading) {
+  if (loading || constantsLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
         <CircularProgress />
@@ -179,7 +176,7 @@ const OrdersView: React.FC = () => {
               {t('orders.pending')}
             </Typography>
             <Typography variant="h5" sx={{ fontWeight: 'bold', color: UI.COLORS.warning.main }}>
-              {orders.filter(o => o.status === OrderStatus.WAITING).length}
+              {orders.filter(o => o.status === 'waiting').length}
             </Typography>
           </CardContent>
         </Card>
@@ -189,7 +186,7 @@ const OrdersView: React.FC = () => {
               {t('orders.completed')}
             </Typography>
             <Typography variant="h5" sx={{ fontWeight: 'bold', color: UI.COLORS.success.main }}>
-              {orders.filter(o => o.status === OrderStatus.COMPLETED).length}
+              {orders.filter(o => o.status === 'completed').length}
             </Typography>
           </CardContent>
         </Card>
@@ -227,7 +224,7 @@ const OrdersView: React.FC = () => {
                   <TableCell>
                     <Chip
                       label={order.type === 'dine_in' ? 'В заведении' : 
-                             order.type === 'takeout' ? 'На вынос' : 'Доставка'}
+                             order.type === 'takeaway' ? 'На вынос' : 'Доставка'}
                       size="small"
                       variant="outlined"
                     />
@@ -256,14 +253,14 @@ const OrdersView: React.FC = () => {
                     >
                       Редактировать
                     </Button>
-                    {order.status === OrderStatus.WAITING && (
+                    {order.status === 'waiting' && (
                       <Button
                         size="small"
                         startIcon={<CheckCircle />}
                         color="success"
                                                  onClick={() => {
                            setSelectedOrder(order);
-                           setNewStatus(OrderStatus.COMPLETED);
+                          setNewStatus('completed');
                            handleUpdateStatus();
                          }}
                         disabled={updateLoading === order.id}
@@ -300,10 +297,13 @@ const OrdersView: React.FC = () => {
               label={t('orders.status')}
               onChange={(e) => setNewStatus(e.target.value as OrderStatus)}
             >
-              <MenuItem value={OrderStatus.WAITING}>{t('status.waiting')}</MenuItem>
-              <MenuItem value={OrderStatus.COMPLETED}>{t('status.completed')}</MenuItem>
-              <MenuItem value={OrderStatus.CANCELLED}>{t('status.cancelled')}</MenuItem>
-              <MenuItem value={OrderStatus.RETURNED}>{t('status.returned')}</MenuItem>
+              {constants.orderStatuses.map((status) => (
+                <MenuItem key={status} value={status}>
+                  {status === 'waiting' ? t('status.waiting') :
+                   status === 'completed' ? t('status.completed') :
+                   status === 'cancelled' ? t('status.cancelled') : status}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </DialogContent>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { UI } from '../config/constants';
 
 const LanguageSwitcher: React.FC = () => {
   const { i18n } = useTranslation();
@@ -32,7 +33,7 @@ const LanguageSwitcher: React.FC = () => {
         onClick={handleClick}
         sx={{ 
           color: 'text.primary',
-          borderRadius: '4px',
+          borderRadius: UI.SIZES.BORDER.RADIUS.SMALL,
           '&:hover': {
             backgroundColor: 'transparent',
           },
@@ -51,7 +52,7 @@ const LanguageSwitcher: React.FC = () => {
         disableFocusRipple
         disableTouchRipple
       >
-        <Typography variant="body2" sx={{ fontWeight: 'bold', fontSize: '14px' }}>
+        <Typography variant="body2" sx={{ fontWeight: 'bold', fontSize: UI.SIZES.FONT.MEDIUM }}>
           {currentLanguage.short}
         </Typography>
       </IconButton>

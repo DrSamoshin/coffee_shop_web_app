@@ -33,13 +33,14 @@ import { useTranslation } from 'react-i18next';
 import type { Item } from '../types/api';
 import { apiService } from '../services/api';
 import { logger } from '../services/logger';
+import { useConstants } from '../hooks/useConstants';
 
 const ItemsView: React.FC = () => {
   const { t } = useTranslation();
+  const { constants, loading: constantsLoading } = useConstants();
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [measurements, setMeasurements] = useState<string[]>([]);
   
   // Dialog states
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -55,27 +56,14 @@ const ItemsView: React.FC = () => {
 
   useEffect(() => {
     loadItems();
-    loadMeasurements();
   }, []);
 
-  const loadMeasurements = async () => {
-    try {
-      const data = await apiService.getItemMeasurements();
-      setMeasurements(data);
-      // Устанавливаем первую единицу измерения как значение по умолчанию
-      if (data.length > 0 && !newItemMeasure) {
-        setNewItemMeasure(data[0]);
-      }
-    } catch (err) {
-      logger.error('API_ERROR', 'Failed to load item measurements', err instanceof Error ? err : new Error('Unknown error'));
-      // Fallback единицы измерения
-      const fallbackMeasurements = ['кг', 'л', 'шт', 'г'];
-      setMeasurements(fallbackMeasurements);
-      if (!newItemMeasure) {
-        setNewItemMeasure(fallbackMeasurements[0]);
-      }
+  // Устанавливаем единицу измерения по умолчанию когда загружаются константы
+  useEffect(() => {
+    if (constants.itemMeasurements.length > 0 && !newItemMeasure) {
+      setNewItemMeasure(constants.itemMeasurements[0]);
     }
-  };
+  }, [constants.itemMeasurements, newItemMeasure]);
 
   const loadItems = async () => {
     try {
@@ -102,7 +90,7 @@ const ItemsView: React.FC = () => {
         measurement: newItemMeasure.trim()
       });
       setNewItemName('');
-      setNewItemMeasure(measurements.length > 0 ? measurements[0] : '');
+      setNewItemMeasure(constants.itemMeasurements.length > 0 ? constants.itemMeasurements[0] : '');
       setAddDialogOpen(false);
       await loadItems();
       logger.info('Item created', 'USER_ACTION', { name: newItemName, measurement: newItemMeasure });
@@ -124,7 +112,7 @@ const ItemsView: React.FC = () => {
       setEditDialogOpen(false);
       setSelectedItem(null);
       setEditItemName('');
-      setEditItemMeasure(measurements.length > 0 ? measurements[0] : '');
+      setEditItemMeasure(constants.itemMeasurements.length > 0 ? constants.itemMeasurements[0] : '');
       await loadItems();
       logger.info('Item updated', 'USER_ACTION', { id: selectedItem.id, name: editItemName, measurement: editItemMeasure });
     } catch (err) {
@@ -156,9 +144,9 @@ const ItemsView: React.FC = () => {
     
     // Проверяем, есть ли единица измерения товара в списке доступных
     const currentMeasure = item.measurement || '';
-    const validMeasure = measurements.includes(currentMeasure)
+    const validMeasure = constants.itemMeasurements.includes(currentMeasure)
       ? currentMeasure
-      : (measurements.length > 0 ? measurements[0] : '');
+      : (constants.itemMeasurements.length > 0 ? constants.itemMeasurements[0] : '');
       
     setEditItemMeasure(validMeasure);
     setEditDialogOpen(true);
@@ -169,7 +157,7 @@ const ItemsView: React.FC = () => {
     setDeleteDialogOpen(true);
   };
 
-  if (loading) {
+  if (loading || constantsLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
         <CircularProgress />
@@ -260,7 +248,7 @@ const ItemsView: React.FC = () => {
               onChange={(e) => setNewItemMeasure(e.target.value as string)}
               label={t('items.measure')}
             >
-              {measurements.map((measurement) => (
+              {constants.itemMeasurements.map((measurement) => (
                 <MenuItem key={measurement} value={measurement}>
                   {measurement}
                 </MenuItem>
@@ -299,7 +287,7 @@ const ItemsView: React.FC = () => {
               onChange={(e) => setEditItemMeasure(e.target.value as string)}
               label={t('items.measure')}
             >
-              {measurements.map((measurement) => (
+              {constants.itemMeasurements.map((measurement) => (
                 <MenuItem key={measurement} value={measurement}>
                   {measurement}
                 </MenuItem>

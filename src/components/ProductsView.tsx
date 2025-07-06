@@ -36,6 +36,7 @@ import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/ico
 import { useTranslation } from 'react-i18next';
 import { logger } from '../services/logger';
 import { apiService } from '../services/api';
+import { UI } from '../config/constants';
 import type { Product, Category } from '../types/api';
 
 const ProductsView: React.FC = () => {
@@ -306,11 +307,11 @@ const ProductsView: React.FC = () => {
                                 src={product.image_url} 
                                 alt="Product preview"
                                 style={{ 
-                                  maxWidth: '200px', 
-                                  maxHeight: '200px', 
+                                  maxWidth: UI.SIZES.IMAGE_PREVIEW.MEDIUM.width, 
+                                  maxHeight: UI.SIZES.IMAGE_PREVIEW.MEDIUM.height, 
                                   objectFit: 'cover',
-                                  borderRadius: '4px',
-                                  border: '2px solid #ddd'
+                                  borderRadius: UI.SIZES.BORDER.RADIUS.SMALL,
+                                  border: `${UI.SIZES.BORDER.WIDTH.MEDIUM} solid ${UI.COLORS.divider}`
                                 }}
                               />
                             }
@@ -428,7 +429,11 @@ const ProductsView: React.FC = () => {
                 <img 
                   src={newProductImageUrl} 
                   alt="Selected" 
-                  style={{ maxWidth: '100px', maxHeight: '100px', objectFit: 'cover' }}
+                  style={{ 
+                    maxWidth: UI.SIZES.IMAGE_PREVIEW.SMALL.width, 
+                    maxHeight: UI.SIZES.IMAGE_PREVIEW.SMALL.height, 
+                    objectFit: 'cover' 
+                  }}
                 />
               </Box>
             )}

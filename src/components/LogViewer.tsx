@@ -96,8 +96,6 @@ const LogViewer: React.FC<LogViewerProps> = ({ isOpen, onClose }) => {
     }
   };
 
-
-
   const formatTimestamp = (timestamp: Date): string => {
     return timestamp.toLocaleTimeString('ru-RU', {
       hour: '2-digit',
@@ -263,7 +261,7 @@ const LogViewer: React.FC<LogViewerProps> = ({ isOpen, onClose }) => {
                           
                           <Chip
                             size="small"
-                            label={LogLevel[log.level]}
+                            label={log.level}
                             sx={{
                               backgroundColor: getLevelColor(log.level),
                               color: 'white',
@@ -345,21 +343,11 @@ const LogViewer: React.FC<LogViewerProps> = ({ isOpen, onClose }) => {
 // Компонент кнопки для открытия логов
 export const LogViewerFab: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [errorCount, setErrorCount] = useState(0);
-
-  useEffect(() => {
-    const unsubscribe = logger.subscribe((logs) => {
-      const errors = logs.filter(log => log.level === LogLevel.ERROR).length;
-      setErrorCount(errors);
-    });
-
-    return unsubscribe;
-  }, []);
 
   return (
     <>
       <Fab
-        color={errorCount > 0 ? "error" : "primary"}
+        color="primary"
         sx={{
           position: 'fixed',
           bottom: 16,
@@ -368,9 +356,7 @@ export const LogViewerFab: React.FC = () => {
         }}
         onClick={() => setIsOpen(true)}
       >
-        <Badge badgeContent={errorCount > 0 ? errorCount : null} color="error">
           <BugReportIcon />
-        </Badge>
       </Fab>
 
       <LogViewer isOpen={isOpen} onClose={() => setIsOpen(false)} />

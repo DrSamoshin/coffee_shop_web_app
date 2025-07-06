@@ -45,7 +45,7 @@ import ItemsView from './ItemsView';
 import StoreView from './StoreView';
 import SuppliersView from './SuppliersView';
 import SuppliesView from './SuppliesView';
-import ReportingPeriodsView from './ReportingPeriodsView';
+
 
 const drawerWidth = 240;
 
@@ -85,7 +85,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     { id: 'employees', label: t('navigation.employees') },
     { id: 'suppliers', label: t('navigation.suppliers') },
     { id: 'supplies', label: t('navigation.supplies') },
-    { id: 'reportingPeriods', label: t('navigation.reportingPeriods') },
+
   ];
 
   useEffect(() => {
@@ -365,8 +365,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
       case 'supplies':
         return <SuppliesView />;
 
-      case 'reportingPeriods':
-        return <ReportingPeriodsView />;
+
 
       default:
         return (

@@ -29,23 +29,28 @@ export interface ProductCreate {
 }
 
 // Order types
-export enum OrderPaymentMethod {
-  CASH = 'cash',
-  CARD = 'card'
-}
+export const OrderPaymentMethod = {
+  CASH: 'cash',
+  CARD: 'card'
+} as const;
 
-export enum OrderType {
-  DINE_IN = 'dine_in',
-  DELIVERY = 'delivery',
-  TAKEOUT = 'takeout'
-}
+export type OrderPaymentMethod = typeof OrderPaymentMethod[keyof typeof OrderPaymentMethod];
 
-export enum OrderStatus {
-  WAITING = 'waiting',
-  COMPLETED = 'completed',
-  CANCELLED = 'cancelled',
-  RETURNED = 'returned'
-}
+export const OrderType = {
+  DINE_IN: 'dine_in',
+  DELIVERY: 'delivery',
+  TAKEAWAY: 'takeaway'
+} as const;
+
+export type OrderType = typeof OrderType[keyof typeof OrderType];
+
+export const OrderStatus = {
+  WAITING: 'waiting',
+  COMPLETED: 'completed',
+  CANCELLED: 'cancelled'
+} as const;
+
+export type OrderStatus = typeof OrderStatus[keyof typeof OrderStatus];
 
 export interface ProductOrder {
   product_id: string;
@@ -95,10 +100,12 @@ export interface Shift {
 }
 
 // Employee types
-export enum EmployeePosition {
-  BARISTA = 'barista',
-  MANAGER = 'manager'
-}
+export const EmployeePosition = {
+  BARISTA: 'barista',
+  MANAGER: 'manager'
+} as const;
+
+export type EmployeePosition = typeof EmployeePosition[keyof typeof EmployeePosition];
 
 export interface Employee {
   id: string;
@@ -108,10 +115,20 @@ export interface Employee {
 }
 
 // Inventory types
+export const ItemMeasurements = {
+  KG: 'kg',
+  G: 'g',
+  L: 'l',
+  ML: 'ml',
+  PCS: 'pcs'
+} as const;
+
+export type ItemMeasurements = typeof ItemMeasurements[keyof typeof ItemMeasurements];
+
 export interface Item {
   id: string;
   name: string;
-  measurement: string;
+  measurement: ItemMeasurements;
   active: boolean;
 }
 
@@ -132,21 +149,21 @@ export interface Supply {
 export interface StoreItem {
   id: string;
   item_id: string;
-  item_name: string;
+  item_name: string | null;
   supply_id: string | null;
   amount: string;
-  price_per_item: string;
+  price_per_item: string | null;
   debit: boolean;
-  reporting_period_id: string;
+  shift_id: string;
   date: string;
-  supplier: string;
+  supplier: string | null;
 }
 
 export interface StoreItemCreate {
   item_id: string;
   supply_id?: string | null;
   amount: number | string;
-  price_per_item: number | string;
+  price_per_item?: number | string | null;
 }
 
 export interface StoreItemCalculation {
@@ -155,16 +172,7 @@ export interface StoreItemCalculation {
   amount: string;
 }
 
-export interface ReportingPeriod {
-  id: string;
-  name?: string;
-  start_time: string;
-  end_time: string | null;
-  status?: string;
-  active: boolean;
-  created_at?: string;
-  updated_at?: string;
-}
+
 
 // API Response types
 export interface ApiResponse<T> {
@@ -194,4 +202,10 @@ export interface AnalyticsData {
     revenue: number;
     orders: number;
   }>;
+}
+
+// API константы
+export interface ConstantItem {
+  key: string;
+  value: string;
 } 

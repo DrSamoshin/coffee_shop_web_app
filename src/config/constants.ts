@@ -50,6 +50,55 @@ export const APP_CONFIG = {
       LG: 1280,
       XL: 1920,
     },
+    
+    // Размеры и отступы
+    SIZES: {
+      // Изображения
+      IMAGE_PREVIEW: {
+        SMALL: { width: '100px', height: '100px' },
+        MEDIUM: { width: '200px', height: '200px' },
+        LARGE: { width: '400px', height: '400px' },
+      },
+      
+      // Границы и скругления
+      BORDER: {
+        RADIUS: {
+          SMALL: '4px',
+          MEDIUM: '8px',
+          LARGE: '12px',
+        },
+        WIDTH: {
+          THIN: '1px',
+          MEDIUM: '2px',
+          THICK: '3px',
+        }
+      },
+      
+      // Типографика
+      FONT: {
+        SMALL: '12px',
+        MEDIUM: '14px',
+        LARGE: '16px',
+        XLARGE: '18px',
+      },
+      
+      // Отступы
+      SPACING: {
+        XS: '4px',
+        SM: '8px',
+        MD: '16px',
+        LG: '24px',
+        XL: '32px',
+      },
+      
+      // Максимальные ширины
+      MAX_WIDTH: {
+        CARD: '400px',
+        FORM: '600px',
+        CONTENT: '1200px',
+        SIDEBAR: '280px',
+      }
+    },
   },
   
   // Business logic constants
