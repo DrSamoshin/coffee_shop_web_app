@@ -208,4 +208,13 @@ export interface AnalyticsData {
 export interface ConstantItem {
   key: string;
   value: string;
+}
+
+// Аналитика активной смены
+export interface ActiveShiftReport {
+  shift_income: number;
+  order_amount: number;
+  total_product_amount: number;
+  products_amount: Record<string, number>;
+  product_price: Record<string, number>;
 } 

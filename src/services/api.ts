@@ -1,6 +1,8 @@
 import axios, { type AxiosInstance } from 'axios';
 import { logger } from './logger';
 import { apiConfig, getStorageKey } from '../config';
+import { API_ENDPOINTS } from '../config/urls';
+import fileLogger from './fileLogger';
 import type {
   Category,
   Product,
@@ -15,8 +17,8 @@ import type {
   StoreItem,
   StoreItemCreate,
   StoreItemCalculation,
-
-  ConstantItem
+  ConstantItem,
+  ActiveShiftReport
 } from '../types/api';
 import { OrderStatus } from '../types/api';
 
@@ -26,11 +28,14 @@ class ApiService {
 
   constructor() {
     // Debug: проверяем что baseURL правильный
-    console.log('ApiService Constructor Debug:', {
+    const debugInfo = {
       baseURL: this.baseURL,
       apiConfig: apiConfig,
       isProduction: import.meta.env.PROD
-    });
+    };
+    
+    console.log('ApiService Constructor Debug:', debugInfo);
+    fileLogger.logConfigDebug('ApiService initialized', debugInfo);
 
     this.api = axios.create({
       baseURL: this.baseURL,
@@ -46,13 +51,22 @@ class ApiService {
         const token = localStorage.getItem(getStorageKey('TOKEN'));
         
         // Debug info для продакшн режима
-        console.log('API Request Debug:', {
+        const fullUrl = `${config.baseURL}${config.url}`;
+        const debugInfo = {
           url: config.url,
-          fullUrl: `${config.baseURL}${config.url}`,
+          fullUrl,
           hasToken: !!token,
           tokenPreview: token ? `${token.substring(0, 20)}...` : null,
           headers: config.headers
-        });
+        };
+        
+        console.log('API Request Debug:', debugInfo);
+        fileLogger.logApiRequest(
+          config.method?.toUpperCase() || 'UNKNOWN',
+          config.url || '',
+          fullUrl,
+          !!token
+        );
         
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
@@ -113,6 +127,12 @@ class ApiService {
           error
         );
         
+        fileLogger.logApiError(
+          config?.method?.toUpperCase() || 'UNKNOWN',
+          config?.url || 'Unknown URL',
+          error
+        );
+        
         if (error.response?.status === 401) {
           // Токен недействителен, удаляем его и перенаправляем на страницу входа
           localStorage.removeItem(getStorageKey('TOKEN'));
@@ -140,15 +160,16 @@ class ApiService {
   // Проверка токена
   async checkToken(): Promise<{ isValid: boolean; error?: string }> {
     try {
-      await this.api.get('/health/token/');
+      await this.api.get(API_ENDPOINTS.AUTH.TOKEN_CHECK);
       return { isValid: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
       let errorMessage = 'Unknown error';
       
-      if (error.response?.data?.detail) {
-        errorMessage = error.response.data.detail;
-      } else if (error.message) {
-        errorMessage = error.message;
+      const axiosError = error as { response?: { data?: { detail?: string } }; message?: string };
+      if (axiosError.response?.data?.detail) {
+        errorMessage = axiosError.response.data.detail;
+      } else if (axiosError.message) {
+        errorMessage = axiosError.message;
       }
       
       return { 
@@ -438,6 +459,12 @@ class ApiService {
   // === КЛИЕНТЫ ===
   async getClients(): Promise<any[]> {
     const response = await this.api.get('/clients/');
+    return response.data;
+  }
+
+  // === АНАЛИТИКА ===
+  async getActiveShiftReport(): Promise<ActiveShiftReport> {
+    const response = await this.api.get(API_ENDPOINTS.ANALYTICS_ACTIVE_SHIFT + '/');
     return response.data;
   }
 

@@ -16,31 +16,16 @@
     "apiInfo": "Приложение подключается к:",
     "tokenRemoved": "Токен удален из-за ошибки 401"
   },
-  "dashboard": {
-    "title": "Панель управления",
-    "welcome": "Добро пожаловать в систему управления кофейней",
-    "totalRevenue": "Общая выручка",
-    "totalOrders": "Всего заказов",
-    "activeShifts": "Активные смены", 
-    "pendingOrders": "Заказы в ожидании",
-    "quickActions": "Быстрые действия",
-    "viewOrders": "Просмотр заказов",
-    "manageProducts": "Управление продуктами",
-    "viewReports": "Просмотр отчетов",
-    "manageEmployees": "Управление сотрудниками",
-    "loadingError": "Ошибка загрузки данных панели управления"
-  },
+
     "navigation": {
-    "dashboard": "Панель",
     "orders": "Заказы",
     "products": "Продукты",
     "inventory": "Склад",
     "store": "Склад",
-    "analytics": "Аналитика",
+    "report": "Отчет",
     "employees": "Сотрудники",
     "suppliers": "Поставщики",
     "supplies": "Поставки",
-
     "images": "Изображения",
     "settings": "Настройки",
     "menu": "Меню",
@@ -86,6 +71,21 @@
     "data": "Данные",
     "stackTrace": "Stack Trace",
     "shown": "Показано"
+  },
+  "report": {
+    "title": "Отчет активной смены",
+    "refresh": "Обновить",
+    "refreshing": "Обновление...",
+    "loading": "Загрузка отчета...",
+    "error": "Ошибка загрузки отчета",
+    "retry": "Повторить",
+    "noData": "Нет данных для отображения",
+    "shiftIncome": "Доход смены",
+    "totalOrders": "Общее количество заказов",
+    "totalProducts": "Общее количество продуктов",
+    "productSales": "Количество продаж по продуктам",
+    "productRevenue": "Продажи по продуктам",
+    "pieces": "шт."
   },
   "common": {
     "close": "Закрыть",
@@ -200,14 +200,7 @@
     "noImagesAvailable": "Изображения недоступны"
   },
   "images": {
-    "title": "Изображения",
-    "noImages": "Изображения не найдены",
-    "uploadImage": "Загрузить изображение",
-    "deleteImage": "Удалить изображение",
-    "confirmDelete": "Вы уверены, что хотите удалить это изображение?",
-    "selectedFile": "Выбранный файл",
-    "upload": "Загрузить",
-    "uploading": "Загрузка..."
+    "inDevelopment": "В разработке"
   },
   "suppliers": {
     "title": "Поставщики",
