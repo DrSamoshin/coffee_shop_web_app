@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -6,7 +6,6 @@ import {
   CardContent,
   Button,
   Chip,
-  Alert,
   CircularProgress,
   Paper,
   Table,
@@ -28,8 +27,10 @@ import { Refresh, Edit, CheckCircle } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { UI } from '../config/constants';
 import { apiService } from '../services/api';
+import { logger } from '../services/logger';
 import type { Order, OrderStatus } from '../types/api';
 import { useConstants } from '../hooks/useConstants';
+import { PageContainer } from './shared';
 
 const OrdersView: React.FC = () => {
   const { t } = useTranslation();
@@ -42,23 +43,24 @@ const OrdersView: React.FC = () => {
   const [newStatus, setNewStatus] = useState<OrderStatus>('waiting');
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  useEffect(() => {
-    loadOrders();
-  }, []);
-
-  const loadOrders = async () => {
+  const loadOrders = useCallback(async () => {
     try {
       setLoading(true);
       setError('');
       const ordersData = await apiService.getOrders();
       setOrders(ordersData);
+      logger.info('OrdersView', 'Orders loaded successfully', { count: ordersData.length });
     } catch (err) {
-      console.error('Error loading orders:', err);
+      logger.error('OrdersView', 'Error loading orders', err instanceof Error ? err : new Error(String(err)));
       setError(t('common.ordersLoadError'));
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
+
+  useEffect(() => {
+    loadOrders();
+  }, [loadOrders]);
 
   const handleUpdateStatus = async () => {
     if (!selectedOrder) return;
@@ -76,8 +78,9 @@ const OrdersView: React.FC = () => {
       
       setDialogOpen(false);
       setSelectedOrder(null);
+      logger.info('OrdersView', 'Order status updated', { orderId: selectedOrder.id, newStatus });
     } catch (err) {
-      console.error('Error updating order status:', err);
+      logger.error('OrdersView', 'Error updating order status', err instanceof Error ? err : new Error(String(err)));
       setError(t('common.orderUpdateError'));
     } finally {
       setUpdateLoading(null);
@@ -127,21 +130,15 @@ const OrdersView: React.FC = () => {
     return new Date(dateString).toLocaleString('ru-RU');
   };
 
-  if (loading || constantsLoading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
   return (
-    <Box sx={{ p: 3 }}>
-      {/* Заголовок */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4" gutterBottom sx={{ color: '#333', fontWeight: 'bold' }}>
-          {t('orders.title')}
-        </Typography>
+    <PageContainer
+      title={t('orders.title')}
+      loading={loading || constantsLoading}
+      error={error}
+      onErrorClose={() => setError('')}
+    >
+      {/* Кнопка обновления */}
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3 }}>
         <Button
           variant="outlined"
           startIcon={<Refresh />}
@@ -151,12 +148,6 @@ const OrdersView: React.FC = () => {
           {t('orders.refresh')}
         </Button>
       </Box>
-
-      {error && (
-        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError('')}>
-          {error}
-        </Alert>
-      )}
 
       {/* Статистика заказов */}
       <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
@@ -195,61 +186,53 @@ const OrdersView: React.FC = () => {
       {/* Таблица заказов */}
       <Paper sx={{ borderRadius: 2 }}>
         <TableContainer>
-          <Table>
+          <Table sx={{ tableLayout: 'fixed' }}>
             <TableHead>
               <TableRow sx={{ backgroundColor: UI.COLORS.background.cardHover }}>
-                <TableCell sx={{ fontWeight: 'bold' }}>{t('orders.id')}</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>{t('orders.date')}</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>{t('orders.amount')}</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Скидка</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Тип</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Оплата</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>{t('orders.status')}</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>{t('orders.actions')}</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>{t('orders.id')}</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>{t('orders.date')}</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>{t('orders.amount')}</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>Скидка</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>Тип</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>Оплата</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>{t('orders.status')}</TableCell>
+                <TableCell align="right" sx={{ fontWeight: 'bold', width: '150px', minWidth: '150px', maxWidth: '150px', whiteSpace: 'nowrap' }}>{t('orders.actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {orders.map((order) => (
                 <TableRow key={order.id} hover>
-                  <TableCell sx={{ fontWeight: 'bold' }}>
-                    #{order.order_number}
-                  </TableCell>
-                  <TableCell>{formatDate(order.date)}</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>
-                    {formatCurrency(order.price)}
-                  </TableCell>
-                  <TableCell>
-                    {parseFloat(order.discount) > 0 ? formatCurrency(order.discount) : '-'}
-                  </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>#{order.order_number}</TableCell>
+                  <TableCell sx={{ py: 1, textAlign: 'left' }}>{formatDate(order.date)}</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>{formatCurrency(order.price)}</TableCell>
+                  <TableCell sx={{ textAlign: 'left' }}>{parseFloat(order.discount) > 0 ? formatCurrency(order.discount) : '-'}</TableCell>
+                  <TableCell sx={{ textAlign: 'left' }}>
                     <Chip
-                      label={order.type === 'dine_in' ? 'В заведении' : 
-                             order.type === 'takeaway' ? 'На вынос' : 'Доставка'}
+                      label={order.type === 'dine_in' ? 'В заведении' : order.type === 'takeaway' ? 'На вынос' : 'Доставка'}
                       size="small"
                       variant="outlined"
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ textAlign: 'left' }}>
                     <Chip
                       label={order.payment_method === 'cash' ? 'Наличные' : 'Карта'}
                       size="small"
                       color={order.payment_method === 'cash' ? 'default' : 'primary'}
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ textAlign: 'left' }}>
                     <Chip
                       label={getStatusLabel(order.status)}
                       color={getStatusColor(order.status)}
                       size="small"
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell align="right" sx={{ py: 1, width: '150px', minWidth: '150px', maxWidth: '150px', whiteSpace: 'nowrap' }}>
                     <Button
                       size="small"
                       startIcon={<Edit />}
                       onClick={() => openUpdateDialog(order)}
                       disabled={updateLoading === order.id}
-                      sx={{ mr: 1 }}
                     >
                       Редактировать
                     </Button>
@@ -258,11 +241,11 @@ const OrdersView: React.FC = () => {
                         size="small"
                         startIcon={<CheckCircle />}
                         color="success"
-                                                 onClick={() => {
-                           setSelectedOrder(order);
+                        onClick={() => {
+                          setSelectedOrder(order);
                           setNewStatus('completed');
-                           handleUpdateStatus();
-                         }}
+                          handleUpdateStatus();
+                        }}
                         disabled={updateLoading === order.id}
                       >
                         Завершить
@@ -308,7 +291,7 @@ const OrdersView: React.FC = () => {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>
+          <Button onClick={() => setDialogOpen(false)} sx={{ color: UI.COLORS.text.secondary, '&:hover, &:active, &:focus': { color: UI.COLORS.text.secondary } }}>
             {t('common.cancel')}
           </Button>
           <Button
@@ -320,7 +303,7 @@ const OrdersView: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </PageContainer>
   );
 };
 

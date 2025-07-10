@@ -10,7 +10,7 @@ import { logger } from '../services/logger';
 import { PageContainer, DataTable, CrudDialog, type TableColumn } from './shared';
 import { useCrudDialog } from '../hooks/useCrudDialog';
 
-const CategoriesView: React.FC = () => {
+const CategoriesViewRefactored: React.FC = () => {
   const { t } = useTranslation();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -211,4 +211,4 @@ const CategoriesView: React.FC = () => {
   );
 };
 
-export default CategoriesView; 
+export default CategoriesViewRefactored; 

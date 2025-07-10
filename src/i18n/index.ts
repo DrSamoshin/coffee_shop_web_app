@@ -5,6 +5,7 @@ import { logger } from '../services/logger';
 // Import translation files
 import enTranslations from './locales/en.json';
 import ruTranslations from './locales/ru.json';
+import esTranslations from './locales/es.json';
 
 const resources = {
   en: {
@@ -12,6 +13,9 @@ const resources = {
   },
   ru: {
     translation: ruTranslations
+  },
+  es: {
+    translation: esTranslations
   }
 };
 

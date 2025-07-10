@@ -7,7 +7,16 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  IconButton
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from '@mui/material';
 import {
   Settings
@@ -15,6 +24,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { logger } from '../services/logger';
 import { UI } from '../config/constants';
+import { getStorageKey } from '../config';
 import CategoriesView from './CategoriesView';
 import EmployeesView from './EmployeesView';
 import ProductsView from './ProductsView';
@@ -24,24 +34,27 @@ import StoreView from './StoreView';
 import SuppliersView from './SuppliersView';
 import SuppliesView from './SuppliesView';
 import ReportView from './ReportView';
+// import MetricsDashboard from './MetricsDashboard'; // Удалено
 
 const drawerWidth = 240;
 
 const Dashboard: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [activeView, setActiveView] = useState('report');
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
 
   const menuItems = [
     { id: 'report', label: t('navigation.report') },
     { id: 'categories', label: t('navigation.categories') },
     { id: 'products', label: t('navigation.products') },
     { id: 'images', label: t('navigation.images') },
-    { id: 'items', label: t('items.title') },
+    { id: 'items', label: t('navigation.items') },
     { id: 'store', label: t('navigation.store') },
     { id: 'employees', label: t('navigation.employees') },
     { id: 'suppliers', label: t('navigation.suppliers') },
-    { id: 'supplies', label: t('navigation.supplies') },
+    { id: 'supplies', label: t('navigation.supplies') }
+    // { id: 'logs', label: t('navigation.logs') }, // Удалено
   ];
 
   useEffect(() => {
@@ -54,7 +67,21 @@ const Dashboard: React.FC = () => {
   };
 
   const handleSettingsOpen = () => {
-    // Заглушка для открытия настроек
+    setSettingsDialogOpen(true);
+  };
+
+  const handleSettingsClose = () => {
+    setSettingsDialogOpen(false);
+  };
+
+  const handleLanguageChange = (language: string) => {
+    i18n.changeLanguage(language);
+    logger.userAction('language_change', 'Settings', { language });
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem(getStorageKey('TOKEN'));
+    window.location.href = '/';
   };
 
   const drawer = (
@@ -131,6 +158,17 @@ const Dashboard: React.FC = () => {
         return <SuppliesView />;
       case 'report':
         return <ReportView />;
+      // case 'logs':
+      //   return (
+      //     <Box sx={{ p: 3, textAlign: 'center' }}>
+      //       <Typography variant="h5" gutterBottom>
+      //         {t('navigation.logs')}
+      //       </Typography>
+      //       <Typography color="text.secondary">
+      //         {t('common.inDevelopment')}
+      //       </Typography>
+      //     </Box>
+      //   );
       default:
         return (
           <Box sx={{ p: 3, textAlign: 'center' }}>
@@ -245,6 +283,32 @@ const Dashboard: React.FC = () => {
       >
         {renderContent()}
       </Box>
+
+      {/* Settings Dialog */}
+      <Dialog open={settingsDialogOpen} onClose={handleSettingsClose}>
+        <DialogTitle>{t('navigation.settings')}</DialogTitle>
+        <DialogContent>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>{t('navigation.language')}</InputLabel>
+            <Select
+              value={i18n.language}
+              label={t('navigation.language')}
+              onChange={(e) => handleLanguageChange(e.target.value as string)}
+            >
+              <MenuItem value="en">{t('navigation.english')}</MenuItem>
+              <MenuItem value="ru">{t('navigation.russian')}</MenuItem>
+              <MenuItem value="es">{t('navigation.spanish', 'Español')}</MenuItem>
+            </Select>
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleLogout}>{t('navigation.logout')}</Button>
+          <Button onClick={handleSettingsClose}>{t('common.cancel')}</Button>
+          <Button onClick={handleSettingsClose} variant="contained">
+            {t('common.save')}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

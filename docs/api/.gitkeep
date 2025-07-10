@@ -1,0 +1,2 @@
+# This file ensures the docs/api directory is tracked by git
+# Remove this file once openapi.json is added 

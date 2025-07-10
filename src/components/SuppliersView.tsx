@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Card,
@@ -20,9 +20,7 @@ import {
   Alert,
   CircularProgress,
   Fab,
-  Container,
-  ToggleButtonGroup,
-  ToggleButton
+  Container
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -32,6 +30,7 @@ import { useTranslation } from 'react-i18next';
 import type { Supplier } from '../types/api';
 import { apiService } from '../services/api';
 import { logger } from '../services/logger';
+import { FilterToggle } from './shared';
 
 const SuppliersView: React.FC = () => {
   const { t } = useTranslation();
@@ -50,11 +49,7 @@ const SuppliersView: React.FC = () => {
   const [newSupplierName, setNewSupplierName] = useState('');
   const [editSupplierName, setEditSupplierName] = useState('');
 
-  useEffect(() => {
-    loadSuppliers();
-  }, [showDeactivatedOnly]);
-
-  const loadSuppliers = async () => {
+  const loadSuppliers = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -70,7 +65,11 @@ const SuppliersView: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [showDeactivatedOnly]);
+
+  useEffect(() => {
+    loadSuppliers();
+  }, [loadSuppliers]);
 
   const handleAddSupplier = async () => {
     if (!newSupplierName.trim()) return;
@@ -168,33 +167,14 @@ const SuppliersView: React.FC = () => {
         </Alert>
       )}
 
-      <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-start' }}>
-        <ToggleButtonGroup
-          value={showDeactivatedOnly ? 'deactivated' : 'all'}
-          exclusive
-          onChange={(_, value) => {
-            if (value !== null) {
-              setShowDeactivatedOnly(value === 'deactivated');
-            }
-          }}
-          size="small"
-          sx={{
-            '& .MuiToggleButton-root': {
-              px: 2,
-              py: 0.5,
-              fontSize: '0.875rem',
-              textTransform: 'none'
-            }
-          }}
-        >
-          <ToggleButton value="all">
-            {t('suppliers.allSuppliers')}
-          </ToggleButton>
-          <ToggleButton value="deactivated">
-            {t('suppliers.showDeactivated')}
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </Box>
+      <FilterToggle
+        value={showDeactivatedOnly ? 'deactivated' : 'all'}
+        onChange={(value) => setShowDeactivatedOnly(value === 'deactivated')}
+        options={[
+          { value: 'all', label: t('suppliers.allSuppliers') },
+          { value: 'deactivated', label: t('suppliers.showDeactivated') }
+        ]}
+      />
 
       <Card>
         <CardContent>

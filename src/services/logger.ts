@@ -1,7 +1,7 @@
-// Система логирования для отладки приложения
+// Logging system for application debugging
 import { loggingConfig } from '../config';
 
-// Уровни логирования
+// Logging levels
 export const LogLevel = {
   DEBUG: 'debug',
   INFO: 'info',
@@ -17,7 +17,7 @@ export interface LogEntry {
   level: LogLevel;
   category: string;
   message: string;
-  data?: any;
+  data?: Record<string, unknown>;
   stack?: string;
 }
 
@@ -27,7 +27,7 @@ class LoggerService {
   private currentLogLevel: LogLevel = LogLevel.DEBUG;
   private listeners: Array<(logs: LogEntry[]) => void> = [];
 
-  // Настройка логирования
+  // Logging configuration
   setLogLevel(level: LogLevel): void {
     this.currentLogLevel = level;
     this.info('Logger', `Log level set to ${level}`);
@@ -38,7 +38,7 @@ class LoggerService {
     this.trimLogs();
   }
 
-  // Подписка на изменения логов
+  // Subscribe to log changes
   subscribe(callback: (logs: LogEntry[]) => void): () => void {
     this.listeners.push(callback);
     callback([...this.logs]);
@@ -51,9 +51,9 @@ class LoggerService {
     };
   }
 
-  // Основной метод логирования
-  private log(level: LogLevel, category: string, message: string, data?: any, error?: Error): void {
-    // Проверяем уровень логирования по порядку важности
+  // Main logging method
+  private log(level: LogLevel, category: string, message: string, data?: Record<string, unknown>, error?: Error): void {
+    // Check logging level by importance order
     const levelOrder = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR];
     const currentIndex = levelOrder.indexOf(this.currentLogLevel);
     const messageIndex = levelOrder.indexOf(level);
@@ -74,29 +74,29 @@ class LoggerService {
     this.trimLogs();
     this.notifyListeners();
 
-    // Дублируем в консоль браузера
+    // Duplicate to browser console
     this.logToConsole(logEntry);
   }
 
-  // Публичные методы для разных уровней логирования
-  debug(category: string, message: string, data?: any): void {
+  // Public methods for different logging levels
+  debug(category: string, message: string, data?: Record<string, unknown>): void {
     this.log(LogLevel.DEBUG, category, message, data);
   }
 
-  info(category: string, message: string, data?: any): void {
+  info(category: string, message: string, data?: Record<string, unknown>): void {
     this.log(LogLevel.INFO, category, message, data);
   }
 
-  warn(category: string, message: string, data?: any): void {
+  warn(category: string, message: string, data?: Record<string, unknown>): void {
     this.log(LogLevel.WARN, category, message, data);
   }
 
-  error(category: string, message: string, error?: Error, data?: any): void {
+  error(category: string, message: string, error?: Error, data?: Record<string, unknown>): void {
     this.log(LogLevel.ERROR, category, message, data, error);
   }
 
-  // Специальные методы для API логирования
-  apiRequest(method: string, url: string, data?: any): void {
+  // Special methods for API logging
+  apiRequest(method: string, url: string, data?: Record<string, unknown>): void {
     this.info('API_REQUEST', `${method} ${url}`, {
       method,
       url,
@@ -105,7 +105,7 @@ class LoggerService {
     });
   }
 
-  apiResponse(method: string, url: string, status: number, data?: any, duration?: number): void {
+  apiResponse(method: string, url: string, status: number, data?: Record<string, unknown>, duration?: number): void {
     const level = status >= 400 ? LogLevel.ERROR : LogLevel.INFO;
     const message = `${method} ${url} - ${status}${duration ? ` (${duration}ms)` : ''}`;
     
@@ -119,18 +119,30 @@ class LoggerService {
     });
   }
 
-  apiError(method: string, url: string, error: any): void {
-    this.error('API_ERROR', `${method} ${url} failed`, error, {
+  apiError(method: string, url: string, error: Error | Record<string, unknown>): void {
+    const errorData: Record<string, unknown> = {
       method,
       url,
-      error: error.message || 'Unknown error',
-      status: error.response?.status,
       timestamp: new Date().toISOString()
-    });
+    };
+
+    if (error instanceof Error) {
+      this.error('API_ERROR', `${method} ${url} failed`, error, errorData);
+    } else if (typeof error === 'object' && error !== null) {
+      errorData.error = (error as Record<string, unknown>).message || 'Unknown error';
+      if ('response' in error) {
+        const errorResponse = error.response as Record<string, unknown>;
+        errorData.status = errorResponse.status;
+      }
+      this.log(LogLevel.ERROR, 'API_ERROR', `${method} ${url} failed`, errorData);
+    } else {
+      errorData.error = String(error);
+      this.log(LogLevel.ERROR, 'API_ERROR', `${method} ${url} failed`, errorData);
+    }
   }
 
-  // Логирование действий пользователя
-  userAction(action: string, component: string, data?: any): void {
+  // User action logging
+  userAction(action: string, component: string, data?: Record<string, unknown>): void {
     this.info('USER_ACTION', `${action} in ${component}`, {
       action,
       component,
@@ -139,7 +151,7 @@ class LoggerService {
     });
   }
 
-  // Логирование навигации
+  // Navigation logging
   navigation(from: string, to: string): void {
     this.info('NAVIGATION', `Navigate from ${from} to ${to}`, {
       from,
@@ -148,8 +160,8 @@ class LoggerService {
     });
   }
 
-  // Логирование состояния компонентов
-  componentState(component: string, state: string, data?: any): void {
+  // Component state logging
+  componentState(component: string, state: string, data?: Record<string, unknown>): void {
     this.debug('COMPONENT_STATE', `${component}: ${state}`, {
       component,
       state,
@@ -158,7 +170,7 @@ class LoggerService {
     });
   }
 
-  // Получение логов
+  // Get logs
   getLogs(category?: string, level?: LogLevel): LogEntry[] {
     let filteredLogs = [...this.logs];
 
@@ -173,14 +185,14 @@ class LoggerService {
     return filteredLogs.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   }
 
-  // Очистка логов
+  // Clear logs
   clearLogs(): void {
     this.logs = [];
     this.notifyListeners();
     this.info('Logger', 'Logs cleared');
   }
 
-  // Экспорт логов
+  // Export logs
   exportLogs(): string {
     const logsForExport = this.logs.map(log => ({
       timestamp: log.timestamp.toISOString(),
@@ -194,16 +206,16 @@ class LoggerService {
     return JSON.stringify(logsForExport, null, 2);
   }
 
-  // Приватные методы
+  // Private methods
   private generateId(): string {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
   }
 
-  private serializeData(data: any): any {
+  private serializeData(data: Record<string, unknown>): Record<string, unknown> {
     try {
       return JSON.parse(JSON.stringify(data));
     } catch {
-      return '[Circular or non-serializable data]';
+      return { error: '[Circular or non-serializable data]' };
     }
   }
 
@@ -218,6 +230,7 @@ class LoggerService {
       try {
         callback([...this.logs]);
       } catch (error) {
+         
         console.error('Error in log listener:', error);
       }
     });
@@ -229,21 +242,25 @@ class LoggerService {
     
     switch (entry.level) {
       case LogLevel.DEBUG:
+         
         console.debug(`DEBUG ${prefix}`, entry.message, entry.data || '');
         break;
       case LogLevel.INFO:
+         
         console.info(`INFO ${prefix}`, entry.message, entry.data || '');
         break;
       case LogLevel.WARN:
+         
         console.warn(`WARN ${prefix}`, entry.message, entry.data || '');
         break;
       case LogLevel.ERROR:
+         
         console.error(`ERROR ${prefix}`, entry.message, entry.data || '', entry.stack || '');
         break;
     }
   }
 
-  // Методы для работы с performance
+  // Performance methods
   startTimer(name: string): () => void {
     const startTime = performance.now();
     this.debug('PERFORMANCE', `Timer started: ${name}`);
@@ -256,16 +273,16 @@ class LoggerService {
   }
 }
 
-// Экспортируем единственный экземпляр
+// Export single instance
 export const logger = new LoggerService();
 
-// Настраиваем логирование в зависимости от окружения
+// Configure logging depending on environment
 if (typeof window !== 'undefined') {
   logger.setLogLevel(LogLevel.DEBUG);
   logger.info('Logger', 'Development mode: All logs enabled');
 }
 
-// Логируем необработанные ошибки
+// Log unhandled errors
 window.addEventListener('error', (event) => {
   logger.error('UNHANDLED_ERROR', event.message, event.error, {
     filename: event.filename,
@@ -274,7 +291,7 @@ window.addEventListener('error', (event) => {
   });
 });
 
-// Логируем необработанные Promise rejections
+// Log unhandled Promise rejections
 window.addEventListener('unhandledrejection', (event) => {
   logger.error('UNHANDLED_PROMISE_REJECTION', 'Unhandled promise rejection', event.reason);
 });

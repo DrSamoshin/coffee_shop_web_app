@@ -1,0 +1,5159 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Coffee point",
+        "description": "This backend application is built on FastAPI and implements the full logic of cafe management.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/analytics/shift-report/{shift_id}/": {
+            "get": {
+                "tags": [
+                    "analytics"
+                ],
+                "summary": "Get Shift Report",
+                "operationId": "get_shift_report_analytics_shift_report__shift_id___get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "shift_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Shift Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/analytics/active-shift-report/": {
+            "get": {
+                "tags": [
+                    "analytics"
+                ],
+                "summary": "Get Active Shift Report",
+                "operationId": "get_active_shift_report_analytics_active_shift_report__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/categories/": {
+            "get": {
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Get Categories",
+                "operationId": "get_categories_categories__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/CategoryOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Categories Categories  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Create Category",
+                "operationId": "create_category_categories__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CategoryCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/categories/{category_id}/": {
+            "put": {
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Update Category",
+                "operationId": "update_category_categories__category_id___put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "category_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Category Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CategoryUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Delete Category",
+                "operationId": "delete_category_categories__category_id___delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "category_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Category Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/check-lists/start/": {
+            "get": {
+                "tags": [
+                    "check_lists"
+                ],
+                "summary": "Get Start Check List",
+                "operationId": "get_start_check_list_check_lists_start__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CheckListOut"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/check-lists/end/": {
+            "get": {
+                "tags": [
+                    "check_lists"
+                ],
+                "summary": "Get End Check List",
+                "operationId": "get_end_check_list_check_lists_end__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CheckListOut"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/check-lists/{check_list_id}/": {
+            "put": {
+                "tags": [
+                    "check_lists"
+                ],
+                "summary": "Update Start Check List",
+                "operationId": "update_start_check_list_check_lists__check_list_id___put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "check_list_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Check List Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CheckListUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CheckListOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/clients/": {
+            "get": {
+                "tags": [
+                    "clients"
+                ],
+                "summary": "Get Clients",
+                "operationId": "get_clients_clients__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ClientOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Clients Clients  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "clients"
+                ],
+                "summary": "Create Client",
+                "operationId": "create_client_clients__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ClientCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ClientOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/clients/{client_id}/": {
+            "get": {
+                "tags": [
+                    "clients"
+                ],
+                "summary": "Get Client",
+                "operationId": "get_client_clients__client_id___get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "client_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Client Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ClientOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "clients"
+                ],
+                "summary": "Update Client",
+                "operationId": "update_client_clients__client_id___put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "client_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Client Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ClientUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ClientOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/coffee-shop/info/": {
+            "get": {
+                "tags": [
+                    "coffee_shop"
+                ],
+                "summary": "Get Coffee Shop Info",
+                "operationId": "get_coffee_shop_info_coffee_shop_info__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/constants/payment-methods/": {
+            "get": {
+                "tags": [
+                    "constants"
+                ],
+                "summary": "Get Payment Methods",
+                "operationId": "get_payment_methods_constants_payment_methods__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/constants/order-types/": {
+            "get": {
+                "tags": [
+                    "constants"
+                ],
+                "summary": "Get Order Types",
+                "operationId": "get_order_types_constants_order_types__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/constants/order-statuses/": {
+            "get": {
+                "tags": [
+                    "constants"
+                ],
+                "summary": "Get Order Statuses",
+                "operationId": "get_order_statuses_constants_order_statuses__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/constants/employee-positions/": {
+            "get": {
+                "tags": [
+                    "constants"
+                ],
+                "summary": "Get Employee Positions",
+                "operationId": "get_employee_positions_constants_employee_positions__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/constants/item-measurements/": {
+            "get": {
+                "tags": [
+                    "constants"
+                ],
+                "summary": "Get Item Measurements",
+                "operationId": "get_item_measurements_constants_item_measurements__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/employees/": {
+            "get": {
+                "tags": [
+                    "employees"
+                ],
+                "summary": "Get Employees",
+                "operationId": "get_employees_employees__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/EmployeeOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Employees Employees  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "employees"
+                ],
+                "summary": "Create Employee",
+                "operationId": "create_employee_employees__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmployeeCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeeOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/employees/deactivated/": {
+            "get": {
+                "tags": [
+                    "employees"
+                ],
+                "summary": "Get Deactivated Employees",
+                "operationId": "get_deactivated_employees_employees_deactivated__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/EmployeeOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Deactivated Employees Employees Deactivated  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/employees/available/": {
+            "get": {
+                "tags": [
+                    "employees"
+                ],
+                "summary": "Get Available Employees",
+                "operationId": "get_available_employees_employees_available__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/EmployeeOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Available Employees Employees Available  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/employees/{employee_id}/": {
+            "put": {
+                "tags": [
+                    "employees"
+                ],
+                "summary": "Update Employee",
+                "operationId": "update_employee_employees__employee_id___put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "employee_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Employee Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmployeeUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeeOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "employees"
+                ],
+                "summary": "Deactivate Employee",
+                "operationId": "deactivate_employee_employees__employee_id___delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "employee_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Employee Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeeOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/employees/activate/{employee_id}/": {
+            "post": {
+                "tags": [
+                    "employees"
+                ],
+                "summary": "Activate Employee",
+                "operationId": "activate_employee_employees_activate__employee_id___post",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "employee_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Employee Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeeOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/employee-shifts/": {
+            "get": {
+                "tags": [
+                    "employee_shifts"
+                ],
+                "summary": "Get Employee Shifts",
+                "operationId": "get_employee_shifts_employee_shifts__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/EmployeeShiftOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Employee Shifts Employee Shifts  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "employee_shifts"
+                ],
+                "summary": "Create Employee Shift",
+                "operationId": "create_employee_shift_employee_shifts__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmployeeShiftCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeeShiftOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/employee-shifts/active-employee-shifts/": {
+            "get": {
+                "tags": [
+                    "employee_shifts"
+                ],
+                "summary": "Get Active Employee Shifts",
+                "operationId": "get_active_employee_shifts_employee_shifts_active_employee_shifts__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/EmployeeShiftWithEmployeeOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Active Employee Shifts Employee Shifts Active Employee Shifts  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/employee-shifts/shift-end-update/{shift_id}/": {
+            "put": {
+                "tags": [
+                    "employee_shifts"
+                ],
+                "summary": "Update Employee Shift End",
+                "operationId": "update_employee_shift_end_employee_shifts_shift_end_update__shift_id___put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "shift_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Shift Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmployeeShiftUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeeShiftOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/files/": {
+            "get": {
+                "tags": [
+                    "files"
+                ],
+                "summary": "Get Image Urls",
+                "operationId": "get_image_urls_files__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/files/upload-image/": {
+            "post": {
+                "tags": [
+                    "files"
+                ],
+                "summary": "Upload Image",
+                "operationId": "upload_image_files_upload_image__post",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_upload_image_files_upload_image__post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/files/delete/": {
+            "post": {
+                "tags": [
+                    "files"
+                ],
+                "summary": "Delete Image",
+                "operationId": "delete_image_files_delete__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ImageDelete"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/health/app/": {
+            "get": {
+                "tags": [
+                    "health"
+                ],
+                "summary": "Get Health Check",
+                "operationId": "get_health_check_health_app__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/health/token/": {
+            "get": {
+                "tags": [
+                    "health"
+                ],
+                "summary": "Check Token",
+                "operationId": "check_token_health_token__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/items/": {
+            "get": {
+                "tags": [
+                    "items"
+                ],
+                "summary": "Get Items",
+                "operationId": "get_items_items__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ItemOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Items Items  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "items"
+                ],
+                "summary": "Create Item",
+                "operationId": "create_item_items__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ItemCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ItemOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/items/{item_id}/": {
+            "get": {
+                "tags": [
+                    "items"
+                ],
+                "summary": "Get Item",
+                "operationId": "get_item_items__item_id___get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Item Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ItemOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "items"
+                ],
+                "summary": "Update Item",
+                "operationId": "update_item_items__item_id___put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Item Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ItemUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ItemOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "items"
+                ],
+                "summary": "Deactivate Item",
+                "operationId": "deactivate_item_items__item_id___delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Item Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ItemOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/shift-orders/": {
+            "get": {
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Get Shift Orders",
+                "operationId": "get_shift_orders_orders_shift_orders__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0,
+                            "title": "Skip"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ShiftOrderOut"
+                                    },
+                                    "title": "Response Get Shift Orders Orders Shift Orders  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/waiting-shift-orders/": {
+            "get": {
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Get Shift Orders",
+                "operationId": "get_shift_orders_orders_waiting_shift_orders__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0,
+                            "title": "Skip"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ShiftOrderOut"
+                                    },
+                                    "title": "Response Get Shift Orders Orders Waiting Shift Orders  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/{order_id}/": {
+            "get": {
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Get Order",
+                "operationId": "get_order_orders__order_id___get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Order Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShiftOrderOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Update Order",
+                "operationId": "update_order_orders__order_id___put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Order Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OrderUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/": {
+            "post": {
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Create Order With Products",
+                "operationId": "create_order_with_products_orders__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OrderCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/orders/status-update/{order_id}/": {
+            "put": {
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Update Order Status",
+                "operationId": "update_order_status_orders_status_update__order_id___put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Order Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OrderStatusUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/": {
+            "get": {
+                "tags": [
+                    "products"
+                ],
+                "summary": "Get Products",
+                "operationId": "get_products_products__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProductOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Products Products  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "products"
+                ],
+                "summary": "Create Product",
+                "operationId": "create_product_products__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/products/online-shop/": {
+            "get": {
+                "tags": [
+                    "products"
+                ],
+                "summary": "Get Online Shop Products",
+                "operationId": "get_online_shop_products_products_online_shop__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProductOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Online Shop Products Products Online Shop  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/products/{product_id}/": {
+            "put": {
+                "tags": [
+                    "products"
+                ],
+                "summary": "Update Product",
+                "operationId": "update_product_products__product_id___put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Product Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "products"
+                ],
+                "summary": "Deactivate Product",
+                "operationId": "deactivate_product_products__product_id___delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Product Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductFullInfoOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/product-orders/": {
+            "get": {
+                "tags": [
+                    "product_orders"
+                ],
+                "summary": "Read Product Orders",
+                "operationId": "read_product_orders_product_orders__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/app__schemas__product_order__ProductOrderOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Read Product Orders Product Orders  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "product_orders"
+                ],
+                "summary": "Create Product Order",
+                "operationId": "create_product_order_product_orders__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductOrderCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/app__schemas__product_order__ProductOrderOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/product-orders/{product_order_id}/": {
+            "get": {
+                "tags": [
+                    "product_orders"
+                ],
+                "summary": "Read Product Order",
+                "operationId": "read_product_order_product_orders__product_order_id___get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "product_order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Product Order Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/app__schemas__product_order__ProductOrderOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "product_orders"
+                ],
+                "summary": "Update Product Order",
+                "operationId": "update_product_order_product_orders__product_order_id___put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "product_order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Product Order Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductOrderUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/app__schemas__product_order__ProductOrderOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/recipe-items/": {
+            "get": {
+                "tags": [
+                    "recipe_items"
+                ],
+                "summary": "Get Recipe Items",
+                "operationId": "get_recipe_items_recipe_items__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/RecipeItemOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Recipe Items Recipe Items  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "recipe_items"
+                ],
+                "summary": "Create Recipe Item",
+                "operationId": "create_recipe_item_recipe_items__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RecipeItemCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RecipeItemOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/recipe-items/{recipe_item_id}/": {
+            "get": {
+                "tags": [
+                    "recipe_items"
+                ],
+                "summary": "Get Recipe Item",
+                "operationId": "get_recipe_item_recipe_items__recipe_item_id___get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "recipe_item_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Recipe Item Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RecipeItemOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "recipe_items"
+                ],
+                "summary": "Update Recipe Item",
+                "operationId": "update_recipe_item_recipe_items__recipe_item_id___put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "recipe_item_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Recipe Item Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RecipeItemUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RecipeItemOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/shifts/": {
+            "get": {
+                "tags": [
+                    "shifts"
+                ],
+                "summary": "Get Shifts",
+                "operationId": "get_shifts_shifts__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ShiftOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Shifts Shifts  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/shifts/active-shifts/": {
+            "get": {
+                "tags": [
+                    "shifts"
+                ],
+                "summary": "Get Active Shifts",
+                "operationId": "get_active_shifts_shifts_active_shifts__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ShiftOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Active Shifts Shifts Active Shifts  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/shifts/shift-start-update/{shift_id}/": {
+            "put": {
+                "tags": [
+                    "shifts"
+                ],
+                "summary": "Update Shift Start",
+                "operationId": "update_shift_start_shifts_shift_start_update__shift_id___put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "shift_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Shift Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShiftOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/store-items/": {
+            "get": {
+                "tags": [
+                    "store_items"
+                ],
+                "summary": "Get Store Items",
+                "operationId": "get_store_items_store_items__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/StoreItemOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Store Items Store Items  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/store-items/calculation/": {
+            "get": {
+                "tags": [
+                    "store_items"
+                ],
+                "summary": "Get Store Items Calculation",
+                "operationId": "get_store_items_calculation_store_items_calculation__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/CalculationStoreItemOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Store Items Calculation Store Items Calculation  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/store-items/{store_item_id}/": {
+            "get": {
+                "tags": [
+                    "store_items"
+                ],
+                "summary": "Get Store Item",
+                "operationId": "get_store_item_store_items__store_item_id___get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "store_item_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Store Item Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StoreItemOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "store_items"
+                ],
+                "summary": "Update Store Item",
+                "operationId": "update_store_item_store_items__store_item_id___put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "store_item_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Store Item Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreItemUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StoreItemOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/store-items/add/": {
+            "post": {
+                "tags": [
+                    "store_items"
+                ],
+                "summary": "Add Store Item",
+                "operationId": "add_store_item_store_items_add__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreItemCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StoreItemOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/store-items/remove/": {
+            "post": {
+                "tags": [
+                    "store_items"
+                ],
+                "summary": "Remove Store Item",
+                "operationId": "remove_store_item_store_items_remove__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreItemCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StoreItemOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/suppliers/": {
+            "get": {
+                "tags": [
+                    "suppliers"
+                ],
+                "summary": "Get Suppliers",
+                "operationId": "get_suppliers_suppliers__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/SupplierOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Suppliers Suppliers  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "suppliers"
+                ],
+                "summary": "Create Supplier",
+                "operationId": "create_supplier_suppliers__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SupplierCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SupplierOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/suppliers/deactivated/": {
+            "get": {
+                "tags": [
+                    "suppliers"
+                ],
+                "summary": "Get Deactivated Suppliers",
+                "operationId": "get_deactivated_suppliers_suppliers_deactivated__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/SupplierOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Deactivated Suppliers Suppliers Deactivated  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/suppliers/{supplier_id}/": {
+            "get": {
+                "tags": [
+                    "suppliers"
+                ],
+                "summary": "Get Supplier",
+                "operationId": "get_supplier_suppliers__supplier_id___get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "supplier_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Supplier Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SupplierOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "suppliers"
+                ],
+                "summary": "Update Supplier",
+                "operationId": "update_supplier_suppliers__supplier_id___put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "supplier_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Supplier Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SupplierUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SupplierOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "suppliers"
+                ],
+                "summary": "Deactivate Supplier",
+                "operationId": "deactivate_supplier_suppliers__supplier_id___delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "supplier_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Supplier Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SupplierOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/suppliers/activate/{supplier_id}/": {
+            "post": {
+                "tags": [
+                    "suppliers"
+                ],
+                "summary": "Activate Supplier",
+                "operationId": "activate_supplier_suppliers_activate__supplier_id___post",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "supplier_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Supplier Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SupplierOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/supplies/": {
+            "get": {
+                "tags": [
+                    "supplies"
+                ],
+                "summary": "Get Supplies",
+                "operationId": "get_supplies_supplies__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/SupplyOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Supplies Supplies  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "supplies"
+                ],
+                "summary": "Create Supply",
+                "operationId": "create_supply_supplies__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SupplyCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SupplyOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/supplies/{supply_id}/": {
+            "get": {
+                "tags": [
+                    "supplies"
+                ],
+                "summary": "Get Supply",
+                "operationId": "get_supply_supplies__supply_id___get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "supply_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Supply Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SupplyOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "supplies"
+                ],
+                "summary": "Update Supply",
+                "operationId": "update_supply_supplies__supply_id___put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "supply_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Supply Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SupplyUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SupplyOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/migrate-users-db/": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Migrate Users Db",
+                "operationId": "migrate_users_db_admin_migrate_users_db__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/admin/migrate-point-db/{db_name}/": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Migrate Point Db",
+                "operationId": "migrate_point_db_admin_migrate_point_db__db_name___get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "db_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Db Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/import-products/": {
+            "post": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Import Products",
+                "operationId": "import_products_admin_import_products__post",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_import_products_admin_import_products__post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/admin/import-categories/": {
+            "post": {
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Import Categories",
+                "operationId": "import_categories_admin_import_categories__post",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_import_categories_admin_import_categories__post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/users/": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get Users",
+                "operationId": "get_users_users__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserOut"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Users Users  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Create User",
+                "operationId": "create_user_users__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/users/{user_id}/": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get User",
+                "operationId": "get_user_users__user_id___get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "User Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update User",
+                "operationId": "update_user_users__user_id___put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "User Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserOut"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Deactivate User",
+                "operationId": "deactivate_user_users__user_id___delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "User Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Body_import_categories_admin_import_categories__post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_import_categories_admin_import_categories__post"
+            },
+            "Body_import_products_admin_import_products__post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_import_products_admin_import_products__post"
+            },
+            "Body_upload_image_files_upload_image__post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_upload_image_files_upload_image__post"
+            },
+            "CalculationStoreItemOut": {
+                "properties": {
+                    "item_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Item Id"
+                    },
+                    "amount": {
+                        "type": "string",
+                        "title": "Amount"
+                    },
+                    "item_name": {
+                        "type": "string",
+                        "title": "Item Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "item_id",
+                    "amount",
+                    "item_name"
+                ],
+                "title": "CalculationStoreItemOut"
+            },
+            "CategoryCreate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "title": "CategoryCreate"
+            },
+            "CategoryOut": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "active": {
+                        "type": "boolean",
+                        "title": "Active"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "id",
+                    "active"
+                ],
+                "title": "CategoryOut"
+            },
+            "CategoryUpdate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "title": "CategoryUpdate"
+            },
+            "CheckListOut": {
+                "properties": {
+                    "check_list": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Check List"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "check_list",
+                    "id"
+                ],
+                "title": "CheckListOut"
+            },
+            "CheckListUpdate": {
+                "properties": {
+                    "check_list": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Check List"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "check_list"
+                ],
+                "title": "CheckListUpdate"
+            },
+            "ClientCreate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "title": "ClientCreate"
+            },
+            "ClientOut": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "deactivated": {
+                        "type": "boolean",
+                        "title": "Deactivated"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "id",
+                    "deactivated"
+                ],
+                "title": "ClientOut"
+            },
+            "ClientUpdate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "title": "ClientUpdate"
+            },
+            "EmployeeCreate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "position": {
+                        "$ref": "#/components/schemas/EmployeePosition"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "position"
+                ],
+                "title": "EmployeeCreate"
+            },
+            "EmployeeOut": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "position": {
+                        "$ref": "#/components/schemas/EmployeePosition"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "position",
+                    "id"
+                ],
+                "title": "EmployeeOut"
+            },
+            "EmployeePosition": {
+                "type": "string",
+                "enum": [
+                    "barista",
+                    "manager"
+                ],
+                "title": "EmployeePosition"
+            },
+            "EmployeeShiftCreate": {
+                "properties": {
+                    "employee_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Employee Id"
+                    },
+                    "shift_id": {
+                        "title": "Shift Id",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "employee_id"
+                ],
+                "title": "EmployeeShiftCreate"
+            },
+            "EmployeeShiftOut": {
+                "properties": {
+                    "employee_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Employee Id"
+                    },
+                    "shift_id": {
+                        "title": "Shift Id",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "active": {
+                        "type": "boolean",
+                        "title": "Active"
+                    },
+                    "start_time": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Start Time"
+                    },
+                    "end_time": {
+                        "title": "End Time",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "employee_id",
+                    "id",
+                    "active",
+                    "start_time"
+                ],
+                "title": "EmployeeShiftOut"
+            },
+            "EmployeeShiftUpdate": {
+                "properties": {
+                    "last_employee_shift": {
+                        "type": "boolean",
+                        "title": "Last Employee Shift"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "last_employee_shift"
+                ],
+                "title": "EmployeeShiftUpdate"
+            },
+            "EmployeeShiftWithEmployeeOut": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "employee": {
+                        "$ref": "#/components/schemas/EmployeeOut"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "employee"
+                ],
+                "title": "EmployeeShiftWithEmployeeOut"
+            },
+            "EmployeeUpdate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "position": {
+                        "$ref": "#/components/schemas/EmployeePosition"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "position"
+                ],
+                "title": "EmployeeUpdate"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "ImageDelete": {
+                "properties": {
+                    "image_url": {
+                        "type": "string",
+                        "title": "Image Url"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "image_url"
+                ],
+                "title": "ImageDelete"
+            },
+            "ItemCreate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "measurement": {
+                        "$ref": "#/components/schemas/ItemMeasurements"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "measurement"
+                ],
+                "title": "ItemCreate"
+            },
+            "ItemMeasurements": {
+                "type": "string",
+                "enum": [
+                    "kg",
+                    "g",
+                    "l",
+                    "ml",
+                    "pcs"
+                ],
+                "title": "ItemMeasurements"
+            },
+            "ItemOut": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "measurement": {
+                        "$ref": "#/components/schemas/ItemMeasurements"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "active": {
+                        "type": "boolean",
+                        "title": "Active"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "measurement",
+                    "id",
+                    "active"
+                ],
+                "title": "ItemOut"
+            },
+            "ItemUpdate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "measurement": {
+                        "$ref": "#/components/schemas/ItemMeasurements"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "measurement"
+                ],
+                "title": "ItemUpdate"
+            },
+            "OrderCreate": {
+                "properties": {
+                    "price": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "title": "Price"
+                    },
+                    "discount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "title": "Discount"
+                    },
+                    "payment_method": {
+                        "$ref": "#/components/schemas/OrderPaymentMethod"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/OrderType"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/OrderStatus"
+                    },
+                    "client_id": {
+                        "title": "Client Id",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "debit": {
+                        "type": "boolean",
+                        "title": "Debit"
+                    },
+                    "products": {
+                        "items": {
+                            "$ref": "#/components/schemas/ProductOrderCreate"
+                        },
+                        "type": "array",
+                        "title": "Products"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "price",
+                    "discount",
+                    "payment_method",
+                    "type",
+                    "status",
+                    "debit",
+                    "products"
+                ],
+                "title": "OrderCreate"
+            },
+            "OrderOut": {
+                "properties": {
+                    "price": {
+                        "type": "string",
+                        "title": "Price"
+                    },
+                    "discount": {
+                        "type": "string",
+                        "title": "Discount"
+                    },
+                    "payment_method": {
+                        "$ref": "#/components/schemas/OrderPaymentMethod"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/OrderType"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/OrderStatus"
+                    },
+                    "client_id": {
+                        "title": "Client Id",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "debit": {
+                        "type": "boolean",
+                        "title": "Debit"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Date"
+                    },
+                    "order_number": {
+                        "type": "integer",
+                        "title": "Order Number"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "price",
+                    "discount",
+                    "payment_method",
+                    "type",
+                    "status",
+                    "id",
+                    "debit",
+                    "date",
+                    "order_number"
+                ],
+                "title": "OrderOut"
+            },
+            "OrderPaymentMethod": {
+                "type": "string",
+                "enum": [
+                    "cash",
+                    "card"
+                ],
+                "title": "OrderPaymentMethod"
+            },
+            "OrderStatus": {
+                "type": "string",
+                "enum": [
+                    "waiting",
+                    "completed",
+                    "cancelled"
+                ],
+                "title": "OrderStatus"
+            },
+            "OrderStatusUpdate": {
+                "properties": {
+                    "status": {
+                        "$ref": "#/components/schemas/OrderStatus"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "status"
+                ],
+                "title": "OrderStatusUpdate"
+            },
+            "OrderType": {
+                "type": "string",
+                "enum": [
+                    "dine_in",
+                    "delivery",
+                    "takeaway"
+                ],
+                "title": "OrderType"
+            },
+            "OrderUpdate": {
+                "properties": {
+                    "price": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "title": "Price"
+                    },
+                    "discount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "title": "Discount"
+                    },
+                    "payment_method": {
+                        "$ref": "#/components/schemas/OrderPaymentMethod"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/OrderType"
+                    },
+                    "client_id": {
+                        "title": "Client Id",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "products": {
+                        "items": {
+                            "$ref": "#/components/schemas/ProductOrderUpdate"
+                        },
+                        "type": "array",
+                        "title": "Products"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "price",
+                    "discount",
+                    "payment_method",
+                    "type",
+                    "products"
+                ],
+                "title": "OrderUpdate"
+            },
+            "ProductCreate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "category_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Category Id"
+                    },
+                    "price": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "title": "Price"
+                    },
+                    "online_shop": {
+                        "type": "boolean",
+                        "title": "Online Shop"
+                    },
+                    "image_url": {
+                        "title": "Image Url",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "category_id",
+                    "price",
+                    "online_shop"
+                ],
+                "title": "ProductCreate"
+            },
+            "ProductFullInfoOut": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "category_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Category Id"
+                    },
+                    "price": {
+                        "type": "string",
+                        "title": "Price"
+                    },
+                    "online_shop": {
+                        "type": "boolean",
+                        "title": "Online Shop"
+                    },
+                    "image_url": {
+                        "title": "Image Url",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "active": {
+                        "type": "boolean",
+                        "title": "Active"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "category_id",
+                    "price",
+                    "online_shop",
+                    "id",
+                    "active"
+                ],
+                "title": "ProductFullInfoOut"
+            },
+            "ProductOrderCreate": {
+                "properties": {
+                    "product_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Product Id"
+                    },
+                    "count": {
+                        "type": "integer",
+                        "title": "Count"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "product_id",
+                    "count"
+                ],
+                "title": "ProductOrderCreate"
+            },
+            "ProductOrderUpdate": {
+                "properties": {
+                    "product_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Product Id"
+                    },
+                    "count": {
+                        "type": "integer",
+                        "title": "Count"
+                    },
+                    "product_order_id": {
+                        "title": "Product Order Id",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "product_id",
+                    "count"
+                ],
+                "title": "ProductOrderUpdate"
+            },
+            "ProductOut": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "price": {
+                        "type": "string",
+                        "title": "Price"
+                    },
+                    "online_shop": {
+                        "type": "boolean",
+                        "title": "Online Shop"
+                    },
+                    "category": {
+                        "$ref": "#/components/schemas/CategoryOut"
+                    },
+                    "image_url": {
+                        "title": "Image Url",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "name",
+                    "price",
+                    "online_shop",
+                    "category"
+                ],
+                "title": "ProductOut"
+            },
+            "ProductUpdate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "category_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Category Id"
+                    },
+                    "price": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "title": "Price"
+                    },
+                    "online_shop": {
+                        "type": "boolean",
+                        "title": "Online Shop"
+                    },
+                    "image_url": {
+                        "title": "Image Url",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "category_id",
+                    "price",
+                    "online_shop"
+                ],
+                "title": "ProductUpdate"
+            },
+            "RecipeItemCreate": {
+                "properties": {
+                    "product_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Product Id"
+                    },
+                    "item_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Item Id"
+                    },
+                    "amount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "title": "Amount"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "product_id",
+                    "item_id",
+                    "amount"
+                ],
+                "title": "RecipeItemCreate"
+            },
+            "RecipeItemOut": {
+                "properties": {
+                    "product_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Product Id"
+                    },
+                    "item_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Item Id"
+                    },
+                    "amount": {
+                        "type": "string",
+                        "title": "Amount"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "product_id",
+                    "item_id",
+                    "amount",
+                    "id"
+                ],
+                "title": "RecipeItemOut"
+            },
+            "RecipeItemUpdate": {
+                "properties": {
+                    "product_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Product Id"
+                    },
+                    "item_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Item Id"
+                    },
+                    "amount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "title": "Amount"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "product_id",
+                    "item_id",
+                    "amount"
+                ],
+                "title": "RecipeItemUpdate"
+            },
+            "ShiftOrderOut": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "debit": {
+                        "type": "boolean",
+                        "title": "Debit"
+                    },
+                    "price": {
+                        "type": "string",
+                        "title": "Price"
+                    },
+                    "discount": {
+                        "type": "string",
+                        "title": "Discount"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Date"
+                    },
+                    "payment_method": {
+                        "$ref": "#/components/schemas/OrderPaymentMethod"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/OrderType"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/OrderStatus"
+                    },
+                    "client_id": {
+                        "title": "Client Id",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "order_number": {
+                        "type": "integer",
+                        "title": "Order Number"
+                    },
+                    "products": {
+                        "items": {
+                            "$ref": "#/components/schemas/app__schemas__product__ProductOrderOut"
+                        },
+                        "type": "array",
+                        "title": "Products"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "debit",
+                    "price",
+                    "discount",
+                    "date",
+                    "payment_method",
+                    "type",
+                    "status",
+                    "order_number",
+                    "products"
+                ],
+                "title": "ShiftOrderOut"
+            },
+            "ShiftOut": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "active": {
+                        "type": "boolean",
+                        "title": "Active"
+                    },
+                    "start_time": {
+                        "title": "Start Time",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "end_time": {
+                        "title": "End Time",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "active"
+                ],
+                "title": "ShiftOut"
+            },
+            "StoreItemCreate": {
+                "properties": {
+                    "item_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Item Id"
+                    },
+                    "amount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "title": "Amount"
+                    },
+                    "price_per_item": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Price Per Item"
+                    },
+                    "supply_id": {
+                        "title": "Supply Id",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "item_id",
+                    "amount"
+                ],
+                "title": "StoreItemCreate"
+            },
+            "StoreItemOut": {
+                "properties": {
+                    "item_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Item Id"
+                    },
+                    "amount": {
+                        "type": "string",
+                        "title": "Amount"
+                    },
+                    "price_per_item": {
+                        "title": "Price Per Item",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "item_name": {
+                        "title": "Item Name",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "shift_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Shift Id"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Date"
+                    },
+                    "debit": {
+                        "type": "boolean",
+                        "title": "Debit"
+                    },
+                    "supply_id": {
+                        "title": "Supply Id",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "supplier": {
+                        "title": "Supplier",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "item_id",
+                    "amount",
+                    "id",
+                    "shift_id",
+                    "date",
+                    "debit"
+                ],
+                "title": "StoreItemOut"
+            },
+            "StoreItemUpdate": {
+                "properties": {
+                    "item_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Item Id"
+                    },
+                    "amount": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "title": "Amount"
+                    },
+                    "price_per_item": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Price Per Item"
+                    },
+                    "supply_id": {
+                        "title": "Supply Id",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "item_id",
+                    "amount"
+                ],
+                "title": "StoreItemUpdate"
+            },
+            "SupplierCreate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "title": "SupplierCreate"
+            },
+            "SupplierOut": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "deactivated": {
+                        "type": "boolean",
+                        "title": "Deactivated"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "id",
+                    "deactivated"
+                ],
+                "title": "SupplierOut"
+            },
+            "SupplierUpdate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "title": "SupplierUpdate"
+            },
+            "SupplyCreate": {
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Date"
+                    },
+                    "supplier_id": {
+                        "title": "Supplier Id",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "date"
+                ],
+                "title": "SupplyCreate"
+            },
+            "SupplyOut": {
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Date"
+                    },
+                    "supplier_id": {
+                        "title": "Supplier Id",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "active": {
+                        "type": "boolean",
+                        "title": "Active"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "date",
+                    "id",
+                    "active"
+                ],
+                "title": "SupplyOut"
+            },
+            "SupplyUpdate": {
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Date"
+                    },
+                    "supplier_id": {
+                        "title": "Supplier Id",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "date"
+                ],
+                "title": "SupplyUpdate"
+            },
+            "UserCreate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "db_name": {
+                        "type": "string",
+                        "title": "Db Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "db_name"
+                ],
+                "title": "UserCreate"
+            },
+            "UserOut": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "db_name": {
+                        "type": "string",
+                        "title": "Db Name"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "deactivated": {
+                        "type": "boolean",
+                        "title": "Deactivated"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "db_name",
+                    "id",
+                    "deactivated"
+                ],
+                "title": "UserOut"
+            },
+            "UserUpdate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "db_name": {
+                        "type": "string",
+                        "title": "Db Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "db_name"
+                ],
+                "title": "UserUpdate"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            },
+            "app__schemas__product__ProductOrderOut": {
+                "properties": {
+                    "product_order_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Product Order Id"
+                    },
+                    "count": {
+                        "type": "integer",
+                        "title": "Count"
+                    },
+                    "product_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Product Id"
+                    },
+                    "product_name": {
+                        "type": "string",
+                        "title": "Product Name"
+                    },
+                    "product_price": {
+                        "type": "string",
+                        "title": "Product Price"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "product_order_id",
+                    "count",
+                    "product_id",
+                    "product_name",
+                    "product_price"
+                ],
+                "title": "ProductOrderOut"
+            },
+            "app__schemas__product_order__ProductOrderOut": {
+                "properties": {
+                    "product_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Product Id"
+                    },
+                    "order_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Order Id"
+                    },
+                    "count": {
+                        "type": "integer",
+                        "title": "Count"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "product_id",
+                    "order_id",
+                    "count",
+                    "id"
+                ],
+                "title": "ProductOrderOut"
+            }
+        },
+        "securitySchemes": {
+            "HTTPBearer": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}

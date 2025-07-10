@@ -9,6 +9,7 @@
  * # Application mode
  * VITE_ADMIN_MODE=true
  * VITE_DEBUG_MODE=true
+ * MODE=dev|prod|local
  * 
  * # API Configuration
  * VITE_API_BASE_URL=http://0.0.0.0:8080
@@ -47,13 +48,14 @@ const getBoolEnvVar = (key: string, fallback: boolean = false): boolean => {
 // Environment configuration
 export const ENV_CONFIG = {
   // Application mode
+  MODE: getEnvVar('MODE', 'dev'),
   ADMIN_MODE: getBoolEnvVar('VITE_ADMIN_MODE', false),
   DEBUG_MODE: getBoolEnvVar('VITE_DEBUG_MODE', false),
   
   // API Configuration
   API_BASE_URL: getEnvVar('VITE_API_BASE_URL', 'https://coffee-point-api-317780828805.europe-west3.run.app'),
   API_TIMEOUT: parseInt(getEnvVar('VITE_API_TIMEOUT', '10000')),
-  USE_API_PROXY: getBoolEnvVar('VITE_USE_API_PROXY', true), // По умолчанию используем прокси
+  USE_API_PROXY: getBoolEnvVar('VITE_USE_API_PROXY', false), // По умолчанию НЕ используем прокси для продакшена
   
   // Application Settings
   APP_NAME: getEnvVar('VITE_APP_NAME', 'Coffee Shop Manager'),
@@ -72,7 +74,6 @@ export const ENV_CONFIG = {
   
   // Environment detection (simplified)
   IS_DEVELOPMENT: import.meta.env.DEV,
-  MODE: import.meta.env.MODE || 'development',
 } as const;
 
 export default ENV_CONFIG; 

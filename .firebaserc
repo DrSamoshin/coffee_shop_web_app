@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "coffee-point-crm",
+    "coffee-point-crm": "coffee-point-crm"
+  },
+  "targets": {},
+  "etags": {}
+}

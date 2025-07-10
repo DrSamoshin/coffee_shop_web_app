@@ -31,21 +31,22 @@
     "loadingError": "Error loading dashboard data"
   },
       "navigation": {
-    "dashboard": "Dashboard",
     "orders": "Orders",
-    "products": "Products", 
-    "inventory": "Inventory",
+    "categories": "Categories",
+    "products": "Products",
+    "items": "Items",
     "store": "Store",
-    "analytics": "Analytics",
     "report": "Report",
     "employees": "Employees",
     "suppliers": "Suppliers",
     "supplies": "Supplies",
-
     "images": "Images",
     "settings": "Settings",
     "menu": "Menu",
-    "categories": "Categories"
+    "language": "Language",
+    "english": "English",
+    "russian": "Русский",
+    "logout": "Logout"
   },
   "orders": {
     "title": "Orders Management",
@@ -213,7 +214,9 @@
     "availableInOnlineShop": "Available in Online Shop",
     "selectImage": "Select Image",
     "clearImage": "Clear",
-    "noImagesAvailable": "No images available"
+    "noImagesAvailable": "No images available",
+    "image": "Image",
+    "noImage": "No image"
   },
   "images": {
     "title": "Images",
@@ -257,6 +260,7 @@
   "items": {
     "title": "Items",
     "name": "Name",
+    "measurement": "Unit of Measurement",
     "measure": "Unit of Measurement",
     "status": "Status",
     "active": "Active",

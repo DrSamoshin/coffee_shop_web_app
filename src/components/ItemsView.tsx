@@ -33,11 +33,12 @@ import { useTranslation } from 'react-i18next';
 import type { Item } from '../types/api';
 import { apiService } from '../services/api';
 import { logger } from '../services/logger';
-import { useConstants } from '../hooks/useConstants';
+import { UI } from '../config/constants';
 
 const ItemsView: React.FC = () => {
   const { t } = useTranslation();
-  const { constants, loading: constantsLoading } = useConstants();
+  const [itemMeasurements, setItemMeasurements] = useState<string[]>([]);
+  const [itemMeasurementsLoading, setItemMeasurementsLoading] = useState(true);
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -55,15 +56,23 @@ const ItemsView: React.FC = () => {
   const [editItemMeasure, setEditItemMeasure] = useState('');
 
   useEffect(() => {
+    setItemMeasurementsLoading(true);
+    apiService.getItemMeasurements()
+      .then((data) => setItemMeasurements(data))
+      .catch(() => setItemMeasurements(['kg', 'g', 'l', 'ml', 'pcs']))
+      .finally(() => setItemMeasurementsLoading(false));
+  }, []);
+
+  useEffect(() => {
     loadItems();
   }, []);
 
-  // Устанавливаем единицу измерения по умолчанию когда загружаются константы
+  // Устанавливаем единицу измерения по умолчанию когда загружаются itemMeasurements
   useEffect(() => {
-    if (constants.itemMeasurements.length > 0 && !newItemMeasure) {
-      setNewItemMeasure(constants.itemMeasurements[0]);
+    if (itemMeasurements.length > 0 && !newItemMeasure) {
+      setNewItemMeasure(itemMeasurements[0]);
     }
-  }, [constants.itemMeasurements, newItemMeasure]);
+  }, [itemMeasurements, newItemMeasure]);
 
   const loadItems = async () => {
     try {
@@ -90,7 +99,7 @@ const ItemsView: React.FC = () => {
         measurement: newItemMeasure.trim()
       });
       setNewItemName('');
-      setNewItemMeasure(constants.itemMeasurements.length > 0 ? constants.itemMeasurements[0] : '');
+      setNewItemMeasure(itemMeasurements.length > 0 ? itemMeasurements[0] : '');
       setAddDialogOpen(false);
       await loadItems();
       logger.info('Item created', 'USER_ACTION', { name: newItemName, measurement: newItemMeasure });
@@ -112,7 +121,7 @@ const ItemsView: React.FC = () => {
       setEditDialogOpen(false);
       setSelectedItem(null);
       setEditItemName('');
-      setEditItemMeasure(constants.itemMeasurements.length > 0 ? constants.itemMeasurements[0] : '');
+      setEditItemMeasure(itemMeasurements.length > 0 ? itemMeasurements[0] : '');
       await loadItems();
       logger.info('Item updated', 'USER_ACTION', { id: selectedItem.id, name: editItemName, measurement: editItemMeasure });
     } catch (err) {
@@ -144,9 +153,9 @@ const ItemsView: React.FC = () => {
     
     // Проверяем, есть ли единица измерения товара в списке доступных
     const currentMeasure = item.measurement || '';
-    const validMeasure = constants.itemMeasurements.includes(currentMeasure)
+    const validMeasure = itemMeasurements.includes(currentMeasure)
       ? currentMeasure
-      : (constants.itemMeasurements.length > 0 ? constants.itemMeasurements[0] : '');
+      : (itemMeasurements.length > 0 ? itemMeasurements[0] : '');
       
     setEditItemMeasure(validMeasure);
     setEditDialogOpen(true);
@@ -157,7 +166,7 @@ const ItemsView: React.FC = () => {
     setDeleteDialogOpen(true);
   };
 
-  if (loading || constantsLoading) {
+  if (loading || itemMeasurementsLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
         <CircularProgress />
@@ -166,7 +175,13 @@ const ItemsView: React.FC = () => {
   }
 
   return (
-    <Container maxWidth={false} sx={{ py: 3 }}>
+    <Container maxWidth={false} sx={{
+      width: '100%',
+      padding: UI.SIZES.SPACING.LG,
+      backgroundColor: UI.COLORS.background.default,
+      borderRadius: UI.SIZES.BORDER.RADIUS.LARGE,
+      minHeight: '80vh',
+    }}>
       <Typography variant="h4" gutterBottom>
         {t('items.title')}
       </Typography>
@@ -187,20 +202,20 @@ const ItemsView: React.FC = () => {
             </Box>
           ) : (
             <TableContainer>
-              <Table>
+              <Table sx={{ tableLayout: 'fixed' }}>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold' }}>{t('items.name')}</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>{t('items.measure')}</TableCell>
-                    <TableCell align="right" sx={{ fontWeight: 'bold' }}>{t('items.actions')}</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>{t('items.name')}</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>{t('items.measurement')}</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 'bold', width: '150px', minWidth: '150px', maxWidth: '150px', whiteSpace: 'nowrap' }}>{t('items.actions')}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {items.map((item) => (
                     <TableRow key={item.id} sx={{ height: 48 }}>
-                      <TableCell sx={{ py: 1 }}>{item.name}</TableCell>
-                      <TableCell sx={{ py: 1 }}>{item.measurement}</TableCell>
-                      <TableCell align="right" sx={{ py: 1 }}>
+                      <TableCell sx={{ py: 1, textAlign: 'left' }}>{item.name}</TableCell>
+                      <TableCell sx={{ py: 1, textAlign: 'left' }}>{item.measurement}</TableCell>
+                      <TableCell align="right" sx={{ py: 1, width: '150px', minWidth: '150px', maxWidth: '150px', whiteSpace: 'nowrap' }}>
                         <IconButton onClick={() => openEditDialog(item)} size="small">
                           <EditIcon />
                         </IconButton>
@@ -248,7 +263,7 @@ const ItemsView: React.FC = () => {
               onChange={(e) => setNewItemMeasure(e.target.value as string)}
               label={t('items.measure')}
             >
-              {constants.itemMeasurements.map((measurement) => (
+              {itemMeasurements.map((measurement) => (
                 <MenuItem key={measurement} value={measurement}>
                   {measurement}
                 </MenuItem>
@@ -257,7 +272,7 @@ const ItemsView: React.FC = () => {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setAddDialogOpen(false)}>
+          <Button onClick={() => setAddDialogOpen(false)} sx={{ color: UI.COLORS.text.secondary, '&:hover, &:active, &:focus': { color: UI.COLORS.text.secondary } }}>
             {t('common.cancel')}
           </Button>
           <Button onClick={handleAddItem} variant="contained" color="success">
@@ -287,7 +302,7 @@ const ItemsView: React.FC = () => {
               onChange={(e) => setEditItemMeasure(e.target.value as string)}
               label={t('items.measure')}
             >
-              {constants.itemMeasurements.map((measurement) => (
+              {itemMeasurements.map((measurement) => (
                 <MenuItem key={measurement} value={measurement}>
                   {measurement}
                 </MenuItem>
@@ -296,7 +311,7 @@ const ItemsView: React.FC = () => {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setEditDialogOpen(false)}>
+          <Button onClick={() => setEditDialogOpen(false)} sx={{ color: UI.COLORS.text.secondary, '&:hover, &:active, &:focus': { color: UI.COLORS.text.secondary } }}>
             {t('common.cancel')}
           </Button>
           <Button onClick={handleSaveItem} variant="contained" color="success">
@@ -319,7 +334,7 @@ const ItemsView: React.FC = () => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>
+          <Button onClick={() => setDeleteDialogOpen(false)} sx={{ color: UI.COLORS.text.secondary, '&:hover, &:active, &:focus': { color: UI.COLORS.text.secondary } }}>
             {t('common.cancel')}
           </Button>
           <Button onClick={handleDeleteItem} color="error" variant="contained">

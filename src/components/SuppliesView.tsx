@@ -24,7 +24,7 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
@@ -169,20 +169,20 @@ const SuppliesView: React.FC = () => {
             </Box>
           ) : (
             <TableContainer>
-              <Table>
+              <Table sx={{ tableLayout: 'fixed' }}>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold' }}>{t('supplies.date')}</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>{t('supplies.supplier')}</TableCell>
-                    <TableCell align="right" sx={{ fontWeight: 'bold' }}>{t('supplies.actions')}</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>{t('supplies.date')}</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>{t('supplies.supplier')}</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 'bold', width: '150px', minWidth: '150px', maxWidth: '150px', whiteSpace: 'nowrap' }}>{t('supplies.actions')}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {supplies.map((supply) => (
                     <TableRow key={supply.id} sx={{ height: 48 }}>
-                      <TableCell sx={{ py: 1 }}>{formatDate(supply.date)}</TableCell>
-                      <TableCell sx={{ py: 1 }}>{getSupplierName(supply.supplier_id)}</TableCell>
-                      <TableCell align="right" sx={{ py: 1 }}>
+                      <TableCell sx={{ py: 1, textAlign: 'left' }}>{formatDate(supply.date)}</TableCell>
+                      <TableCell sx={{ py: 1, textAlign: 'left' }}>{getSupplierName(supply.supplier_id)}</TableCell>
+                      <TableCell align="right" sx={{ py: 1, width: '150px', minWidth: '150px', maxWidth: '150px', whiteSpace: 'nowrap' }}>
                         <IconButton onClick={() => openEditDialog(supply)} size="small">
                           <EditIcon />
                         </IconButton>

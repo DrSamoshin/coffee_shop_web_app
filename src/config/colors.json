@@ -3,43 +3,43 @@
     "main": "#6f4e37",
     "light": "#8b6f47",
     "dark": "#5a3d2a",
-    "contrastText": "#ffffff"
+    "contrastText": "#FAFAFA"
   },
   "secondary": {
     "main": "#d4b896",
     "light": "#e8ddd4",
     "dark": "#c3a882",
-    "contrastText": "#000000"
+    "contrastText": "#111111"
   },
   "success": {
     "main": "#4caf50",
     "light": "#81c784",
     "dark": "#388e3c",
-    "contrastText": "#ffffff"
+    "contrastText": "#FAFAFA"
   },
   "error": {
     "main": "#f44336",
     "light": "#e57373",
     "dark": "#d32f2f",
-    "contrastText": "#ffffff"
+    "contrastText": "#FAFAFA"
   },
   "warning": {
     "main": "#ff9800",
     "light": "#ffb74d",
     "dark": "#f57c00",
-    "contrastText": "#000000"
+    "contrastText": "#111111"
   },
   "info": {
     "main": "#2196f3",
     "light": "#64b5f6",
     "dark": "#1976d2",
-    "contrastText": "#ffffff"
+    "contrastText": "#FAFAFA"
   },
   "background": {
     "default": "#f5f1eb",
-    "paper": "#ffffff",
+    "paper": "#FAFAFA",
     "sidebar": "#fefefe",
-    "card": "#ffffff",
+    "card": "#FAFAFA",
     "cardHover": "#f9f9f9"
   },
   "text": {

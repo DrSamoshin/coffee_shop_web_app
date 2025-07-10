@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Container,
   Typography,
@@ -21,8 +21,6 @@ import {
   Box,
   CircularProgress,
   Alert,
-  ToggleButtonGroup,
-  ToggleButton,
   FormControl,
   InputLabel,
   Select,
@@ -30,7 +28,6 @@ import {
   Checkbox,
   FormControlLabel,
   Link,
-  Tooltip
 } from '@mui/material';
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
@@ -38,6 +35,8 @@ import { logger } from '../services/logger';
 import { apiService } from '../services/api';
 import { UI } from '../config/constants';
 import type { Product, Category } from '../types/api';
+import { FilterToggle, NumberInput } from './shared';
+import { parseNumberInput } from '../utils/numberFormatting';
 
 const ProductsView: React.FC = () => {
   const { t } = useTranslation();
@@ -71,12 +70,15 @@ const ProductsView: React.FC = () => {
   const [editProductOnlineShop, setEditProductOnlineShop] = useState(false);
   const [editProductImageUrl, setEditProductImageUrl] = useState('');
 
-  useEffect(() => {
-    loadProducts();
-    loadCategories();
-  }, [showOnlineShopOnly]);
+  // 1. Функция форматирования цены
+  const formatPrice = (value: string | number) => {
+    const num = typeof value === 'string' ? parseFloat(value.toString().replace(',', '.')) : value;
+    if (isNaN(num)) return '0,00';
+    // Форматируем с запятой как разделителем
+    return new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num).replace('.', ',');
+  };
 
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async () => {
     try {
       setLoading(true);
       const data = showOnlineShopOnly ? 
@@ -84,23 +86,30 @@ const ProductsView: React.FC = () => {
         await apiService.getProducts();
       setProducts(data);
       setError(null);
+      logger.info('ProductsView', 'Products loaded successfully', { count: data.length, onlineShopOnly: showOnlineShopOnly });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       setError(errorMessage);
-      logger.error('API_ERROR', 'Failed to load products', err instanceof Error ? err : new Error(errorMessage));
+      logger.error('ProductsView', 'Failed to load products', err instanceof Error ? err : new Error(errorMessage));
     } finally {
       setLoading(false);
     }
-  };
+  }, [showOnlineShopOnly]);
 
-  const loadCategories = async () => {
+  const loadCategories = useCallback(async () => {
     try {
       const data = await apiService.getCategories();
       setCategories(data);
+      logger.info('ProductsView', 'Categories loaded successfully', { count: data.length });
     } catch (err) {
-      logger.error('API_ERROR', 'Failed to load categories', err instanceof Error ? err : new Error('Unknown error'));
+      logger.error('ProductsView', 'Failed to load categories', err instanceof Error ? err : new Error('Unknown error'));
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadProducts();
+    loadCategories();
+  }, [loadProducts, loadCategories]);
 
   const loadAvailableImages = async () => {
     try {
@@ -133,7 +142,7 @@ const ProductsView: React.FC = () => {
     try {
       await apiService.createProduct({
         name: newProductName.trim(),
-        price: parseFloat(newProductPrice),
+        price: parseNumberInput(newProductPrice),
         category_id: newProductCategoryId,
         online_shop: newProductOnlineShop,
         image_url: newProductImageUrl.trim() || undefined
@@ -164,7 +173,7 @@ const ProductsView: React.FC = () => {
     try {
       await apiService.updateProduct(selectedProduct.id, {
         name: editProductName.trim(),
-        price: parseFloat(editProductPrice),
+        price: parseNumberInput(editProductPrice),
         category_id: editProductCategoryId,
         online_shop: editProductOnlineShop,
         image_url: editProductImageUrl.trim() || undefined
@@ -234,7 +243,13 @@ const ProductsView: React.FC = () => {
   }
 
   return (
-    <Container maxWidth={false} sx={{ py: 3 }}>
+    <Container maxWidth={false} sx={{
+      width: '100%',
+      padding: UI.SIZES.SPACING.LG,
+      backgroundColor: UI.COLORS.background.default,
+      borderRadius: UI.SIZES.BORDER.RADIUS.LARGE,
+      minHeight: '80vh',
+    }}>
       <Typography variant="h4" gutterBottom>
         {t('products.title')}
       </Typography>
@@ -245,33 +260,14 @@ const ProductsView: React.FC = () => {
         </Alert>
       )}
 
-      <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-start' }}>
-        <ToggleButtonGroup
-          value={showOnlineShopOnly ? 'online' : 'all'}
-          exclusive
-          onChange={(_, value) => {
-            if (value !== null) {
-              setShowOnlineShopOnly(value === 'online');
-            }
-          }}
-          size="small"
-          sx={{
-            '& .MuiToggleButton-root': {
-              px: 2,
-              py: 0.5,
-              fontSize: '0.875rem',
-              textTransform: 'none'
-            }
-          }}
-        >
-          <ToggleButton value="all">
-            {t('products.allProducts')}
-          </ToggleButton>
-          <ToggleButton value="online">
-            {t('products.onlineShopProducts')}
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </Box>
+      <FilterToggle
+        value={showOnlineShopOnly ? 'online' : 'all'}
+        onChange={(value) => setShowOnlineShopOnly(value === 'online')}
+        options={[
+          { value: 'all', label: t('products.allProducts') },
+          { value: 'online', label: t('products.onlineShopProducts') }
+        ]}
+      />
 
       <Card>
         <CardContent>
@@ -283,65 +279,32 @@ const ProductsView: React.FC = () => {
             </Box>
           ) : (
             <TableContainer>
-              <Table>
+              <Table sx={{ tableLayout: 'fixed' }}>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold' }}>{t('products.name')}</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>{t('products.price')}</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>{t('products.category')}</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', width: 120 }}>{t('products.imageUrl')}</TableCell>
-                    <TableCell align="right" sx={{ fontWeight: 'bold' }}>{t('products.actions')}</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>{t('products.name')}</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>{t('products.category')}</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>{t('products.price')}</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>{t('products.image')}</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 'bold', width: '150px', minWidth: '150px', maxWidth: '150px', whiteSpace: 'nowrap' }}>{t('products.actions')}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {products.map((product) => (
                     <TableRow key={product.id} sx={{ height: 48 }}>
-                      <TableCell sx={{ py: 1 }}>{product.name || 'No name'}</TableCell>
-                      <TableCell sx={{ py: 1 }}>{product.price || '0'}</TableCell>
-                      <TableCell sx={{ py: 1 }}>{product.category?.name || 'No category'}</TableCell>
-                      <TableCell sx={{ py: 1, width: 120 }}>
+                      <TableCell sx={{ py: 1, textAlign: 'left' }}>{product.name}</TableCell>
+                      <TableCell sx={{ py: 1, textAlign: 'left' }}>{product.category?.name || '-'}</TableCell>
+                      <TableCell sx={{ py: 1, textAlign: 'left' }}>{formatPrice(product.price)}</TableCell>
+                      <TableCell sx={{ py: 1, textAlign: 'left' }}>
                         {product.image_url ? (
-                          <Tooltip
-                            title={
-                              <img 
-                                src={product.image_url} 
-                                alt="Product preview"
-                                style={{ 
-                                  maxWidth: UI.SIZES.IMAGE_PREVIEW.MEDIUM.width, 
-                                  maxHeight: UI.SIZES.IMAGE_PREVIEW.MEDIUM.height, 
-                                  objectFit: 'cover',
-                                  borderRadius: UI.SIZES.BORDER.RADIUS.SMALL,
-                                  border: `${UI.SIZES.BORDER.WIDTH.MEDIUM} solid ${UI.COLORS.divider}`
-                                }}
-                              />
-                            }
-                            placement="right"
-                            componentsProps={{
-                              tooltip: {
-                                sx: {
-                                  backgroundColor: 'transparent',
-                                  boxShadow: 'none',
-                                  border: 'none',
-                                  padding: 0,
-                                  margin: 0
-                                }
-                              }
-                            }}
-                          >
-                            <Link 
-                              href={product.image_url} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              sx={{ cursor: 'pointer' }}
-                            >
-                              Image
-                            </Link>
-                          </Tooltip>
+                          <Link href={product.image_url} target="_blank" rel="noopener noreferrer" sx={{ cursor: 'pointer' }}>
+                            {t('products.image')}
+                          </Link>
                         ) : (
-                          'No image'
+                          t('products.noImage')
                         )}
                       </TableCell>
-                      <TableCell align="right" sx={{ py: 1 }}>
+                      <TableCell align="right" sx={{ py: 1, width: '150px', minWidth: '150px', maxWidth: '150px', whiteSpace: 'nowrap' }}>
                         <IconButton onClick={() => openEditDialog(product)} size="small">
                           <EditIcon />
                         </IconButton>
@@ -382,14 +345,14 @@ const ProductsView: React.FC = () => {
             onChange={(e) => setNewProductName(e.target.value)}
             sx={{ mt: 2, mb: 2 }}
           />
-          <TextField
+          <NumberInput
             margin="dense"
             label={t('products.price')}
-            type="number"
             fullWidth
             variant="outlined"
             value={newProductPrice}
-            onChange={(e) => setNewProductPrice(e.target.value.replace(',', '.'))}
+            onChange={setNewProductPrice}
+            maxDecimals={2}
             sx={{ mb: 2 }}
           />
           <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
@@ -410,7 +373,7 @@ const ProductsView: React.FC = () => {
             <Button
               variant="outlined"
               onClick={() => openImageSelector('add')}
-              sx={{ mb: 1, mr: 1 }}
+              sx={{ mb: 1, mr: 1, color: UI.COLORS.text.primary, '&:hover, &:active, &:focus': { color: UI.COLORS.text.primary } }}
             >
               {t('products.selectImage')}
             </Button>
@@ -449,7 +412,7 @@ const ProductsView: React.FC = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setAddDialogOpen(false)}>
+          <Button onClick={() => setAddDialogOpen(false)} sx={{ color: UI.COLORS.text.secondary, '&:hover, &:active, &:focus': { color: UI.COLORS.text.secondary } }}>
             {t('categories.cancel')}
           </Button>
           <Button onClick={handleAddProduct} variant="contained" color="success">
@@ -472,14 +435,14 @@ const ProductsView: React.FC = () => {
             onChange={(e) => setEditProductName(e.target.value)}
             sx={{ mt: 2, mb: 2 }}
           />
-          <TextField
+          <NumberInput
             margin="dense"
             label={t('products.price')}
-            type="number"
             fullWidth
             variant="outlined"
             value={editProductPrice}
-            onChange={(e) => setEditProductPrice(e.target.value.replace(',', '.'))}
+            onChange={setEditProductPrice}
+            maxDecimals={2}
             sx={{ mb: 2 }}
           />
           <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
@@ -500,7 +463,7 @@ const ProductsView: React.FC = () => {
             <Button
               variant="outlined"
               onClick={() => openImageSelector('edit')}
-              sx={{ mb: 1, mr: 1 }}
+              sx={{ mb: 1, mr: 1, color: UI.COLORS.text.primary, '&:hover, &:active, &:focus': { color: UI.COLORS.text.primary } }}
             >
               {t('products.selectImage')}
             </Button>
@@ -535,7 +498,7 @@ const ProductsView: React.FC = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setEditDialogOpen(false)}>
+          <Button onClick={() => setEditDialogOpen(false)} sx={{ color: UI.COLORS.text.secondary, '&:hover, &:active, &:focus': { color: UI.COLORS.text.secondary } }}>
             {t('categories.cancel')}
           </Button>
           <Button onClick={handleSaveProduct} variant="contained" color="success">
@@ -558,7 +521,7 @@ const ProductsView: React.FC = () => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>
+          <Button onClick={() => setDeleteDialogOpen(false)} sx={{ color: UI.COLORS.text.secondary, '&:hover, &:active, &:focus': { color: UI.COLORS.text.secondary } }}>
             {t('categories.cancel')}
           </Button>
           <Button onClick={handleDeleteProduct} color="error" variant="contained">
@@ -621,7 +584,7 @@ const ProductsView: React.FC = () => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setImageSelectDialogOpen(false)}>
+          <Button onClick={() => setImageSelectDialogOpen(false)} sx={{ color: UI.COLORS.text.secondary, '&:hover, &:active, &:focus': { color: UI.COLORS.text.secondary } }}>
             {t('categories.cancel')}
           </Button>
         </DialogActions>

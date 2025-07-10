@@ -20,7 +20,7 @@
     "navigation": {
     "orders": "Заказы",
     "products": "Продукты",
-    "inventory": "Склад",
+    "items": "Товары",
     "store": "Склад",
     "report": "Отчет",
     "employees": "Сотрудники",
@@ -29,7 +29,11 @@
     "images": "Изображения",
     "settings": "Настройки",
     "menu": "Меню",
-    "categories": "Категории"
+    "categories": "Категории",
+    "language": "Язык",
+    "english": "English",
+    "russian": "Русский",
+    "logout": "Выход"
   },
   "orders": {
     "title": "Управление заказами",
@@ -186,6 +190,7 @@
     "category": "Категория",
     "onlineShop": "Интернет-магазин",
     "imageUrl": "URL изображения",
+    "image": "Изображение",
     "actions": "Действия",
     "addProduct": "Добавить продукт",
     "editProduct": "Редактировать продукт",
@@ -197,7 +202,8 @@
     "availableInOnlineShop": "Доступен в интернет-магазине",
     "selectImage": "Выбрать изображение",
     "clearImage": "Очистить",
-    "noImagesAvailable": "Изображения недоступны"
+    "noImagesAvailable": "Изображения недоступны",
+    "noImage": "Нет изображения"
   },
   "images": {
     "inDevelopment": "В разработке"
@@ -233,6 +239,7 @@
   "items": {
     "title": "Товары",
     "name": "Название",
+    "measurement": "Единица измерения",
     "measure": "Единица измерения",
     "status": "Статус",
     "active": "Активен",

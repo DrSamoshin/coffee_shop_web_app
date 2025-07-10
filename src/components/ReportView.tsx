@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { apiService } from '../services/api';
 import { logger } from '../services/logger';
 import type { ActiveShiftReport } from '../types/api';
-import colors from '../config/colors.json';
+import { UI } from '../config/constants';
+import { Typography, IconButton, Tooltip } from '@mui/material';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 const ReportView: React.FC = () => {
   const { t } = useTranslation();
@@ -11,28 +13,28 @@ const ReportView: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchReport = async () => {
+  const fetchReport = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      logger.info('ReportView', 'Загрузка отчета активной смены');
+      logger.info('ReportView', 'Loading active shift report');
       
       const data = await apiService.getActiveShiftReport();
       setReport(data);
       
-      logger.info('ReportView', 'Отчет активной смены загружен');
+      logger.info('ReportView', 'Active shift report loaded');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : t('report.error');
       setError(errorMessage);
-      logger.error('ReportView', 'Ошибка загрузки отчета активной смены', err instanceof Error ? err : undefined);
+      logger.error('ReportView', 'Error loading active shift report', err instanceof Error ? err : undefined);
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
 
   useEffect(() => {
     fetchReport();
-  }, []);
+  }, [fetchReport]);
 
   const handleRefresh = () => {
     fetchReport();
@@ -46,6 +48,11 @@ const ReportView: React.FC = () => {
     }).format(amount);
   };
 
+  const formatPrice = (amount: number): string => {
+    if (isNaN(amount)) return '0,00';
+    return new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount).replace('.', ',');
+  };
+
   if (loading) {
     return (
       <div style={{ 
@@ -53,7 +60,7 @@ const ReportView: React.FC = () => {
         justifyContent: 'center', 
         alignItems: 'center', 
         minHeight: '200px',
-        color: colors.text.primary 
+        color: UI.COLORS.text.primary 
       }}>
         {t('report.loading')}
       </div>
@@ -64,7 +71,7 @@ const ReportView: React.FC = () => {
     return (
       <div style={{ 
         padding: '20px', 
-        color: colors.error.main,
+        color: UI.COLORS.error.main,
         textAlign: 'center' 
       }}>
         <h3>{t('report.error')}</h3>
@@ -74,8 +81,8 @@ const ReportView: React.FC = () => {
           style={{
             marginTop: '10px',
             padding: '8px 16px',
-            backgroundColor: colors.error.main,
-            color: 'white',
+            backgroundColor: UI.COLORS.error.main,
+            color: UI.COLORS.background.paper,
             border: 'none',
             borderRadius: '4px',
             cursor: 'pointer'
@@ -92,7 +99,7 @@ const ReportView: React.FC = () => {
       <div style={{ 
         padding: '20px', 
         textAlign: 'center',
-        color: colors.text.secondary 
+        color: UI.COLORS.text.secondary 
       }}>
         {t('report.noData')}
       </div>
@@ -100,146 +107,151 @@ const ReportView: React.FC = () => {
   }
 
   return (
-    <div style={{ padding: '20px', backgroundColor: colors.background.default }}>
-      {/* Заголовок с кнопкой обновления */}
+    <div style={{ 
+      padding: UI.SIZES.SPACING.LG, 
+      backgroundColor: UI.COLORS.background.default,
+      borderRadius: UI.SIZES.BORDER.RADIUS.LARGE,
+      minHeight: '80vh',
+      width: '100%',
+    }}>
+      {/* Header with refresh button */}
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
-        marginBottom: '24px' 
+        marginBottom: UI.SIZES.SPACING.LG 
       }}>
-        <h2 style={{ 
-          margin: 0, 
-          color: colors.text.primary,
-          fontSize: '24px',
-          fontWeight: 'bold'
-        }}>
+        <Typography variant="h4" gutterBottom sx={{ color: UI.COLORS.text.primary, fontWeight: UI.SIZES.FONT.WEIGHTS.BOLD, fontFamily: 'Helvetica, Arial, sans-serif', m: 0 }}>
           {t('report.title')}
-        </h2>
-        <button
-          onClick={handleRefresh}
-          disabled={loading}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: colors.primary.main,
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: loading ? 'not-allowed' : 'pointer',
-            fontSize: '14px',
-            fontWeight: '500',
-            opacity: loading ? 0.6 : 1,
-            transition: 'all 0.2s ease'
-          }}
-        >
-          {loading ? t('report.refreshing') : t('report.refresh')}
-        </button>
+        </Typography>
+        <Tooltip title={t('report.refresh')}>
+          <span>
+            <IconButton
+              onClick={handleRefresh}
+              disabled={loading}
+              sx={{
+                border: `1.5px solid ${UI.COLORS.primary.main}`,
+                borderRadius: '50%',
+                backgroundColor: UI.COLORS.background.paper,
+                color: UI.COLORS.primary.main,
+                width: 40,
+                height: 40,
+                transition: 'all 0.2s',
+                '&:focus, &:active, &:hover': {
+                  outline: 'none',
+                  boxShadow: 'none',
+                  borderColor: 'transparent',
+                  backgroundColor: UI.COLORS.action.hover,
+                },
+                opacity: loading ? 0.6 : 1,
+              }}
+            >
+              <RefreshIcon fontSize="medium" />
+            </IconButton>
+          </span>
+        </Tooltip>
       </div>
-
-      {/* Основные метрики */}
+      {/* Main metrics */}
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-        gap: '16px', 
-        marginBottom: '32px' 
+        gap: UI.SIZES.SPACING.MD, 
+        marginBottom: UI.SIZES.SPACING.XL 
       }}>
         <div style={{
-          padding: '20px',
-          backgroundColor: colors.background.paper,
-          borderRadius: '8px',
-          border: `1px solid ${colors.divider}`,
+          padding: UI.SIZES.SPACING.LG,
+          backgroundColor: UI.COLORS.background.paper,
+          borderRadius: UI.SIZES.BORDER.RADIUS.MEDIUM,
+          border: `1px solid ${UI.COLORS.divider}`,
           textAlign: 'center'
         }}>
           <h3 style={{ 
-            margin: '0 0 8px 0', 
-            color: colors.text.secondary,
-            fontSize: '14px',
-            fontWeight: 'normal',
+            margin: `0 0 ${UI.SIZES.SPACING.SM} 0`, 
+            color: UI.COLORS.text.secondary,
+            fontSize: UI.SIZES.FONT.MEDIUM,
+            fontWeight: UI.SIZES.FONT.WEIGHTS.NORMAL,
             textTransform: 'uppercase'
           }}>
             {t('report.shiftIncome')}
           </h3>
           <p style={{ 
             margin: 0, 
-            fontSize: '28px', 
-            fontWeight: 'bold', 
-            color: colors.success.main 
+            fontSize: UI.SIZES.FONT.LARGE,
+            fontWeight: UI.SIZES.FONT.WEIGHTS.BOLD, 
+            color: UI.COLORS.success.main 
           }}>
-            {formatNumber(report.shift_income)}
+            {formatPrice(report.shift_income)}
           </p>
         </div>
-
         <div style={{
-          padding: '20px',
-          backgroundColor: colors.background.paper,
-          borderRadius: '8px',
-          border: `1px solid ${colors.divider}`,
+          padding: UI.SIZES.SPACING.LG,
+          backgroundColor: UI.COLORS.background.paper,
+          borderRadius: UI.SIZES.BORDER.RADIUS.MEDIUM,
+          border: `1px solid ${UI.COLORS.divider}`,
           textAlign: 'center'
         }}>
           <h3 style={{ 
-            margin: '0 0 8px 0', 
-            color: colors.text.secondary,
-            fontSize: '14px',
-            fontWeight: 'normal',
+            margin: `0 0 ${UI.SIZES.SPACING.SM} 0`, 
+            color: UI.COLORS.text.secondary,
+            fontSize: UI.SIZES.FONT.MEDIUM,
+            fontWeight: UI.SIZES.FONT.WEIGHTS.NORMAL,
             textTransform: 'uppercase'
           }}>
             {t('report.totalOrders')}
           </h3>
           <p style={{ 
             margin: 0, 
-            fontSize: '28px', 
-            fontWeight: 'bold', 
-            color: colors.text.primary 
+            fontSize: UI.SIZES.FONT.LARGE,
+            fontWeight: UI.SIZES.FONT.WEIGHTS.BOLD, 
+            color: UI.COLORS.text.primary 
           }}>
             {formatNumber(report.order_amount)}
           </p>
         </div>
-
         <div style={{
-          padding: '20px',
-          backgroundColor: colors.background.paper,
-          borderRadius: '8px',
-          border: `1px solid ${colors.divider}`,
+          padding: UI.SIZES.SPACING.LG,
+          backgroundColor: UI.COLORS.background.paper,
+          borderRadius: UI.SIZES.BORDER.RADIUS.MEDIUM,
+          border: `1px solid ${UI.COLORS.divider}`,
           textAlign: 'center'
         }}>
           <h3 style={{ 
-            margin: '0 0 8px 0', 
-            color: colors.text.secondary,
-            fontSize: '14px',
-            fontWeight: 'normal',
+            margin: `0 0 ${UI.SIZES.SPACING.SM} 0`, 
+            color: UI.COLORS.text.secondary,
+            fontSize: UI.SIZES.FONT.MEDIUM,
+            fontWeight: UI.SIZES.FONT.WEIGHTS.NORMAL,
             textTransform: 'uppercase'
           }}>
             {t('report.totalProducts')}
           </h3>
           <p style={{ 
             margin: 0, 
-            fontSize: '28px', 
-            fontWeight: 'bold', 
-            color: colors.text.primary 
+            fontSize: UI.SIZES.FONT.LARGE,
+            fontWeight: UI.SIZES.FONT.WEIGHTS.BOLD, 
+            color: UI.COLORS.text.primary 
           }}>
             {formatNumber(report.total_product_amount)}
           </p>
         </div>
       </div>
-
-      {/* Детальная информация по продуктам */}
+      {/* Product details */}
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', 
-        gap: '24px' 
+        gap: UI.SIZES.SPACING.XL 
       }}>
-        {/* Количество продуктов */}
+        {/* Product count */}
         <div style={{
-          padding: '20px',
-          backgroundColor: colors.background.paper,
-          borderRadius: '8px',
-          border: `1px solid ${colors.divider}`
+          padding: UI.SIZES.SPACING.LG,
+          backgroundColor: UI.COLORS.background.paper,
+          borderRadius: UI.SIZES.BORDER.RADIUS.MEDIUM,
+          border: `1px solid ${UI.COLORS.divider}`
         }}>
           <h3 style={{ 
-            margin: '0 0 16px 0', 
-            color: colors.text.primary,
-            fontSize: '18px',
-            fontWeight: 'bold'
+            margin: `0 0 ${UI.SIZES.SPACING.MD} 0`, 
+            color: UI.COLORS.text.primary,
+            fontSize: UI.SIZES.FONT.XLARGE,
+            fontWeight: UI.SIZES.FONT.WEIGHTS.BOLD
           }}>
             {t('report.productSales')}
           </h3>
@@ -251,17 +263,17 @@ const ReportView: React.FC = () => {
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  padding: '12px 0',
-                  borderBottom: `1px solid ${colors.divider}`
+                  padding: `${UI.SIZES.SPACING.SM} 0`,
+                  borderBottom: `1px solid ${UI.COLORS.divider}`
                 }}
               >
-                <span style={{ color: colors.text.primary, fontWeight: '500' }}>
+                <span style={{ color: UI.COLORS.text.primary, fontWeight: UI.SIZES.FONT.WEIGHTS.MEDIUM }}>
                   {product}
                 </span>
                 <span style={{ 
-                  color: colors.text.secondary,
-                  fontSize: '16px',
-                  fontWeight: 'bold'
+                  color: UI.COLORS.text.secondary,
+                  fontSize: UI.SIZES.FONT.LARGE,
+                  fontWeight: UI.SIZES.FONT.WEIGHTS.BOLD
                 }}>
                   {formatNumber(amount)} {t('report.pieces')}
                 </span>
@@ -269,19 +281,18 @@ const ReportView: React.FC = () => {
             ))}
           </div>
         </div>
-
-        {/* Продажи по продуктам */}
+        {/* Product sales */}
         <div style={{
-          padding: '20px',
-          backgroundColor: colors.background.paper,
-          borderRadius: '8px',
-          border: `1px solid ${colors.divider}`
+          padding: UI.SIZES.SPACING.LG,
+          backgroundColor: UI.COLORS.background.paper,
+          borderRadius: UI.SIZES.BORDER.RADIUS.MEDIUM,
+          border: `1px solid ${UI.COLORS.divider}`
         }}>
           <h3 style={{ 
-            margin: '0 0 16px 0', 
-            color: colors.text.primary,
-            fontSize: '18px',
-            fontWeight: 'bold'
+            margin: `0 0 ${UI.SIZES.SPACING.MD} 0`, 
+            color: UI.COLORS.text.primary,
+            fontSize: UI.SIZES.FONT.XLARGE,
+            fontWeight: UI.SIZES.FONT.WEIGHTS.BOLD
           }}>
             {t('report.productRevenue')}
           </h3>
@@ -293,19 +304,19 @@ const ReportView: React.FC = () => {
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  padding: '12px 0',
-                  borderBottom: `1px solid ${colors.divider}`
+                  padding: `${UI.SIZES.SPACING.SM} 0`,
+                  borderBottom: `1px solid ${UI.COLORS.divider}`
                 }}
               >
-                <span style={{ color: colors.text.primary, fontWeight: '500' }}>
+                <span style={{ color: UI.COLORS.text.primary, fontWeight: UI.SIZES.FONT.WEIGHTS.MEDIUM }}>
                   {product}
                 </span>
                 <span style={{ 
-                  color: colors.success.main,
-                  fontSize: '16px',
-                  fontWeight: 'bold'
+                  color: UI.COLORS.success.main,
+                  fontSize: UI.SIZES.FONT.LARGE,
+                  fontWeight: UI.SIZES.FONT.WEIGHTS.BOLD
                 }}>
-                  {formatNumber(price)}
+                  {formatPrice(price)}
                 </span>
               </div>
             ))}

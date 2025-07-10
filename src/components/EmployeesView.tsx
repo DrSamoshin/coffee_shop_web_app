@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Card,
@@ -21,8 +21,6 @@ import {
   CircularProgress,
   Fab,
   Container,
-  ToggleButtonGroup,
-  ToggleButton,
   FormControl,
   InputLabel,
   Select,
@@ -37,6 +35,8 @@ import type { Employee } from '../types/api';
 import { apiService } from '../services/api';
 import { logger } from '../services/logger';
 import { useConstants } from '../hooks/useConstants';
+import { UI } from '../config/constants';
+import { FilterToggle } from './shared';
 
 const EmployeesView: React.FC = () => {
   const { t } = useTranslation();
@@ -58,18 +58,7 @@ const EmployeesView: React.FC = () => {
   const [editEmployeeName, setEditEmployeeName] = useState('');
   const [editEmployeePosition, setEditEmployeePosition] = useState<string>('');
 
-  useEffect(() => {
-    loadEmployees();
-  }, [showDeactivatedOnly]);
-
-  // Устанавливаем позицию по умолчанию когда загружаются константы
-  useEffect(() => {
-    if (constants.employeePositions.length > 0 && !newEmployeePosition) {
-      setNewEmployeePosition(constants.employeePositions[0]);
-    }
-  }, [constants.employeePositions, newEmployeePosition]);
-
-  const loadEmployees = async () => {
+  const loadEmployees = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -77,15 +66,26 @@ const EmployeesView: React.FC = () => {
         ? await apiService.getDeactivatedEmployees()
         : await apiService.getEmployees();
       setEmployees(data);
-      logger.info('Employees loaded successfully', 'COMPONENT_STATE', { count: data.length, deactivatedOnly: showDeactivatedOnly });
+      logger.info('EmployeesView', 'Employees loaded successfully', { count: data.length, deactivatedOnly: showDeactivatedOnly });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       setError(errorMessage);
-      logger.error('API_ERROR', 'Failed to load employees', err instanceof Error ? err : new Error(errorMessage));
+      logger.error('EmployeesView', 'Failed to load employees', err instanceof Error ? err : new Error(errorMessage));
     } finally {
       setLoading(false);
     }
-  };
+  }, [showDeactivatedOnly]);
+
+  useEffect(() => {
+    loadEmployees();
+  }, [loadEmployees]);
+
+  // Устанавливаем позицию по умолчанию когда загружаются константы
+  useEffect(() => {
+    if (constants.employeePositions.length > 0 && !newEmployeePosition) {
+      setNewEmployeePosition(constants.employeePositions[0]);
+    }
+  }, [constants.employeePositions, newEmployeePosition]);
 
   const handleAddEmployee = async () => {
     if (!newEmployeeName.trim()) return;
@@ -199,33 +199,14 @@ const EmployeesView: React.FC = () => {
         </Alert>
       )}
 
-      <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-start' }}>
-        <ToggleButtonGroup
-          value={showDeactivatedOnly ? 'deactivated' : 'all'}
-          exclusive
-          onChange={(_, value) => {
-            if (value !== null) {
-              setShowDeactivatedOnly(value === 'deactivated');
-            }
-          }}
-          size="small"
-          sx={{
-            '& .MuiToggleButton-root': {
-              px: 2,
-              py: 0.5,
-              fontSize: '0.875rem',
-              textTransform: 'none'
-            }
-          }}
-        >
-          <ToggleButton value="all">
-            {t('employees.allEmployees')}
-          </ToggleButton>
-          <ToggleButton value="deactivated">
-            {t('employees.showDeactivated')}
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </Box>
+      <FilterToggle
+        value={showDeactivatedOnly ? 'deactivated' : 'all'}
+        onChange={(value) => setShowDeactivatedOnly(value === 'deactivated')}
+        options={[
+          { value: 'all', label: t('employees.allEmployees') },
+          { value: 'deactivated', label: t('employees.showDeactivated') }
+        ]}
+      />
 
       <Card>
         <CardContent>
@@ -237,20 +218,20 @@ const EmployeesView: React.FC = () => {
             </Box>
           ) : (
             <TableContainer>
-              <Table>
+              <Table sx={{ tableLayout: 'fixed' }}>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold' }}>{t('employees.name')}</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>{t('employees.position')}</TableCell>
-                    <TableCell align="right" sx={{ fontWeight: 'bold' }}>{t('employees.actions')}</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>{t('employees.name')}</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', textAlign: 'left' }}>{t('employees.position')}</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 'bold', width: '150px', minWidth: '150px', maxWidth: '150px', whiteSpace: 'nowrap' }}>{t('employees.actions')}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {employees.map((employee) => (
                     <TableRow key={employee.id} sx={{ height: 48 }}>
-                      <TableCell sx={{ py: 1 }}>{employee.name || 'No name'}</TableCell>
-                      <TableCell sx={{ py: 1 }}>{employee.position || 'No position'}</TableCell>
-                      <TableCell align="right" sx={{ py: 1 }}>
+                      <TableCell sx={{ py: 1, textAlign: 'left' }}>{employee.name}</TableCell>
+                      <TableCell sx={{ py: 1, textAlign: 'left' }}>{employee.position}</TableCell>
+                      <TableCell align="right" sx={{ py: 1, width: '150px', minWidth: '150px', maxWidth: '150px', whiteSpace: 'nowrap' }}>
                         {!showDeactivatedOnly && (
                           <IconButton onClick={() => openEditDialog(employee)} size="small">
                             <EditIcon />
@@ -259,7 +240,7 @@ const EmployeesView: React.FC = () => {
                         <IconButton 
                           onClick={() => openDeleteDialog(employee)} 
                           size="small" 
-                          color={showDeactivatedOnly ? "primary" : "error"}
+                          color={showDeactivatedOnly ? "success" : "error"}
                         >
                           {showDeactivatedOnly ? <RestoreIcon /> : <DeleteIcon />}
                         </IconButton>
@@ -313,7 +294,7 @@ const EmployeesView: React.FC = () => {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setAddDialogOpen(false)}>
+          <Button onClick={() => setAddDialogOpen(false)} sx={{ color: UI.COLORS.text.secondary, '&:hover, &:active, &:focus': { color: UI.COLORS.text.secondary } }}>
             {t('categories.cancel')}
           </Button>
           <Button onClick={handleAddEmployee} variant="contained" color="success">
@@ -352,7 +333,7 @@ const EmployeesView: React.FC = () => {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setEditDialogOpen(false)}>
+          <Button onClick={() => setEditDialogOpen(false)} sx={{ color: UI.COLORS.text.secondary, '&:hover, &:active, &:focus': { color: UI.COLORS.text.secondary } }}>
             {t('categories.cancel')}
           </Button>
           <Button onClick={handleSaveEmployee} variant="contained" color="success">
@@ -377,7 +358,7 @@ const EmployeesView: React.FC = () => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>
+          <Button onClick={() => setDeleteDialogOpen(false)} sx={{ color: UI.COLORS.text.secondary, '&:hover, &:active, &:focus': { color: UI.COLORS.text.secondary } }}>
             {t('categories.cancel')}
           </Button>
           <Button 

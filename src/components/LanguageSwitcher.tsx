@@ -22,7 +22,8 @@ const LanguageSwitcher: React.FC = () => {
 
   const languages = [
     { code: 'en', name: 'English', short: 'EN' },
-    { code: 'ru', name: 'Русский', short: 'RU' }
+    { code: 'ru', name: 'Русский', short: 'RU' },
+    { code: 'es', name: 'Español', short: 'ES' }
   ];
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
@@ -32,31 +33,36 @@ const LanguageSwitcher: React.FC = () => {
       <IconButton 
         onClick={handleClick}
         sx={{ 
-          color: 'text.primary',
-          borderRadius: UI.SIZES.BORDER.RADIUS.SMALL,
+          color: UI.COLORS.text.primary,
+          border: 'none',
+          borderRadius: 0,
+          backgroundColor: 'transparent',
+          width: 36,
+          height: 36,
+          minWidth: 36,
+          minHeight: 36,
+          p: 0,
+          fontWeight: 700,
+          fontSize: UI.SIZES.FONT.MEDIUM,
+          transition: 'color 0.2s',
           '&:hover': {
             backgroundColor: 'transparent',
+            color: UI.COLORS.primary.dark,
           },
           '&:focus': {
             outline: 'none',
             backgroundColor: 'transparent',
-            boxShadow: 'none',
+            color: UI.COLORS.primary.dark,
           },
-          '&:focus-visible': {
-            outline: 'none',
-            boxShadow: 'none',
-          }
         }}
         size="small"
         disableRipple
         disableFocusRipple
         disableTouchRipple
+        aria-label="Change language"
       >
-        <Typography variant="body2" sx={{ fontWeight: 'bold', fontSize: UI.SIZES.FONT.MEDIUM }}>
-          {currentLanguage.short}
-        </Typography>
+        <span style={{ fontWeight: 700, fontSize: UI.SIZES.FONT.MEDIUM, color: UI.COLORS.text.primary }}>{currentLanguage.short}</span>
       </IconButton>
-      
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -77,7 +83,9 @@ const LanguageSwitcher: React.FC = () => {
             selected={language.code === i18n.language}
             sx={{ minWidth: 120 }}
           >
-            <Typography variant="body2">{language.name}</Typography>
+            <Typography variant="body2" sx={{ fontWeight: language.code === i18n.language ? 700 : 400 }}>
+              {language.name}
+            </Typography>
           </MenuItem>
         ))}
       </Menu>

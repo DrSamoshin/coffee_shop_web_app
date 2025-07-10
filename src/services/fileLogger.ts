@@ -1,6 +1,8 @@
+import { APP_CONFIG } from '../config/constants';
+
 /**
- * Система логирования в файл для отладки
- * Записывает логи на сервер для анализа проблем
+ * File logging system for debugging
+ * Writes logs to server for problem analysis
  */
 
 export interface LogEntry {
@@ -8,7 +10,7 @@ export interface LogEntry {
   level: 'INFO' | 'ERROR' | 'WARN' | 'DEBUG';
   category: string;
   message: string;
-  data?: any;
+  data?: Record<string, unknown>;
   url?: string;
   userAgent?: string;
   mode?: string;
@@ -34,7 +36,7 @@ class FileLogger {
     });
   }
 
-  log(level: LogEntry['level'], category: string, message: string, data?: any): void {
+  log(level: LogEntry['level'], category: string, message: string, data?: Record<string, unknown>): void {
     if (!this.isEnabled) return;
 
     const entry: LogEntry = {
@@ -55,14 +57,17 @@ class FileLogger {
       this.logs.shift();
     }
 
-    // Выводим в консоль тоже
-    console.log(`[${level}] [${category}] ${message}`, data || '');
+    // Выводим в консоль для отладки в dev режиме
+    if (import.meta.env.DEV) {
+       
+      console.log(`[${level}] [${category}] ${message}`, data || '');
+    }
 
     // Отправляем на сервер периодически
     this.sendLogsToServer();
   }
 
-  logAppMode(mode: 'LOCAL' | 'PROD', config: any): void {
+  logAppMode(mode: 'LOCAL' | 'PROD', config: Record<string, unknown>): void {
     this.log('INFO', 'APP_MODE', `Application started in ${mode} mode`, {
       mode,
       config,
@@ -84,24 +89,37 @@ class FileLogger {
     });
   }
 
-  logApiError(method: string, url: string, error: any): void {
-    this.log('ERROR', 'API_ERROR', `${method} ${url} failed`, {
+  logApiError(method: string, url: string, error: Error | Record<string, unknown>): void {
+    const errorData: Record<string, unknown> = {
       method,
       url,
-      error: error.message || 'Unknown error',
-      status: error.response?.status,
-      responseData: error.response?.data,
       timestamp: new Date().toISOString()
-    });
+    };
+
+    if (error instanceof Error) {
+      errorData.error = error.message;
+      errorData.stack = error.stack;
+    } else if (typeof error === 'object' && error !== null) {
+      errorData.error = (error as Record<string, unknown>).message || 'Unknown error';
+      if ('response' in error) {
+        const errorResponse = error.response as Record<string, unknown>;
+        errorData.status = errorResponse.status;
+        errorData.responseData = errorResponse.data;
+      }
+    } else {
+      errorData.error = String(error);
+    }
+
+    this.log('ERROR', 'API_ERROR', `${method} ${url} failed`, errorData);
   }
 
-  logConfigDebug(message: string, config: any): void {
+  logConfigDebug(message: string, config: Record<string, unknown>): void {
     this.log('DEBUG', 'CONFIG', message, config);
   }
 
   private async sendLogsToServer(): Promise<void> {
-    // Отправляем логи каждые 10 записей или каждые 30 секунд
-    if (this.logs.length % 10 === 0) {
+    // Отправляем логи каждые N записей или по таймеру
+    if (this.logs.length % APP_CONFIG.BUSINESS.ANALYTICS.LOGS_BATCH_SIZE === 0) {
       try {
         // В реальном приложении здесь был бы запрос на сервер
         // Пока просто сохраняем в localStorage
@@ -110,14 +128,16 @@ class FileLogger {
         allLogs.push(...this.logs);
         
         // Ограничиваем размер
-        if (allLogs.length > 500) {
-          allLogs.splice(0, allLogs.length - 500);
+        if (allLogs.length > APP_CONFIG.BUSINESS.ANALYTICS.MAX_STORED_LOGS) {
+          allLogs.splice(0, allLogs.length - APP_CONFIG.BUSINESS.ANALYTICS.MAX_STORED_LOGS);
         }
         
         localStorage.setItem('app_debug_logs', JSON.stringify(allLogs));
         
         this.log('DEBUG', 'LOGGER', `Saved ${this.logs.length} logs to localStorage`);
       } catch (error) {
+        // Избегаем циклического логирования, используем console только для критических ошибок
+         
         console.error('Failed to save logs:', error);
       }
     }

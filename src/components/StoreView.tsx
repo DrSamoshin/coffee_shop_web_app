@@ -17,7 +17,6 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  TextField,
   FormControl,
   InputLabel,
   Select,
@@ -31,6 +30,18 @@ import { useTranslation } from 'react-i18next';
 import { logger } from '../services/logger';
 import { apiService } from '../services/api';
 import type { StoreItem, StoreItemCreate, StoreItemCalculation, Item, Supply, Supplier } from '../types/api';
+import { NumberInput } from './shared';
+import { parseNumberInput } from '../utils/numberFormatting';
+
+interface ApiError {
+  response?: {
+    data?: {
+      detail?: string | Array<{ msg?: string; message?: string }>;
+      message?: string;
+    };
+  };
+  message?: string;
+}
 
 const StoreView: React.FC = () => {
   const { t } = useTranslation();
@@ -60,6 +71,14 @@ const StoreView: React.FC = () => {
   });
   const [removeAmount, setRemoveAmount] = useState<string>('');
 
+  // Функция форматирования числовых значений (как в ProductsView)
+  const formatNumber = (value: string | number) => {
+    const num = typeof value === 'string' ? parseFloat(value.toString().replace(',', '.')) : value;
+    if (isNaN(num)) return '0,00';
+    // Форматируем с запятой как разделителем
+    return new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num).replace('.', ',');
+  };
+
   useEffect(() => {
     loadData();
   }, []);
@@ -83,18 +102,19 @@ const StoreView: React.FC = () => {
     } catch (err) {
       let errorMessage = 'Ошибка загрузки данных';
       
-      if ((err as any).response?.data) {
-        const responseData = (err as any).response.data;
+      const apiError = err as ApiError;
+      if (apiError.response?.data) {
+        const responseData = apiError.response.data;
         
         if (typeof responseData.detail === 'string') {
           errorMessage = responseData.detail;
         } else if (Array.isArray(responseData.detail)) {
-          errorMessage = responseData.detail.map((error: any) => error.msg || error.message || 'Ошибка валидации').join(', ');
+          errorMessage = responseData.detail.map((error) => error.msg || error.message || 'Ошибка валидации').join(', ');
         } else if (responseData.message) {
           errorMessage = responseData.message;
         }
-      } else if ((err as any).message) {
-        errorMessage = (err as any).message;
+      } else if (apiError.message) {
+        errorMessage = apiError.message;
       }
       
       setError(errorMessage);
@@ -109,11 +129,11 @@ const StoreView: React.FC = () => {
       const storeItemToCreate = {
         ...newStoreItem,
         supply_id: newStoreItem.supply_id || null,
-        amount: parseFloat(newStoreItem.amount.toString()) || 0,
-        price_per_item: newStoreItem.price_per_item ? parseFloat(newStoreItem.price_per_item.toString()) : null
+        amount: parseNumberInput(newStoreItem.amount.toString()) || 0,
+        price_per_item: newStoreItem.price_per_item ? parseNumberInput(newStoreItem.price_per_item.toString()) : null
       };
 
-      await apiService.createStoreItem(storeItemToCreate);
+      await apiService.addStoreItem(storeItemToCreate);
       setOpenAddDialog(false);
       setNewStoreItem({
         item_id: '',
@@ -121,24 +141,25 @@ const StoreView: React.FC = () => {
         amount: '',
         price_per_item: ''
       });
-      logger.info('Store item created', 'USER_ACTION', newStoreItem);
+      logger.info('Store item created', 'USER_ACTION', newStoreItem as unknown as Record<string, unknown>);
       await loadData();
     } catch (err) {
       let errorMessage = 'Ошибка создания записи';
       
-      if ((err as any).response?.data) {
-        const responseData = (err as any).response.data;
+      const apiError = err as ApiError;
+      if (apiError.response?.data) {
+        const responseData = apiError.response.data;
         
         if (typeof responseData.detail === 'string') {
           errorMessage = responseData.detail;
         } else if (Array.isArray(responseData.detail)) {
           // Если detail это массив ошибок валидации
-          errorMessage = responseData.detail.map((error: any) => error.msg || error.message || 'Ошибка валидации').join(', ');
+          errorMessage = responseData.detail.map((error) => error.msg || error.message || 'Ошибка валидации').join(', ');
         } else if (responseData.message) {
           errorMessage = responseData.message;
         }
-      } else if ((err as any).message) {
-        errorMessage = (err as any).message;
+      } else if (apiError.message) {
+        errorMessage = apiError.message;
       }
       
       setError(errorMessage);
@@ -164,8 +185,8 @@ const StoreView: React.FC = () => {
       const storeItemToUpdate = {
         ...editStoreItem,
         supply_id: editStoreItem.supply_id || null,
-        amount: parseFloat(editStoreItem.amount.toString()) || 0,
-        price_per_item: editStoreItem.price_per_item ? parseFloat(editStoreItem.price_per_item.toString()) : null
+        amount: parseNumberInput(editStoreItem.amount.toString()) || 0,
+        price_per_item: editStoreItem.price_per_item ? parseNumberInput(editStoreItem.price_per_item.toString()) : null
       };
       await apiService.updateStoreItem(editingItem.id, storeItemToUpdate);
       setOpenEditDialog(false);
@@ -176,24 +197,25 @@ const StoreView: React.FC = () => {
         amount: '',
         price_per_item: ''
       });
-      logger.info('Store item updated', 'USER_ACTION', editStoreItem);
+      logger.info('Store item updated', 'USER_ACTION', editStoreItem as unknown as Record<string, unknown>);
       await loadData();
     } catch (err) {
       let errorMessage = 'Ошибка обновления записи';
       
-      if ((err as any).response?.data) {
-        const responseData = (err as any).response.data;
+      const apiError = err as ApiError;
+      if (apiError.response?.data) {
+        const responseData = apiError.response.data;
         
         if (typeof responseData.detail === 'string') {
           errorMessage = responseData.detail;
         } else if (Array.isArray(responseData.detail)) {
           // Если detail это массив ошибок валидации
-          errorMessage = responseData.detail.map((error: any) => error.msg || error.message || 'Ошибка валидации').join(', ');
+          errorMessage = responseData.detail.map((error) => error.msg || error.message || 'Ошибка валидации').join(', ');
         } else if (responseData.message) {
           errorMessage = responseData.message;
         }
-      } else if ((err as any).message) {
-        errorMessage = (err as any).message;
+      } else if (apiError.message) {
+        errorMessage = apiError.message;
       }
       
       setError(errorMessage);
@@ -221,7 +243,7 @@ const StoreView: React.FC = () => {
     try {
       await apiService.removeStoreItem({
         item_id: removingItem.item_id,
-        amount: parseFloat(removeAmount) || 0,
+        amount: parseFloat(removeAmount.replace(',', '.')) || 0,
         price_per_item: 0
       });
       setOpenRemoveDialog(false);
@@ -232,18 +254,19 @@ const StoreView: React.FC = () => {
     } catch (err) {
       let errorMessage = 'Ошибка удаления товара';
       
-      if ((err as any).response?.data) {
-        const responseData = (err as any).response.data;
+      const apiError = err as ApiError;
+      if (apiError.response?.data) {
+        const responseData = apiError.response.data;
         
         if (typeof responseData.detail === 'string') {
           errorMessage = responseData.detail;
         } else if (Array.isArray(responseData.detail)) {
-          errorMessage = responseData.detail.map((error: any) => error.msg || error.message || 'Ошибка валидации').join(', ');
+          errorMessage = responseData.detail.map((error) => error.msg || error.message || 'Ошибка валидации').join(', ');
         } else if (responseData.message) {
           errorMessage = responseData.message;
         }
-      } else if ((err as any).message) {
-        errorMessage = (err as any).message;
+      } else if (apiError.message) {
+        errorMessage = apiError.message;
       }
       
       setError(errorMessage);
@@ -345,8 +368,8 @@ const StoreView: React.FC = () => {
                     <TableRow key={storeItem.id} sx={{ height: 48 }}>
                       <TableCell sx={{ py: 1 }}>{storeItem.item_name}</TableCell>
                       <TableCell sx={{ py: 1 }}>{storeItem.supplier || '-'}</TableCell>
-                      <TableCell sx={{ py: 1 }}>{storeItem.amount}</TableCell>
-                      <TableCell sx={{ py: 1 }}>{storeItem.price_per_item}</TableCell>
+                      <TableCell sx={{ py: 1 }}>{formatNumber(storeItem.amount)}</TableCell>
+                      <TableCell sx={{ py: 1 }}>{formatNumber(storeItem.price_per_item || 0)}</TableCell>
                       <TableCell sx={{ py: 1 }}>{storeItem.debit ? t('store.removing') : t('store.adding')}</TableCell>
                       <TableCell sx={{ py: 1 }}>{new Date(storeItem.date).toLocaleString()}</TableCell>
                       <TableCell align="right" sx={{ py: 1 }}>
@@ -409,26 +432,26 @@ const StoreView: React.FC = () => {
             </Select>
           </FormControl>
 
-          <TextField
+          <NumberInput
             autoFocus
             margin="dense"
             label={t('store.amount')}
-            type="number"
             fullWidth
             variant="outlined"
             value={newStoreItem.amount}
-            onChange={(e) => setNewStoreItem({ ...newStoreItem, amount: e.target.value })}
+            onChange={(val) => setNewStoreItem({ ...newStoreItem, amount: val })}
+            maxDecimals={2}
             sx={{ mb: 2 }}
           />
 
-          <TextField
+          <NumberInput
             margin="dense"
             label={t('store.pricePerItem')}
-            type="number"
             fullWidth
             variant="outlined"
-            value={newStoreItem.price_per_item}
-            onChange={(e) => setNewStoreItem({ ...newStoreItem, price_per_item: e.target.value })}
+            value={newStoreItem.price_per_item || ''}
+            onChange={(val) => setNewStoreItem({ ...newStoreItem, price_per_item: val })}
+            maxDecimals={2}
             sx={{ mb: 2 }}
           />
 
@@ -486,26 +509,26 @@ const StoreView: React.FC = () => {
             </Select>
           </FormControl>
 
-          <TextField
+          <NumberInput
             autoFocus
             margin="dense"
             label={t('store.amount')}
-            type="number"
             fullWidth
             variant="outlined"
             value={editStoreItem.amount}
-            onChange={(e) => setEditStoreItem({ ...editStoreItem, amount: e.target.value })}
+            onChange={(val) => setEditStoreItem({ ...editStoreItem, amount: val })}
+            maxDecimals={2}
             sx={{ mb: 2 }}
           />
 
-          <TextField
+          <NumberInput
             margin="dense"
             label={t('store.pricePerItem')}
-            type="number"
             fullWidth
             variant="outlined"
-            value={editStoreItem.price_per_item}
-            onChange={(e) => setEditStoreItem({ ...editStoreItem, price_per_item: e.target.value })}
+            value={editStoreItem.price_per_item || ''}
+            onChange={(val) => setEditStoreItem({ ...editStoreItem, price_per_item: val })}
+            maxDecimals={2}
             sx={{ mb: 2 }}
           />
 
@@ -541,15 +564,15 @@ const StoreView: React.FC = () => {
             </Box>
           )}
           
-          <TextField
+          <NumberInput
             autoFocus
             margin="dense"
             label={t('store.removeAmount')}
-            type="number"
             fullWidth
             variant="outlined"
             value={removeAmount}
-            onChange={(e) => setRemoveAmount(e.target.value)}
+            onChange={setRemoveAmount}
+            maxDecimals={2}
             sx={{ mb: 2 }}
           />
         </DialogContent>
@@ -561,7 +584,7 @@ const StoreView: React.FC = () => {
             onClick={handleConfirmRemove}
             variant="contained"
             color="error"
-            disabled={!removeAmount || parseFloat(removeAmount) <= 0}
+            disabled={!removeAmount || parseNumberInput(removeAmount) <= 0}
           >
             {t('store.remove')}
           </Button>

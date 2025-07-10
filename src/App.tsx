@@ -5,6 +5,7 @@ import { CssBaseline, Box } from '@mui/material';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import { apiService } from './services/api';
+import { logger } from './services/logger';
 import { getAppBackground, UI } from './config/constants';
 import './i18n';
 
@@ -27,7 +28,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: 'Helvetica, Arial, sans-serif',
     h4: {
       fontWeight: 700,
     },
@@ -50,6 +51,44 @@ const theme = createTheme({
           borderRadius: 8,
           textTransform: 'none',
           fontWeight: 600,
+          '&:focus, &:active, &.Mui-focusVisible': {
+            outline: 'none',
+            boxShadow: 'none',
+            borderColor: 'transparent',
+          },
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          '&:focus, &:active, &.Mui-focusVisible': {
+            outline: 'none',
+            boxShadow: 'none',
+            borderColor: 'transparent',
+          },
+        },
+      },
+    },
+    MuiFab: {
+      styleOverrides: {
+        root: {
+          '&:focus, &:active, &.Mui-focusVisible': {
+            outline: 'none',
+            boxShadow: 'none',
+            borderColor: 'transparent',
+          },
+        },
+      },
+    },
+    MuiToggleButton: {
+      styleOverrides: {
+        root: {
+          '&:focus, &:active, &.Mui-focusVisible': {
+            outline: 'none',
+            boxShadow: 'none',
+            borderColor: 'transparent',
+          },
         },
       },
     },
@@ -72,7 +111,7 @@ function App() {
         setIsAuthenticated(result.isValid);
       }
     } catch (error) {
-      console.error('Error checking authentication:', error);
+      logger.error('App', 'Error checking authentication', error instanceof Error ? error : new Error(String(error)));
       setIsAuthenticated(false);
     } finally {
       setIsLoading(false);
@@ -81,11 +120,6 @@ function App() {
 
   const handleLoginSuccess = () => {
     setIsAuthenticated(true);
-  };
-
-  const handleLogout = () => {
-    apiService.clearToken();
-    setIsAuthenticated(false);
   };
 
   if (isLoading) {
@@ -101,22 +135,15 @@ function App() {
             background: getAppBackground(),
           }}
         >
-          <Box sx={{ textAlign: 'center' }}>
-            <            Box sx={{ 
-              fontSize: '48px',
-              marginBottom: '16px',
-              color: UI.COLORS.primary.main,
-              fontWeight: 'bold'
-            }}>
-              Coffee
-            </Box>
-            <Box sx={{ 
-              fontSize: '18px',
-              color: UI.COLORS.primary.main,
-              fontWeight: 'bold'
-            }}>
-              Загрузка приложения...
-            </Box>
+          <Box
+            sx={{
+              fontSize: UI.SIZES.FONT.XLARGE,
+              color: UI.COLORS.text.primary,
+              fontWeight: 300,
+              fontFamily: 'Helvetica, Arial, sans-serif',
+            }}
+          >
+            Loading
           </Box>
         </Box>
       </ThemeProvider>
@@ -134,7 +161,7 @@ function App() {
         }}
       >
         {isAuthenticated ? (
-          <Dashboard onLogout={handleLogout} />
+          <Dashboard />
         ) : (
           <Login onSuccess={handleLoginSuccess} />
         )}

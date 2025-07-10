@@ -7,7 +7,16 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "contracts:check": "node scripts/checkContracts.cjs",
+    "contracts:quick": "node scripts/checkContracts.cjs --quick",
+    "contracts:report": "node scripts/checkContracts.cjs --format markdown --output docs/contract-compliance-report.md",
+    "contracts:ci": "node scripts/checkContracts.cjs --quick --fail-on-errors --quiet",
+    "test": "jest",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
+    "test:e2e": "cypress run",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

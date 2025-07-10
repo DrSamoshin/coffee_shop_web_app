@@ -9,8 +9,8 @@ export const APP_CONFIG = {
   VERSION: '1.0.0',
   
   // UI Constants
-  DEFAULT_LANGUAGE: ENV_CONFIG.DEFAULT_LANGUAGE,
-  AVAILABLE_LANGUAGES: ['en', 'ru'],
+  DEFAULT_LANGUAGE: 'en',
+  AVAILABLE_LANGUAGES: ['en', 'ru', 'es'],
   
   // Local Storage Keys
   STORAGE_KEYS: {
@@ -80,6 +80,13 @@ export const APP_CONFIG = {
         MEDIUM: '14px',
         LARGE: '16px',
         XLARGE: '18px',
+        // Веса шрифтов
+        WEIGHTS: {
+          NORMAL: '400',
+          MEDIUM: '500',
+          SEMIBOLD: '600',
+          BOLD: '700',
+        },
       },
       
       // Отступы
@@ -105,6 +112,15 @@ export const APP_CONFIG = {
   BUSINESS: {
     CURRENCY: ENV_CONFIG.CURRENCY,
     PAGINATION_SIZE: 20,
+    // Analytics constants
+    ANALYTICS: {
+      TOP_PRODUCTS_LIMIT: 5,
+      MOCK_QUANTITY_MIN: 10,
+      MOCK_QUANTITY_MAX: 100,
+      LOGS_BATCH_SIZE: 10,
+      LOGS_SAVE_INTERVAL: 30000, // 30 seconds
+      MAX_STORED_LOGS: 500,
+    },
   },
   
   // Feature flags

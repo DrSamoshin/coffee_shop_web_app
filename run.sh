@@ -54,6 +54,7 @@ create_local_env() {
     log "Создание .env файла для локального режима..."
     cat > .env.local << EOF
 # Local development environment
+MODE=local
 VITE_USE_API_PROXY=true
 VITE_API_BASE_URL=http://0.0.0.0:8080
 VITE_API_TIMEOUT=10000
@@ -68,6 +69,7 @@ create_prod_env() {
     log "Создание .env файла для production режима..."
     cat > .env.production << EOF
 # Production environment - используем прокси для избежания CORS
+MODE=prod
 VITE_USE_API_PROXY=true
 VITE_API_BASE_URL=https://coffee-point-api-317780828805.europe-west3.run.app
 VITE_API_TIMEOUT=10000

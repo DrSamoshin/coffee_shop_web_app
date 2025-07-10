@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { apiService } from '../services/api';
+import { logger } from '../services/logger';
 
 interface Constants {
   paymentMethods: string[];
@@ -49,8 +50,8 @@ export const useConstants = () => {
         itemMeasurements
       });
     } catch (err) {
-      setError('Ошибка загрузки констант');
-      console.error('Failed to load constants:', err);
+      setError('Failed to load constants');
+      logger.error('useConstants', 'Failed to load constants', err instanceof Error ? err : new Error(String(err)));
     } finally {
       setLoading(false);
     }
