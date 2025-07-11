@@ -17,6 +17,7 @@ import type {
   StoreItemCalculation,
   ConstantItem,
   ActiveShiftReport,
+  OrdersReport,
   Item,
   Supply
 } from '../types/api';
@@ -444,6 +445,11 @@ class ApiService {
   // === ANALYTICS ===
   async getActiveShiftReport(): Promise<ActiveShiftReport> {
     const response = await this.api.get(API_ENDPOINTS.ANALYTICS_ACTIVE_SHIFT);
+    return response.data;
+  }
+
+  async getOrdersReport(shiftId: string): Promise<OrdersReport> {
+    const response = await this.api.get(ENDPOINT_BUILDERS.ordersReport(shiftId));
     return response.data;
   }
 

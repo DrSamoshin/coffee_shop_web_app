@@ -77,7 +77,7 @@
     "shown": "Показано"
   },
   "report": {
-    "title": "Отчет активной смены",
+    "title": "Отчеты",
     "refresh": "Обновить",
     "refreshing": "Обновление...",
     "loading": "Загрузка отчета...",
@@ -89,7 +89,35 @@
     "totalProducts": "Общее количество продуктов",
     "productSales": "Количество продаж по продуктам",
     "productRevenue": "Продажи по продуктам",
-    "pieces": "шт."
+    "pieces": "шт.",
+    "activeShift": "Активная смена",
+    "totalIncome": "Общий доход",
+    "averageBill": "Средний чек",
+    "selectShift": "Выберите смену",
+    "shift": "Смена",
+    "shiftSummary": "Сводка по смене",
+    "quantity": "Количество",
+    "price": "Цена",
+    "debitTrue": "Списано (Debit True)",
+    "debitFalse": "Не списано (Debit False)",
+    "debitTrueProducts": "Товары (списано)",
+    "debitTrueCategories": "Категории (списано)",
+    "debitTrueOrders": "Заказы (списано)",
+    "debitFalseProducts": "Товары",
+    "debitFalseCategories": "Категории",
+    "debitFalseOrders": "Заказы",
+    "orderId": "ID заказа",
+    "date": "Дата",
+    "time": "Время",
+    "discount": "Скидка",
+    "paymentMethod": "Способ оплаты",
+    "orderType": "Тип заказа",
+    "status": "Статус",
+    "refreshShifts": "Обновить список смен",
+    "orderDensity": "Плотность заказов по времени",
+    "orderCount": "Количество заказов",
+    "shiftReport": "Отчет по смене",
+    "periodReport": "Отчет по периоду"
   },
   "common": {
     "close": "Закрыть",
@@ -109,7 +137,8 @@
     "currency": "₽",
     "yes": "Да",
     "no": "Нет",
-    "actions": "Действия"
+    "actions": "Действия",
+    "active": "активная"
   },
   "logging": {
     "categories": {

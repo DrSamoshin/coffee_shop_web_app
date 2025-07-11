@@ -90,7 +90,7 @@
     "shown": "Mostrado"
   },
   "report": {
-    "title": "Informe de turno activo",
+    "title": "Informe de turno",
     "refresh": "Actualizar",
     "refreshing": "Actualizando...",
     "loading": "Cargando informe...",
@@ -102,7 +102,35 @@
     "totalProducts": "Total de productos",
     "productSales": "Cantidad de ventas por producto",
     "productRevenue": "Ventas de productos",
-    "pieces": "uds"
+    "pieces": "uds",
+    "activeShift": "Turno activo",
+    "totalIncome": "Ingresos totales",
+    "averageBill": "Factura promedio",
+    "selectShift": "Seleccionar turno",
+    "shift": "Turno",
+    "shiftSummary": "Resumen del turno",
+    "quantity": "Cantidad",
+    "price": "Precio",
+    "debitTrue": "Debitado (Debit True)",
+    "debitFalse": "No debitado (Debit False)",
+    "debitTrueProducts": "Productos (debitados)",
+    "debitTrueCategories": "Categorías (debitadas)",
+    "debitTrueOrders": "Pedidos (debitados)",
+    "debitFalseProducts": "Productos",
+    "debitFalseCategories": "Categorías",
+    "debitFalseOrders": "Pedidos",
+    "orderId": "ID del pedido",
+    "date": "Fecha",
+    "time": "Hora",
+    "discount": "Descuento",
+    "paymentMethod": "Método de pago",
+    "orderType": "Tipo de pedido",
+    "status": "Estado",
+    "refreshShifts": "Actualizar lista de turnos",
+    "orderDensity": "Densidad de pedidos por tiempo",
+    "orderCount": "Cantidad de pedidos",
+    "shiftReport": "Informe de turno",
+    "periodReport": "Informe de período"
   },
   "common": {
     "close": "Cerrar",
@@ -122,7 +150,8 @@
     "currency": "$",
     "yes": "Sí",
     "no": "No",
-    "actions": "Acciones"
+    "actions": "Acciones",
+    "active": "activo"
   },
   "logging": {
     "categories": {

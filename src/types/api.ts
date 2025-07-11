@@ -217,4 +217,40 @@ export interface ActiveShiftReport {
   total_product_amount: number;
   products_amount: Record<string, number>;
   product_price: Record<string, number>;
+}
+
+// Детальный отчет по смене
+export interface OrdersReport {
+  total_income: number;
+  total_number_sold_products: number;
+  total_number_orders: number;
+  average_bill: number;
+  debit_true_products_sum_json: ProductSummary[];
+  debit_true_categories_sum_json: CategorySummary[];
+  debit_true_unique_orders_json: OrderSummary[];
+  debit_false_products_sum_json: ProductSummary[];
+  debit_false_categories_sum_json: CategorySummary[];
+  debit_false_unique_orders_json: OrderSummary[];
+}
+
+export interface ProductSummary {
+  product_name: string;
+  count: number;
+  total_product_price: number;
+}
+
+export interface CategorySummary {
+  product_category: string;
+  count: number;
+  total_product_price: number;
+}
+
+export interface OrderSummary {
+  order_id: string;
+  order_date: string;
+  order_price: number;
+  order_discount: number;
+  order_payment_method: string;
+  order_type: string;
+  order_status: string;
 } 

@@ -108,6 +108,7 @@ export const API_ENDPOINTS = {
   // Analytics endpoints
   ANALYTICS: '/analytics/',
   ANALYTICS_ACTIVE_SHIFT: '/analytics/active-shift-report/',
+  ORDERS_REPORT: '/orders-report/',
 
   // Constants endpoints - grouped by category
   CONSTANTS: {
@@ -177,6 +178,9 @@ export const ENDPOINT_BUILDERS = {
   
   // Analytics
   analyticsShiftReport: (id: string): string => `${API_ENDPOINTS.ANALYTICS}shift-report/${id}/`,
+  
+  // Orders report
+  ordersReport: (shiftId: string): string => `${API_ENDPOINTS.ORDERS_REPORT}${shiftId}/`,
   
   // Clients
   client: (id: string): string => ENDPOINT_BUILDERS.byId(API_ENDPOINTS.CLIENTS, id),

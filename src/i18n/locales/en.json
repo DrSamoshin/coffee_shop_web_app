@@ -90,7 +90,7 @@
     "shown": "Shown"
   },
   "report": {
-    "title": "Active Shift Report",
+    "title": "Shift Report",
     "refresh": "Refresh",
     "refreshing": "Refreshing...",
     "loading": "Loading report...",
@@ -102,7 +102,35 @@
     "totalProducts": "Total Products",
     "productSales": "Product Sales Quantities",
     "productRevenue": "Product Sales",
-    "pieces": "pcs"
+    "pieces": "pcs",
+    "activeShift": "Active Shift",
+    "totalIncome": "Total Income",
+    "averageBill": "Average Bill",
+    "selectShift": "Select Shift",
+    "shift": "Shift",
+    "shiftSummary": "Shift Summary",
+    "quantity": "Quantity",
+    "price": "Price",
+    "debitTrue": "Debited (Debit True)",
+    "debitFalse": "Not Debited (Debit False)",
+    "debitTrueProducts": "Products (debited)",
+    "debitTrueCategories": "Categories (debited)",
+    "debitTrueOrders": "Orders (debited)",
+    "debitFalseProducts": "Products",
+    "debitFalseCategories": "Categories",
+    "debitFalseOrders": "Orders",
+    "orderId": "Order ID",
+    "date": "Date",
+    "time": "Time",
+    "discount": "Discount",
+    "paymentMethod": "Payment Method",
+    "orderType": "Order Type",
+    "status": "Status",
+    "refreshShifts": "Refresh shifts list",
+    "orderDensity": "Order Density by Time",
+    "orderCount": "Order Count",
+    "shiftReport": "Shift Report",
+    "periodReport": "Period Report"
   },
   "common": {
     "close": "Close",
@@ -122,7 +150,8 @@
     "currency": "$",
     "yes": "Yes",
     "no": "No",
-    "actions": "Actions"
+    "actions": "Actions",
+    "active": "active"
   },
   "logging": {
     "categories": {
