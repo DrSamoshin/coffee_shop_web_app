@@ -27,4 +27,22 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Разделяем большие UI библиотеки
+          'mui': ['@mui/material', '@mui/icons-material'],
+          // Разделяем библиотеки для графиков
+          'charts': ['recharts'],
+          // Разделяем локализацию
+          'i18n': ['react-i18next', 'i18next'],
+          // Разделяем React экосистему
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
+    },
+    // Увеличиваем лимит чтобы убрать предупреждение для основного chunk
+    chunkSizeWarningLimit: 600,
+  },
 })

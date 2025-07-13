@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { CssBaseline, Box } from '@mui/material';
+import { CssBaseline, Box, CircularProgress } from '@mui/material';
 
-import Login from './components/Login';
-import Dashboard from './components/Dashboard';
 import { apiService } from './services/api';
 import { logger } from './services/logger';
 import { getAppBackground, UI } from './config/constants';
 import './i18n';
+
+// Lazy loading для основных компонентов
+const Login = lazy(() => import('./components/Login'));
+const Dashboard = lazy(() => import('./components/Dashboard'));
 
 // Создаем тему для приложения
 const theme = createTheme({
@@ -160,11 +162,22 @@ function App() {
           position: 'relative',
         }}
       >
-        {isAuthenticated ? (
-          <Dashboard />
-        ) : (
-          <Login onSuccess={handleLoginSuccess} />
-        )}
+        <Suspense fallback={
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            height: '100vh' 
+          }}>
+            <CircularProgress />
+          </Box>
+        }>
+          {isAuthenticated ? (
+            <Dashboard />
+          ) : (
+            <Login onSuccess={handleLoginSuccess} />
+          )}
+        </Suspense>
       </Box>
     </ThemeProvider>
   );

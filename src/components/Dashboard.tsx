@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import {
   Box,
   Drawer,
@@ -16,7 +16,8 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  CircularProgress
 } from '@mui/material';
 import {
   Settings
@@ -25,15 +26,17 @@ import { useTranslation } from 'react-i18next';
 import { logger } from '../services/logger';
 import { UI } from '../config/constants';
 import { getStorageKey } from '../config';
-import CategoriesView from './CategoriesView';
-import EmployeesView from './EmployeesView';
-import ProductsView from './ProductsView';
-import ImagesView from './ImagesView';
-import ItemsView from './ItemsView';
-import StoreView from './StoreView';
-import SuppliersView from './SuppliersView';
-import SuppliesView from './SuppliesView';
-import ReportView from './ReportView';
+
+// Lazy loading компонентов для code splitting
+const CategoriesView = lazy(() => import('./CategoriesView'));
+const EmployeesView = lazy(() => import('./EmployeesView'));
+const ProductsView = lazy(() => import('./ProductsView'));
+const ImagesView = lazy(() => import('./ImagesView'));
+const ItemsView = lazy(() => import('./ItemsView'));
+const StoreView = lazy(() => import('./StoreView'));
+const SuppliersView = lazy(() => import('./SuppliersView'));
+const SuppliesView = lazy(() => import('./SuppliesView'));
+const ReportView = lazy(() => import('./ReportView'));
 // import MetricsDashboard from './MetricsDashboard'; // Удалено
 
 const drawerWidth = 240;
@@ -139,48 +142,65 @@ const Dashboard: React.FC = () => {
   );
 
   const renderContent = () => {
-    switch (activeView) {
-      case 'categories':
-        return <CategoriesView />;
-      case 'products':
-        return <ProductsView />;
-      case 'images':
-        return <ImagesView />;
-      case 'items':
-        return <ItemsView />;
-      case 'store':
-        return <StoreView />;
-      case 'employees':
-        return <EmployeesView />;
-      case 'suppliers':
-        return <SuppliersView />;
-      case 'supplies':
-        return <SuppliesView />;
-      case 'report':
-        return <ReportView />;
-      // case 'logs':
-      //   return (
-      //     <Box sx={{ p: 3, textAlign: 'center' }}>
-      //       <Typography variant="h5" gutterBottom>
-      //         {t('navigation.logs')}
-      //       </Typography>
-      //       <Typography color="text.secondary">
-      //         {t('common.inDevelopment')}
-      //       </Typography>
-      //     </Box>
-      //   );
-      default:
-        return (
-          <Box sx={{ p: 3, textAlign: 'center' }}>
-            <Typography variant="h5" gutterBottom>
-              {menuItems.find(item => item.id === activeView)?.label}
-            </Typography>
-            <Typography color="text.secondary">
-              {t('common.inDevelopment')}
-            </Typography>
-          </Box>
-        );
-    }
+    const LazyComponent = () => {
+      switch (activeView) {
+        case 'categories':
+          return <CategoriesView />;
+        case 'products':
+          return <ProductsView />;
+        case 'images':
+          return <ImagesView />;
+        case 'items':
+          return <ItemsView />;
+        case 'store':
+          return <StoreView />;
+        case 'employees':
+          return <EmployeesView />;
+        case 'suppliers':
+          return <SuppliersView />;
+        case 'supplies':
+          return <SuppliesView />;
+        case 'report':
+          return <ReportView />;
+        // case 'logs':
+        //   return (
+        //     <Box sx={{ p: 3, textAlign: 'center' }}>
+        //       <Typography variant="h5" gutterBottom>
+        //         {t('navigation.logs')}
+        //       </Typography>
+        //       <Typography color="text.secondary">
+        //         {t('common.inDevelopment')}
+        //       </Typography>
+        //     </Box>
+        //   );
+        default:
+          return (
+            <Box sx={{ p: 3, textAlign: 'center' }}>
+              <Typography variant="h5" gutterBottom>
+                {menuItems.find(item => item.id === activeView)?.label}
+              </Typography>
+              <Typography color="text.secondary">
+                {t('common.inDevelopment')}
+              </Typography>
+            </Box>
+          );
+      }
+    };
+
+    return (
+      <Suspense fallback={
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '50vh' 
+        }}>
+          <CircularProgress />
+        </Box>
+      }>
+        <LazyComponent />
+      </Suspense>
+    );
   };
 
   return (

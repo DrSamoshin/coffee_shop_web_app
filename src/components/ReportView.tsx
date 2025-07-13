@@ -31,6 +31,7 @@ import { FilterToggle } from './shared';
 import type { OrdersReport, Shift, ProductSummary, OrderSummary, CategoryOrderData } from '../types/api';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'];
+const CATEGORY_COLORS = ['#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D', '#FFC658'];
 
 const ReportView: React.FC = () => {
   const { t } = useTranslation();
@@ -204,7 +205,7 @@ const ReportView: React.FC = () => {
       }
     }
 
-    const categoryColors = ['#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D', '#FFC658'];
+
 
     return (
       <Card sx={{ mb: 3, flex: 1 }}>
@@ -222,8 +223,8 @@ const ReportView: React.FC = () => {
                     checked={categoryFilters[categoryKey] ?? false}
                     onChange={() => handleCategoryFilterChange(categoryKey)}
                     sx={{ 
-                      color: categoryColors[index % categoryColors.length], 
-                      '&.Mui-checked': { color: categoryColors[index % categoryColors.length] } 
+                      color: CATEGORY_COLORS[index % CATEGORY_COLORS.length], 
+                      '&.Mui-checked': { color: CATEGORY_COLORS[index % CATEGORY_COLORS.length] } 
                     }}
                   />
                 }
@@ -268,7 +269,7 @@ const ReportView: React.FC = () => {
                     key={categoryKey}
                     type="monotone" 
                     dataKey={categoryKey} 
-                    stroke={categoryColors[index % categoryColors.length]} 
+                    stroke={CATEGORY_COLORS[index % CATEGORY_COLORS.length]} 
                     strokeWidth={2}
                     name={categoryKey.replace(/_/g, ' ')}
                     dot={false}
