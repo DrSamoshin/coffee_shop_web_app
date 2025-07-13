@@ -224,6 +224,7 @@ export interface OrdersReport {
   total_income: number;
   total_number_sold_products: number;
   total_number_orders: number;
+  total_number_debited_orders: number;
   average_bill: number;
   debit_true_products_sum_json: ProductSummary[];
   debit_true_categories_sum_json: CategorySummary[];
@@ -235,6 +236,7 @@ export interface OrdersReport {
 
 export interface ProductSummary {
   product_name: string;
+  product_category: string;
   count: number;
   total_product_price: number;
 }

@@ -121,6 +121,79 @@ export const APP_CONFIG = {
       LOGS_SAVE_INTERVAL: 30000, // 30 seconds
       MAX_STORED_LOGS: 500,
     },
+
+    // Report view constants
+    REPORT: {
+      // Chart colors for consistent visualization
+      CHART_COLORS: ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'],
+      
+      // Chart dimensions and settings
+      CHART: {
+        HEIGHT: {
+          SMALL: 300,
+          MEDIUM: 400,
+          LARGE: 500,
+        },
+        PIE: {
+          OUTER_RADIUS: {
+            SMALL: 80,
+            LARGE: 180,
+          },
+        },
+        MARGIN: {
+          DEFAULT: 16,
+          LARGE: 24,
+        },
+      },
+      
+      // Time and date formatting
+      FORMAT: {
+        // Locale for number formatting
+        NUMBER_LOCALE: 'ru-RU',
+        // Hours in day for density chart
+        HOURS_PER_DAY: 24,
+        // Decimal places for prices
+        PRICE_DECIMALS: 2,
+        // Decimal places for quantities
+        QUANTITY_DECIMALS: 0,
+        MAX_QUANTITY_DECIMALS: 2,
+      },
+      
+      // Order status colors mapping
+      STATUS_COLORS: {
+        COMPLETED: 'success',
+        WAITING: 'warning', 
+        CANCELLED: 'error',
+        IN_PROGRESS: 'info',
+        DEFAULT: 'default',
+      } as const,
+      
+      // Table settings
+      TABLE: {
+        ROW_HEIGHT_PADDING: '48px', // XL + MD spacing
+        CELL_PADDING: '4px', // XS spacing
+        LAYOUT: 'fixed',
+        // Products table specific settings
+        PRODUCTS: {
+          ROW_HEIGHT: 24,
+          SEPARATOR_ROW_HEIGHT: 24,
+        },
+      },
+      
+      // Summary card settings
+      SUMMARY_CARDS: {
+        MIN_WIDTH: '300px',
+        FLEX_BASIS: '300px',
+        // Custom colors for summary cards
+                 COLORS: {
+           YELLOW: {
+             BACKGROUND: '#ffd700',
+             TEXT: '#212121',
+           },
+         },
+      },
+    },
+
   },
   
   // Feature flags
@@ -141,6 +214,9 @@ export const {
   BUSINESS,
   FEATURES,
 } = APP_CONFIG;
+
+// Export report constants separately for easier access
+export const REPORT = APP_CONFIG.BUSINESS.REPORT;
 
 // Theme utilities
 export const getAppBackground = (): string => {

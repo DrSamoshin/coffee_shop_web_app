@@ -4,6 +4,7 @@ export { NumberInput } from './NumberInput';
 export { CrudDialog } from './CrudDialog';
 export { DataTable } from './DataTable';
 export { PageContainer } from './PageContainer';
+export { ChartFilters } from './ChartFilters';
 
 // Экспорт типов
 export type { TableColumn, TableAction } from './DataTable'; 
