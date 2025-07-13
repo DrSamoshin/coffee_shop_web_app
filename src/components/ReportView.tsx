@@ -142,6 +142,22 @@ const ReportView: React.FC = () => {
 
 
 
+  const getLocalizedPaymentMethod = (method: string): string => {
+    const methodKey = method.toLowerCase();
+    const localizationKey = `report.${methodKey}`;
+    const translated = t(localizationKey);
+    return translated !== localizationKey ? translated : method;
+  };
+
+  const getLocalizedOrderType = (type: string): string => {
+    const typeKey = type.toLowerCase().replace('-', '_');
+    const localizationKey = `report.${typeKey}`;
+    const translated = t(localizationKey);
+    return translated !== localizationKey ? translated : type;
+  };
+
+
+
 
   const renderCategoriesChart = (categoryOrderData: CategoryOrderData[], title: string) => {
     if (!categoryOrderData || categoryOrderData.length === 0) return null;
@@ -161,26 +177,26 @@ const ReportView: React.FC = () => {
         };
       }
       
-      const categoryKey = item.product_category.toLowerCase().replace(/\s+/g, '_');
+      const categoryName = item.product_category; // Используем оригинальное название
       
       acc[timeKey].total += item.count;
-      if (!acc[timeKey].categories[categoryKey]) {
-        acc[timeKey].categories[categoryKey] = 0;
+      if (!acc[timeKey].categories[categoryName]) {
+        acc[timeKey].categories[categoryName] = 0;
       }
-      acc[timeKey].categories[categoryKey] += item.count;
+      acc[timeKey].categories[categoryName] += item.count;
       
       return acc;
     }, {} as Record<string, { total: number; categories: Record<string, number> }>);
 
-    // Получаем уникальные категории
-    const categoryKeys = Array.from(new Set(categoryOrderData.map(item => 
-      item.product_category.toLowerCase().replace(/\s+/g, '_')
+    // Получаем уникальные категории (оригинальные названия)
+    const categoryNames = Array.from(new Set(categoryOrderData.map(item => 
+      item.product_category
     )));
     
-    const handleCategoryFilterChange = (categoryKey: string) => {
+    const handleCategoryFilterChange = (categoryName: string) => {
       setCategoryFilters(prev => ({
         ...prev,
-        [categoryKey]: !prev[categoryKey]
+        [categoryName]: !prev[categoryName]
       }));
     };
 
@@ -197,8 +213,8 @@ const ReportView: React.FC = () => {
         };
         
         // Добавляем реальное количество для каждой категории
-        categoryKeys.forEach(categoryKey => {
-          dataPoint[categoryKey] = intervalInfo?.categories[categoryKey] || 0;
+        categoryNames.forEach(categoryName => {
+          dataPoint[categoryName] = intervalInfo?.categories[categoryName] || 0;
         });
         
         chartData.push(dataPoint);
@@ -215,20 +231,20 @@ const ReportView: React.FC = () => {
           </Typography>
           
           <Box sx={{ mb: 2, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-            {categoryKeys.map((categoryKey, index) => (
+            {categoryNames.map((categoryName: string, index: number) => (
               <FormControlLabel
-                key={categoryKey}
+                key={categoryName}
                 control={
                   <Checkbox
-                    checked={categoryFilters[categoryKey] ?? false}
-                    onChange={() => handleCategoryFilterChange(categoryKey)}
+                    checked={categoryFilters[categoryName] ?? false}
+                    onChange={() => handleCategoryFilterChange(categoryName)}
                     sx={{ 
                       color: CATEGORY_COLORS[index % CATEGORY_COLORS.length], 
                       '&.Mui-checked': { color: CATEGORY_COLORS[index % CATEGORY_COLORS.length] } 
                     }}
                   />
                 }
-                label={categoryKey.replace(/_/g, ' ')}
+                label={categoryName}
               />
             ))}
           </Box>
@@ -250,7 +266,7 @@ const ReportView: React.FC = () => {
               />
                             <YAxis label={{ value: t('report.quantity'), angle: -90, position: 'insideLeft' }} />
               <Tooltip 
-                formatter={(value, name) => [formatNumber(Number(value)), name === 'totalSales' ? t('report.totalSales') : String(name).replace(/_/g, ' ')]} 
+                formatter={(value, name) => [formatNumber(Number(value)), name === 'totalSales' ? t('report.totalSales') : String(name)]} 
                 labelFormatter={(label) => `${t('report.time')}: ${label}`}
               />
                              <Area 
@@ -263,15 +279,15 @@ const ReportView: React.FC = () => {
                 isAnimationActive={false}
                 activeDot={false}
               />
-              {categoryKeys.map((categoryKey, index) => 
-                (categoryFilters[categoryKey] ?? false) && (
+              {categoryNames.map((categoryName: string, index: number) => 
+                (categoryFilters[categoryName] ?? false) && (
                   <Line 
-                    key={categoryKey}
+                    key={categoryName}
                     type="monotone" 
-                    dataKey={categoryKey} 
+                    dataKey={categoryName} 
                     stroke={CATEGORY_COLORS[index % CATEGORY_COLORS.length]} 
                     strokeWidth={2}
-                    name={categoryKey.replace(/_/g, ' ')}
+                    name={categoryName}
                     dot={false}
                     isAnimationActive={false}
                     activeDot={false}
@@ -301,7 +317,7 @@ const ReportView: React.FC = () => {
     }));
 
     return (
-      <Card sx={{ mb: 3, flex: 1 }}>
+      <Card sx={{ flex: 1 }}>
         <CardContent>
           <Typography variant="h6" gutterBottom>
             {t('report.paymentMethod')}
@@ -313,7 +329,7 @@ const ReportView: React.FC = () => {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
+                label={({ name, percent }) => `${getLocalizedPaymentMethod(name)} ${((percent ?? 0) * 100).toFixed(0)}%`}
                 outerRadius={80}
                 fill="#8884d8"
                 dataKey="value"
@@ -353,7 +369,7 @@ const ReportView: React.FC = () => {
     }));
 
     return (
-      <Card sx={{ mb: 3, flex: 1 }}>
+      <Card sx={{ flex: 1 }}>
         <CardContent>
           <Typography variant="h6" gutterBottom>
             {t('report.orderType')}
@@ -365,7 +381,7 @@ const ReportView: React.FC = () => {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
+                label={({ name, percent }) => `${getLocalizedOrderType(name)} ${((percent ?? 0) * 100).toFixed(0)}%`}
                 outerRadius={80}
                 fill="#8884d8"
                 dataKey="value"
@@ -732,7 +748,7 @@ const ReportView: React.FC = () => {
         {renderCategoriesChart(ordersReport.df_debit_false_category_product_for_order_json, t('report.categorySalesByTime'))}
 
         {/* Payment Method and Order Type Charts */}
-        <Box sx={{ display: 'flex', gap: UI.SIZES.SPACING.MD, mb: 3 }}>
+        <Box sx={{ display: 'flex', gap: UI.SIZES.SPACING.MD }}>
           {renderPaymentMethodChart(ordersReport.debit_false_unique_orders_json)}
           {renderOrderTypeChart(ordersReport.debit_false_unique_orders_json)}
         </Box>

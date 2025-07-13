@@ -148,6 +148,9 @@
     "dine_in": "Dine In",
     "takeaway": "Takeaway",
     "delivery": "Delivery",
+    "cash": "Cash",
+    "card": "Card",
+    "unknown": "Unknown",
     "categorySalesByTime": "Category Sales by Time"
   },
   "common": {

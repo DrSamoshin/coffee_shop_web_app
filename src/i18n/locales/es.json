@@ -148,6 +148,9 @@
     "dine_in": "Para comer aquí",
     "takeaway": "Para llevar",
     "delivery": "Entrega",
+    "cash": "Efectivo",
+    "card": "Tarjeta",
+    "unknown": "Desconocido",
     "categorySalesByTime": "Ventas por categoría por tiempo"
   },
   "common": {

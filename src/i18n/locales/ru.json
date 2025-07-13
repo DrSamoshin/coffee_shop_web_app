@@ -135,6 +135,9 @@
     "dine_in": "В зале",
     "takeaway": "С собой",
     "delivery": "Доставка",
+    "cash": "Наличные",
+    "card": "Карта",
+    "unknown": "Неизвестно",
     "categorySalesByTime": "Продажи по категориям по времени"
   },
   "common": {
