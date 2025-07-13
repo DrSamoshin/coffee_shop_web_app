@@ -28,7 +28,7 @@ import { apiService } from '../services/api';
 import { logger } from '../services/logger';
 import { UI, REPORT } from '../config/constants';
 import { FilterToggle } from './shared';
-import type { OrdersReport, Shift, ProductSummary, OrderSummary } from '../types/api';
+import type { OrdersReport, Shift, ProductSummary, OrderSummary, CategoryOrderData } from '../types/api';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'];
 
@@ -108,9 +108,9 @@ const ReportView: React.FC = () => {
 
   // Initialize category filters when orders report changes
   useEffect(() => {
-    if (ordersReport && ordersReport.debit_false_products_sum_json.length > 0) {
-      const categories = ordersReport.debit_false_products_sum_json.reduce((acc, product) => {
-        const categoryKey = product.product_category.toLowerCase().replace(/\s+/g, '_');
+    if (ordersReport && ordersReport.df_debit_false_category_product_for_order_json.length > 0) {
+      const categories = ordersReport.df_debit_false_category_product_for_order_json.reduce((acc, item) => {
+        const categoryKey = item.product_category.toLowerCase().replace(/\s+/g, '_');
         acc[categoryKey] = false;
         return acc;
       }, {} as Record<string, boolean>);
@@ -142,12 +142,12 @@ const ReportView: React.FC = () => {
 
 
 
-  const renderCategoriesChart = (products: ProductSummary[], orders: OrderSummary[], title: string) => {
-    if (!products || products.length === 0 || !orders || orders.length === 0) return null;
+  const renderCategoriesChart = (categoryOrderData: CategoryOrderData[], title: string) => {
+    if (!categoryOrderData || categoryOrderData.length === 0) return null;
 
-    // Группируем заказы по 20-минутным интервалам с суммами
-    const ordersByInterval = orders.reduce((acc, order) => {
-      const date = new Date(order.order_date);
+    // Группируем данные по 20-минутным интервалам и категориям
+    const intervalData = categoryOrderData.reduce((acc, item) => {
+      const date = new Date(item.order_date);
       const hour = date.getHours();
       const minute = date.getMinutes();
       const intervalIndex = Math.floor(minute / 20); // 0, 1, 2 for 0-19, 20-39, 40-59
@@ -155,29 +155,26 @@ const ReportView: React.FC = () => {
       
       if (!acc[timeKey]) {
         acc[timeKey] = {
-          count: 0,
-          totalPrice: 0
+          total: 0,
+          categories: {} as Record<string, number>
         };
       }
-      acc[timeKey].count += 1;
-      acc[timeKey].totalPrice += order.order_price;
+      
+      const categoryKey = item.product_category.toLowerCase().replace(/\s+/g, '_');
+      
+      acc[timeKey].total += item.count;
+      if (!acc[timeKey].categories[categoryKey]) {
+        acc[timeKey].categories[categoryKey] = 0;
+      }
+      acc[timeKey].categories[categoryKey] += item.count;
       
       return acc;
-    }, {} as Record<string, { count: number; totalPrice: number }>);
+    }, {} as Record<string, { total: number; categories: Record<string, number> }>);
 
-    // Получаем количество товаров по категориям и общее количество
-    const totalQuantity = products.reduce((sum, product) => sum + product.count, 0);
-    const categoryQuantities = products.reduce((acc, product) => {
-      const category = product.product_category;
-      if (!acc[category]) {
-        acc[category] = 0;
-      }
-      acc[category] += product.count;
-      return acc;
-    }, {} as Record<string, number>);
-
-    // Получаем список категорий
-    const categoryKeys = Object.keys(categoryQuantities).map(cat => cat.toLowerCase().replace(/\s+/g, '_'));
+    // Получаем уникальные категории
+    const categoryKeys = Array.from(new Set(categoryOrderData.map(item => 
+      item.product_category.toLowerCase().replace(/\s+/g, '_')
+    )));
     
     const handleCategoryFilterChange = (categoryKey: string) => {
       setCategoryFilters(prev => ({
@@ -191,27 +188,17 @@ const ReportView: React.FC = () => {
     for (let hour = 0; hour < 24; hour++) {
       for (let interval = 0; interval < 3; interval++) {
         const timeKey = `${hour.toString().padStart(2, '0')}:${(interval * 20).toString().padStart(2, '0')}`;
-        const intervalData = ordersByInterval[timeKey];
+        const intervalInfo = intervalData[timeKey];
         
         const dataPoint: Record<string, string | number> = {
           time: timeKey,
-          total: intervalData ? intervalData.count : 0
+          total: intervalInfo ? intervalInfo.total : 0
         };
         
-        // Добавляем количество для каждой категории пропорционально общему количеству
-        if (intervalData && totalQuantity > 0) {
-          Object.keys(categoryQuantities).forEach(category => {
-            const categoryKey = category.toLowerCase().replace(/\s+/g, '_');
-            const categoryProportion = categoryQuantities[category] / totalQuantity;
-            dataPoint[categoryKey] = Math.round(intervalData.count * categoryProportion);
-          });
-        } else {
-          // Если нет заказов в этом интервале, все категории = 0
-          Object.keys(categoryQuantities).forEach(category => {
-            const categoryKey = category.toLowerCase().replace(/\s+/g, '_');
-            dataPoint[categoryKey] = 0;
-          });
-        }
+        // Добавляем реальное количество для каждой категории
+        categoryKeys.forEach(categoryKey => {
+          dataPoint[categoryKey] = intervalInfo?.categories[categoryKey] || 0;
+        });
         
         chartData.push(dataPoint);
       }
@@ -524,7 +511,7 @@ const ReportView: React.FC = () => {
                 dataKey="total" 
                 stroke="#8884d8" 
                 fill="#8884d8" 
-                fillOpacity={0.3}
+                fillOpacity={0.1}
                 name="totalOrders"
                 isAnimationActive={false}
                 activeDot={false}
@@ -701,7 +688,7 @@ const ReportView: React.FC = () => {
               
               <Box sx={{ flex: ordersReport.total_number_debited_orders > 0 ? '1 1 200px' : '1 1 250px', textAlign: 'center', p: UI.SIZES.SPACING.MD, bgcolor: REPORT.SUMMARY_CARDS.COLORS.YELLOW.BACKGROUND, borderRadius: UI.SIZES.BORDER.RADIUS.SMALL }}>
                 <Typography variant="h4" sx={{ color: REPORT.SUMMARY_CARDS.COLORS.YELLOW.TEXT }}>
-                  {ordersReport.debit_false_products_sum_json.length}
+                  {ordersReport.total_number_sold_products}
                 </Typography>
                 <Typography variant="body2" sx={{ color: REPORT.SUMMARY_CARDS.COLORS.YELLOW.TEXT }}>
                   {t('report.totalProducts')}
@@ -741,7 +728,7 @@ const ReportView: React.FC = () => {
         {renderOrderDensityChart(ordersReport.debit_false_unique_orders_json)}
 
         {/* Category Sales by Time Chart */}
-        {renderCategoriesChart(ordersReport.debit_false_products_sum_json, ordersReport.debit_false_unique_orders_json, t('report.categorySalesByTime'))}
+        {renderCategoriesChart(ordersReport.df_debit_false_category_product_for_order_json, t('report.categorySalesByTime'))}
 
         {/* Payment Method and Order Type Charts */}
         <Box sx={{ display: 'flex', gap: UI.SIZES.SPACING.MD, mb: 3 }}>

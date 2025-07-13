@@ -232,6 +232,8 @@ export interface OrdersReport {
   debit_false_products_sum_json: ProductSummary[];
   debit_false_categories_sum_json: CategorySummary[];
   debit_false_unique_orders_json: OrderSummary[];
+  df_debit_true_category_product_for_order_json: CategoryOrderData[];
+  df_debit_false_category_product_for_order_json: CategoryOrderData[];
 }
 
 export interface ProductSummary {
@@ -255,4 +257,11 @@ export interface OrderSummary {
   order_payment_method: string;
   order_type: string;
   order_status: string;
-} 
+}
+
+export interface CategoryOrderData {
+  order_id: string;
+  product_category: string;
+  order_date: string;
+  count: number;
+}
