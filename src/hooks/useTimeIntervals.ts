@@ -86,7 +86,7 @@ export const useCategoryTimeIntervals = (orders: OrderSummary[]) => {
         };
       }
       acc[timeKey].count += 1;
-      acc[timeKey].totalPrice += order.order_price;
+      acc[timeKey].totalPrice += parseFloat(order.order_price);
       
       return acc;
     }, {} as Record<string, CategoryIntervalData>);

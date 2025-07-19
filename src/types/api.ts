@@ -221,47 +221,44 @@ export interface ActiveShiftReport {
 
 // Детальный отчет по смене
 export interface OrdersReport {
-  total_income: number;
-  total_number_sold_products: number;
-  total_number_orders: number;
-  total_number_debited_orders: number;
-  average_bill: number;
-  debit_true_products_sum_json: ProductSummary[];
-  debit_true_categories_sum_json: CategorySummary[];
-  debit_true_unique_orders_json: OrderSummary[];
-  debit_false_products_sum_json: ProductSummary[];
-  debit_false_categories_sum_json: CategorySummary[];
-  debit_false_unique_orders_json: OrderSummary[];
-  df_debit_true_category_product_for_order_json: CategoryOrderData[];
-  df_debit_false_category_product_for_order_json: CategoryOrderData[];
+  income: string;
+  sold_products_count: number;
+  orders_count: number;
+  debited_orders_count: number;
+  average_bill: string;
+  product_categories: CategoryOrderData[];
+  products: ProductSummary[];
+  orders: OrderSummary[];
+  debited_product_categories: CategoryOrderData[];
+  debited_products: ProductSummary[];
+  debited_orders: OrderSummary[];
 }
 
 export interface ProductSummary {
   product_name: string;
-  product_category: string;
+  category_name: string;
   count: number;
-  total_product_price: number;
+  products_price: string;
 }
 
 export interface CategorySummary {
   product_category: string;
   count: number;
-  total_product_price: number;
+  products_price: number;
 }
 
 export interface OrderSummary {
   order_id: string;
   order_date: string;
-  order_price: number;
-  order_discount: number;
+  order_price: string;
+  order_discount: string;
   order_payment_method: string;
   order_type: string;
   order_status: string;
 }
 
 export interface CategoryOrderData {
-  order_id: string;
-  product_category: string;
+  category_name: string;
   order_date: string;
   count: number;
 }

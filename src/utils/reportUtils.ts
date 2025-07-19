@@ -49,7 +49,7 @@ export const processCategoryQuantities = (products: ProductSummary[]) => {
   const totalQuantity = products.reduce((sum, product) => sum + product.count, 0);
   
   const categoryQuantities = products.reduce((acc, product) => {
-    const category = product.product_category;
+    const category = product.category_name;
     if (!acc[category]) {
       acc[category] = 0;
     }

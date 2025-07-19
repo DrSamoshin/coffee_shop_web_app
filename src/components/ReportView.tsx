@@ -109,10 +109,10 @@ const ReportView: React.FC = () => {
 
   // Initialize category filters when orders report changes
   useEffect(() => {
-    if (ordersReport && ordersReport.df_debit_false_category_product_for_order_json.length > 0) {
-      const categories = ordersReport.df_debit_false_category_product_for_order_json.reduce((acc, item) => {
-        const categoryKey = item.product_category.toLowerCase().replace(/\s+/g, '_');
-        acc[categoryKey] = false;
+    if (ordersReport && ordersReport.product_categories.length > 0) {
+      const categories = ordersReport.product_categories.reduce((acc, item) => {
+        const categoryName = item.category_name;
+        acc[categoryName] = false;
         return acc;
       }, {} as Record<string, boolean>);
       
@@ -177,7 +177,7 @@ const ReportView: React.FC = () => {
         };
       }
       
-      const categoryName = item.product_category; // Используем оригинальное название
+      const categoryName = item.category_name; // Используем оригинальное название
       
       acc[timeKey].total += item.count;
       if (!acc[timeKey].categories[categoryName]) {
@@ -190,7 +190,7 @@ const ReportView: React.FC = () => {
 
     // Получаем уникальные категории (оригинальные названия)
     const categoryNames = Array.from(new Set(categoryOrderData.map(item => 
-      item.product_category
+      item.category_name
     )));
     
     const handleCategoryFilterChange = (categoryName: string) => {
@@ -609,7 +609,7 @@ const ReportView: React.FC = () => {
                   {(() => {
                     // Group products by category
                     const groupedProducts = products.reduce((acc, product) => {
-                      const category = product.product_category;
+                      const category = product.category_name;
                       if (!acc[category]) {
                         acc[category] = [];
                       }
@@ -640,9 +640,9 @@ const ReportView: React.FC = () => {
                            <TableCell sx={{ textAlign: 'right' }}>
                              {formatNumber(categoryProducts.reduce((sum, product) => sum + product.count, 0))}
                            </TableCell>
-                           <TableCell sx={{ textAlign: 'right' }}>
-                             {formatPrice(categoryProducts.reduce((sum, product) => sum + product.total_product_price, 0))}
-                           </TableCell>
+                                      <TableCell sx={{ textAlign: 'right' }}>
+             {formatPrice(categoryProducts.reduce((sum, product) => sum + parseFloat(product.products_price), 0))}
+           </TableCell>
                          </TableRow>
                         
                                                  {/* Products in this category */}
@@ -651,15 +651,15 @@ const ReportView: React.FC = () => {
                                                          <TableCell sx={{ py: UI.SIZES.SPACING.XS, textAlign: 'left' }}>
                                {product.product_name}
                              </TableCell>
-                             <TableCell sx={{ py: UI.SIZES.SPACING.XS, textAlign: 'left' }}>
-                               {product.product_category}
-                             </TableCell>
-                             <TableCell sx={{ py: UI.SIZES.SPACING.XS, textAlign: 'right' }}>
-                               {formatNumber(product.count)}
-                             </TableCell>
-                             <TableCell sx={{ py: UI.SIZES.SPACING.XS, textAlign: 'right' }}>
-                               {formatPrice(product.total_product_price)}
-                             </TableCell>
+                                          <TableCell sx={{ py: UI.SIZES.SPACING.XS, textAlign: 'left' }}>
+               {product.category_name}
+             </TableCell>
+             <TableCell sx={{ py: UI.SIZES.SPACING.XS, textAlign: 'right' }}>
+               {formatNumber(product.count)}
+             </TableCell>
+             <TableCell sx={{ py: UI.SIZES.SPACING.XS, textAlign: 'right' }}>
+               {formatPrice(parseFloat(product.products_price))}
+             </TableCell>
                           </TableRow>
                         ))}
                       </React.Fragment>
@@ -685,46 +685,46 @@ const ReportView: React.FC = () => {
               {t('report.shiftSummary')}
             </Typography>
             <Box sx={{ display: 'flex', gap: UI.SIZES.SPACING.MD, flexWrap: 'wrap' }}>
-              <Box sx={{ flex: ordersReport.total_number_debited_orders > 0 ? '1 1 200px' : '1 1 250px', textAlign: 'center', p: UI.SIZES.SPACING.MD, bgcolor: 'success.light', borderRadius: UI.SIZES.BORDER.RADIUS.SMALL }}>
+              <Box sx={{ flex: ordersReport.debited_orders_count > 0 ? '1 1 200px' : '1 1 250px', textAlign: 'center', p: UI.SIZES.SPACING.MD, bgcolor: 'success.light', borderRadius: UI.SIZES.BORDER.RADIUS.SMALL }}>
                 <Typography variant="h4" color="success.contrastText">
-                  {formatPrice(ordersReport.total_income)}
+                  {formatPrice(parseFloat(ordersReport.income))}
                 </Typography>
                 <Typography variant="body2" color="success.contrastText">
                   {t('report.totalIncome')}
                 </Typography>
               </Box>
               
-              <Box sx={{ flex: ordersReport.total_number_debited_orders > 0 ? '1 1 200px' : '1 1 250px', textAlign: 'center', p: UI.SIZES.SPACING.MD, bgcolor: 'info.light', borderRadius: UI.SIZES.BORDER.RADIUS.SMALL }}>
+              <Box sx={{ flex: ordersReport.debited_orders_count > 0 ? '1 1 200px' : '1 1 250px', textAlign: 'center', p: UI.SIZES.SPACING.MD, bgcolor: 'info.light', borderRadius: UI.SIZES.BORDER.RADIUS.SMALL }}>
                 <Typography variant="h4" color="info.contrastText">
-                  {ordersReport.debit_false_unique_orders_json.length + ordersReport.debit_true_unique_orders_json.length}
+                  {ordersReport.orders.length + ordersReport.debited_orders.length}
                 </Typography>
                 <Typography variant="body2" color="info.contrastText">
                   {t('report.totalOrders')}
                 </Typography>
               </Box>
               
-              <Box sx={{ flex: ordersReport.total_number_debited_orders > 0 ? '1 1 200px' : '1 1 250px', textAlign: 'center', p: UI.SIZES.SPACING.MD, bgcolor: REPORT.SUMMARY_CARDS.COLORS.YELLOW.BACKGROUND, borderRadius: UI.SIZES.BORDER.RADIUS.SMALL }}>
+              <Box sx={{ flex: ordersReport.debited_orders_count > 0 ? '1 1 200px' : '1 1 250px', textAlign: 'center', p: UI.SIZES.SPACING.MD, bgcolor: REPORT.SUMMARY_CARDS.COLORS.YELLOW.BACKGROUND, borderRadius: UI.SIZES.BORDER.RADIUS.SMALL }}>
                 <Typography variant="h4" sx={{ color: REPORT.SUMMARY_CARDS.COLORS.YELLOW.TEXT }}>
-                  {ordersReport.total_number_sold_products}
+                  {ordersReport.sold_products_count}
                 </Typography>
                 <Typography variant="body2" sx={{ color: REPORT.SUMMARY_CARDS.COLORS.YELLOW.TEXT }}>
                   {t('report.totalProducts')}
                 </Typography>
               </Box>
 
-              <Box sx={{ flex: ordersReport.total_number_debited_orders > 0 ? '1 1 200px' : '1 1 250px', textAlign: 'center', p: UI.SIZES.SPACING.MD, bgcolor: 'warning.light', borderRadius: UI.SIZES.BORDER.RADIUS.SMALL }}>
+              <Box sx={{ flex: ordersReport.debited_orders_count > 0 ? '1 1 200px' : '1 1 250px', textAlign: 'center', p: UI.SIZES.SPACING.MD, bgcolor: 'warning.light', borderRadius: UI.SIZES.BORDER.RADIUS.SMALL }}>
                 <Typography variant="h4" color="warning.contrastText">
-                  {formatPrice(ordersReport.total_income / Math.max(1, ordersReport.debit_false_unique_orders_json.length + ordersReport.debit_true_unique_orders_json.length))}
+                  {formatPrice(parseFloat(ordersReport.income) / Math.max(1, ordersReport.orders.length + ordersReport.debited_orders.length))}
                 </Typography>
                 <Typography variant="body2" color="warning.contrastText">
                   {t('report.averageBill')}
                 </Typography>
               </Box>
 
-              {ordersReport.total_number_debited_orders > 0 && (
+              {ordersReport.debited_orders_count > 0 && (
                 <Box sx={{ flex: '1 1 200px', textAlign: 'center', p: UI.SIZES.SPACING.MD, bgcolor: 'error.light', borderRadius: UI.SIZES.BORDER.RADIUS.SMALL }}>
                   <Typography variant="h4" color="error.contrastText">
-                    {ordersReport.total_number_debited_orders}
+                    {ordersReport.debited_orders_count}
                   </Typography>
                   <Typography variant="body2" color="error.contrastText">
                     {t('report.totalDebitedOrders')}
@@ -736,21 +736,21 @@ const ReportView: React.FC = () => {
         </Card>
 
         {/* Products Table */}
-        {renderProductsTable(ordersReport.debit_false_products_sum_json)}
+        {renderProductsTable(ordersReport.products)}
 
         {/* Products (Debit) Table */}
-        {renderProductsTable(ordersReport.debit_true_products_sum_json, t('report.debitTrueProducts'))}
+        {renderProductsTable(ordersReport.debited_products, t('report.debitTrueProducts'))}
 
         {/* Order Density Chart */}
-        {renderOrderDensityChart(ordersReport.debit_false_unique_orders_json)}
+        {renderOrderDensityChart(ordersReport.orders)}
 
         {/* Category Sales by Time Chart */}
-        {renderCategoriesChart(ordersReport.df_debit_false_category_product_for_order_json, t('report.categorySalesByTime'))}
+        {renderCategoriesChart(ordersReport.product_categories, t('report.categorySalesByTime'))}
 
         {/* Payment Method and Order Type Charts */}
         <Box sx={{ display: 'flex', gap: UI.SIZES.SPACING.MD }}>
-          {renderPaymentMethodChart(ordersReport.debit_false_unique_orders_json)}
-          {renderOrderTypeChart(ordersReport.debit_false_unique_orders_json)}
+          {renderPaymentMethodChart(ordersReport.orders)}
+          {renderOrderTypeChart(ordersReport.orders)}
         </Box>
       </>
     );
